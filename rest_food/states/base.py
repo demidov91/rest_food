@@ -12,7 +12,5 @@ class State:
     def __init__(self, db_user):
         self.db_user = db_user
 
-    def handle(self, message: Message):
+    def handle(self, message: Message) -> Reply:
         pass
-
-

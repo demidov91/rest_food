@@ -13,5 +13,13 @@ def get_supply_state(tg_user_id) -> State:
     pass
 
 
+def set_supply_state(tg_user_id) -> State:
+    pass
+
+
 def get_demand_state(tg_user_id) -> State:
+    pass
+
+
+def set_demand_state(tg_user_id) -> State:
     pass
