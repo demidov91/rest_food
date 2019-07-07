@@ -1,18 +1,18 @@
 from telegram import Message
 
 from rest_food.states.base import State
-from rest_food.common_bot import Reply
+from rest_food.entities import Reply, SupplyState
 from rest_food.db import (
-    get_user,
+    get_supply_user,
     extend_supply_message,
     publish_supply,
 )
 from rest_food.utils import notify_admin
-from rest_food.state_enum import SupplyState
+
 
 class DefaultState(State):
     def handle(self, message: Message):
-        db_supply = get_supply(tg_user_id=message.from_user.id)
+        db_supply = get_supply_user(tg_user_id=message.from_user.id)
         if db_supply is None:
             notify_admin(message.from_user)
 

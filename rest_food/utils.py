@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from rest_food.common_bot import Reply
+from rest_food.entities import Reply
 
 def notify_admin(user):
     pass

@@ -2,8 +2,7 @@ from typing import Union
 
 from telegram import Message
 
-from rest_food.state_enum import SupplyState, DemandState
-from rest_food.common_bot import Reply
+from rest_food.entities import SupplyState, DemandState, Reply
 
 
 class State:
