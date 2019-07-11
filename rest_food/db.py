@@ -1,3 +1,6 @@
+from typing import Optional
+from uuid import uuid4
+
 import boto3
 from botocore.exceptions import ClientError
 
@@ -8,33 +11,39 @@ def _build_identifier(user_id, provider: Provider, workflow: Workflow):
     return f'{provider.value}-{workflow.value}-{user_id}'
 
 
-def get_user(user_id, provider: Provider, workflow: Workflow) -> User:
+def get_user_by_id(db_id: str) -> Optional[User]:
     table = _get_state_table()
     response = table.get_item(
-        Key={'id': _build_identifier(user_id, provider, workflow)},
+        Key={'id': db_id},
         ConsistentRead=True,
     )
 
     if 'Item' not in response:
-        user = User(user_id=user_id, provider=provider, workflow=workflow)
-        user.id = _create_user(user)
-        return user
+        return None
 
     data = response['Item']
-
     return User(
         id=data['id'],
         user_id=data['user_id'],
-        state=data.get('state'),
+        state=data.get('bot_state'),
         info=data.get('info'),
-        provider=provider,
-        workflow=workflow,
+        editing_message_id=data.get('editing_message_id'),
     )
 
 
-def _create_user(user: User):
+def get_user(user_id, provider: Provider, workflow: Workflow) -> User:
+    user = get_user_by_id(_build_identifier(user_id, provider, workflow))
+
+    if user is None:
+        user = User(user_id=user_id)
+        user.id = _create_user(user, provider, workflow)
+
+    return user
+
+
+def _create_user(user: User, provider: Provider, workflow: Workflow):
     table = _get_state_table()
-    identifier = _build_identifier(user.user_id, user.provider, user.workflow)
+    identifier = _build_identifier(user.user_id, provider, workflow)
     table.put_item(Item={
         'id': identifier,
         'user_id': user.user_id,
@@ -54,8 +63,42 @@ def get_supply_user(tg_user_id: int):
     return user
 
 
-def extend_supply_message():
-    pass
+def set_state(db_id: str, state: str):
+    table = _get_state_table()
+    table.update_item(
+        Key={'id': db_id},
+        UpdateExpression='SET bot_state = :state',
+        ExpressionAttributeValues={':state': state},
+    )
+
+
+def create_supply_message(user: User, message: str):
+    message_id = uuid4()
+    message_table = _get_message_table()
+    message_table.put_item(Item={
+        'id': message_id,
+        'user_id': user.id,
+        'products': [message],
+    })
+
+    state_table = _get_state_table()
+    state_table.update_item(
+        Key={'id': user.id},
+        UpdateExpression="set editing_message_id = :new_message_guid",
+        ExpressionAttributeValues={':new_message_guid': message_id},
+    )
+
+    return message_id
+
+
+def extend_supply_message(user: User, message: str):
+    message_table = _get_message_table()
+    message_table.update_item(
+        Key={'id': user.editing_message_id},
+        UpdateExpression="list_append(products, :new_item)",
+        ExpressionAttributeValues={':new_item': message},
+        ReturnValues="UPDATED_NEW"
+    )
 
 
 def publish_supply():
@@ -63,19 +106,25 @@ def publish_supply():
 
 
 _STATE_TABLE = 'food-state'
+_MESSAGE_TABLE = 'food-message'
+
+
+def _get_db():
+    # if STAGE != 'local':
+    #     return boto3.resource('dynamodb', region_name='eu-central-1')
+
+    return boto3.resource(
+        'dynamodb',
+        endpoint_url='http://localhost:8000',
+        region_name='eu-central-1'
+    )
+
 
 def _get_state_table():
     """
     `identifier` is a `provider-workflow-user_id` string.
     """
-    # if STAGE != 'local':
-    #     return boto3.resource('dynamodb', region_name='eu-central-1').Table(_STATE_TABLE)
-
-    db = boto3.resource(
-        'dynamodb',
-        endpoint_url='http://localhost:8000',
-        region_name='eu-central-1'
-    )
+    db = _get_db()
 
     try:
         db.meta.client.describe_table(TableName=_STATE_TABLE)
@@ -97,3 +146,34 @@ def _get_state_table():
         )
 
     return db.Table(_STATE_TABLE)
+
+
+def _get_message_table():
+    db = _get_db()
+
+    try:
+        db.meta.client.describe_table(TableName=_MESSAGE_TABLE)
+    except ClientError:
+        return db.create_table(
+            TableName=_MESSAGE_TABLE,
+            AttributeDefinitions=[{
+                'AttributeName': 'id',
+                'AttributeType': 'S',
+            }, {
+                'AttributeName': 'user_id',
+                'AttributeType': 'S',
+            }],
+            KeySchema=[{
+                'AttributeName': 'id',
+                'KeyType': 'HASH',
+            }, {
+                'AttributeName': 'user_id',
+                'KeyType': 'RANGE',
+            }],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 1,
+                'WriteCapacityUnits': 1,
+            }
+        )
+
+    return db.Table(_MESSAGE_TABLE)

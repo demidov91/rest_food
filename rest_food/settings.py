@@ -2,6 +2,7 @@ import logging
 import os
 
 
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 

@@ -7,7 +7,7 @@ from rest_food.db import (
     extend_supply_message,
     publish_supply,
 )
-from rest_food.utils import notify_admin
+from rest_food.utils import notify_admin, publish_supply_event
 
 
 class DefaultState(State):
@@ -21,14 +21,14 @@ class DefaultState(State):
                 buttons=[['Try again']]
             )
 
-        return Reply(next_state=SupplyState.POSTING)
+        return Reply(next_state=SupplyState.READY_TO_POST)
 
 
 class ReadyToPostState(State):
     intro = Reply(text='Enter food you can share and click "send"')
 
     def handle(self, message: Message):
-        extend_supply_message(message.text)
+        create_supply_message(self.db_user, message.text)
         return Reply(next_state=SupplyState.POSTING)
 
 
@@ -37,7 +37,7 @@ class PostingState(State):
 
     def handle(self, message: Message):
         if message.text == 'send':
-            publish_supply(self.db_user['id'])
+            publish_supply(self.db_user.db_id)
             return Reply(
                 text="Information is sent. "
                      "I'll notify you when there is someone to take this food.",
@@ -50,4 +50,4 @@ class PostingState(State):
                 next_state=SupplyState.READY_TO_POST,
             )
 
-        extend_supply_message(message.text)
+        extend_supply_message(self.db_user, message.text)
