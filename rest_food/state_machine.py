@@ -15,7 +15,7 @@ SUPPLY = {
 
 def get_supply_state(tg_user_id: int) -> State:
     user = get_user(tg_user_id, Provider.TG, Workflow.SUPPLY)
-    return SUPPLY[SupplyState(user.state)](user)
+    return SUPPLY[user.state and SupplyState(user.state)](user)
 
 
 def set_supply_state(db_id: str, state: SupplyState) -> State:

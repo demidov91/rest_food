@@ -17,5 +17,5 @@ def publish_supply_event(db_id: str):
 
 def send_messages(tg_user_id, replies:Iterable[Reply]):
     logger.info('Mock sending reply to {}:\n{}'.format(tg_user_id, '\n'.join(
-        '{}|Buttons:{}'.format(x.text, x.buttons) for x in replies
+        '{}|Buttons:{}'.format(x.text, x.buttons) for x in replies if x is not None
     )))

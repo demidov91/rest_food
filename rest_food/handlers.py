@@ -9,8 +9,8 @@ def tg_supply(data):
     update = Update.de_json(data, None)
     state = get_supply_state(update.message.from_user.id)
     reply = state.handle(update.message)
-    if reply.next_state is not None:
-        next_state = set_supply_state(update.message.from_user.id, reply.next_state)
+    if reply is not None and reply.next_state is not None:
+        next_state = set_supply_state(state.db_user.id, reply.next_state)
     else:
         next_state = state
 

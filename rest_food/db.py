@@ -73,7 +73,7 @@ def set_state(db_id: str, state: str):
 
 
 def create_supply_message(user: User, message: str):
-    message_id = uuid4()
+    message_id = str(uuid4())
     message_table = _get_message_table()
     message_table.put_item(Item={
         'id': message_id,
@@ -94,9 +94,10 @@ def create_supply_message(user: User, message: str):
 def extend_supply_message(user: User, message: str):
     message_table = _get_message_table()
     message_table.update_item(
-        Key={'id': user.editing_message_id},
-        UpdateExpression="list_append(products, :new_item)",
-        ExpressionAttributeValues={':new_item': message},
+        Key={'id': user.editing_message_id, 'user_id': user.id},
+        UpdateExpression="SET #p = list_append(:new_item, #p)",
+        ExpressionAttributeNames={'#p': 'products'},
+        ExpressionAttributeValues={':new_item': [message]},
         ReturnValues="UPDATED_NEW"
     )
 
