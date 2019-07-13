@@ -8,7 +8,9 @@ from rest_food.db import (
     publish_supply,
     create_supply_message,
 )
-from rest_food.utils import notify_admin, publish_supply_event
+from rest_food.communication import notify_admin, publish_supply_event
+from .utils import build_share_food_message
+
 
 
 class DefaultState(State):
@@ -34,7 +36,19 @@ class ReadyToPostState(State):
 
 
 class PostingState(State):
-    intro = Reply(buttons=[['send', 'cancel']])
+    intro = Reply(
+        buttons=[['send', 'cancel']]
+    )
+
+    def get_intro(self):
+        reply = super().get_intro()
+        reply.text = 'Food you can share:\n' \
+                     '{}\n' \
+                     'Add more items, SEND or CANCEL'.format(
+            build_share_food_message(self.db_user)
+        )
+        return reply
+
 
     def handle(self, message: Message):
         if message.text == 'send':

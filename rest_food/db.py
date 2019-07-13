@@ -101,6 +101,13 @@ def extend_supply_message(user: User, message: str):
         ReturnValues="UPDATED_NEW"
     )
 
+def get_supply_editing_message(user: User):
+    table = _get_message_table()
+    return table.get_item(
+        Key={'id': user.editing_message_id, 'user_id': user.id},
+        ConsistentRead=True,
+    )['Item']['products']
+
 
 def publish_supply():
     pass

@@ -2,7 +2,7 @@ from telegram import Bot, Update
 
 from rest_food.settings import TELEGRAM_TOKEN
 from rest_food.state_machine import get_supply_state, set_supply_state
-from rest_food.utils import send_messages
+from rest_food.communication import send_messages
 
 
 def tg_supply(data):
@@ -10,11 +10,11 @@ def tg_supply(data):
     state = get_supply_state(update.message.from_user.id)
     reply = state.handle(update.message)
     if reply is not None and reply.next_state is not None:
-        next_state = set_supply_state(state.db_user.id, reply.next_state)
+        next_state = set_supply_state(state.db_user, reply.next_state)
     else:
         next_state = state
 
-    send_messages(update.message.from_user, [reply, next_state.intro])
+    send_messages(tg_chat_id=update.message.chat.id, replies=[reply, next_state.get_intro()])
 
 
 def tg_demand(data):

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Union
 
 from telegram import Message
@@ -10,6 +11,9 @@ class State:
 
     def __init__(self, db_user):
         self.db_user = db_user
+
+    def get_intro(self) -> Reply:
+        return deepcopy(self.intro)
 
     def handle(self, message: Message) -> Reply:
         pass

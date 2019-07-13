@@ -18,9 +18,9 @@ def get_supply_state(tg_user_id: int) -> State:
     return SUPPLY[user.state and SupplyState(user.state)](user)
 
 
-def set_supply_state(db_id: str, state: SupplyState) -> State:
-    set_state(db_id, state.value)
-    return SUPPLY[state](User(id=db_id))
+def set_supply_state(user: User, state: SupplyState) -> State:
+    set_state(user.id, state.value)
+    return SUPPLY[state](user)
 
 
 def get_demand_state(tg_user_id) -> State:
