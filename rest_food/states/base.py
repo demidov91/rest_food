@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Union
+from typing import Union, Optional
 
 from telegram import Message
 
@@ -15,5 +15,5 @@ class State:
     def get_intro(self) -> Reply:
         return deepcopy(self.intro)
 
-    def handle(self, message: Message) -> Reply:
+    def handle(self, text: str, data: Optional[str]) -> Reply:
         pass

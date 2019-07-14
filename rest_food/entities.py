@@ -2,6 +2,8 @@ from enum import Enum
 from typing import Dict, List, Optional, Union
 from dataclasses import dataclass
 
+from telegram.user import User as TgUser
+
 
 class SupplyState(Enum):
     READY_TO_POST = 'ready_to_post'
@@ -29,6 +31,7 @@ class User:
     state: Optional[str] = None
     info: Optional[Dict] = None
     editing_message_id: Optional[str]=None
+    tg_user: Optional[TgUser]=None
 
 
 @dataclass

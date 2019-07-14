@@ -1,12 +1,10 @@
-from telegram import Message
-
 from rest_food.states.base import State
 from rest_food.entities import Reply, SupplyState
 from rest_food.db import (
     get_supply_user,
     extend_supply_message,
-    publish_supply,
     create_supply_message,
+    cancel_supply_message,
 )
 from rest_food.communication import notify_admin, publish_supply_event
 from .utils import build_share_food_message
@@ -14,10 +12,10 @@ from .utils import build_share_food_message
 
 
 class DefaultState(State):
-    def handle(self, message: Message):
-        db_supply = get_supply_user(tg_user_id=message.from_user.id)
+    def handle(self, text: str, data: str):
+        db_supply = get_supply_user(tg_user_id=self.db_user.user_id)
         if db_supply is None:
-            notify_admin(message.from_user)
+            notify_admin(self.db_user.tg_user)
 
             return Reply(
                 text='Admin is notified. Try later.',
@@ -30,8 +28,8 @@ class DefaultState(State):
 class ReadyToPostState(State):
     intro = Reply(text='Enter food you can share and click "send"')
 
-    def handle(self, message: Message):
-        create_supply_message(self.db_user, message.text)
+    def handle(self, text: str, data: str):
+        create_supply_message(self.db_user, text)
         return Reply(next_state=SupplyState.POSTING)
 
 
@@ -50,19 +48,20 @@ class PostingState(State):
         return reply
 
 
-    def handle(self, message: Message):
-        if message.text == 'send':
-            publish_supply(self.db_user.db_id)
+    def handle(self, text: str, data: str):
+        if data == 'send':
+            publish_supply_event(self.db_user)
             return Reply(
                 text="Information is sent. "
                      "I'll notify you when there is someone to take this food.",
                 next_state=SupplyState.READY_TO_POST,
             )
 
-        if message.text == 'cancel':
+        if data == 'cancel':
+            cancel_supply_message(self.db_user)
             return Reply(
                 text='Product list is cleared.',
                 next_state=SupplyState.READY_TO_POST,
             )
 
-        extend_supply_message(self.db_user, message.text)
+        extend_supply_message(self.db_user, text)

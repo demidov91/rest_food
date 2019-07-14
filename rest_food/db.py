@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from uuid import uuid4
 
 import boto3
@@ -50,6 +50,7 @@ def _create_user(user: User, provider: Provider, workflow: Workflow):
         'info': {
             'address': 'Minsk, Charužaj, 22',
             'time_to_visit': 'till 23:00',
+            'name': 'Demo restaurant',
         },
     })
     return identifier
@@ -87,6 +88,7 @@ def create_supply_message(user: User, message: str):
         UpdateExpression="set editing_message_id = :new_message_guid",
         ExpressionAttributeValues={':new_message_guid': message_id},
     )
+    user.editing_message_id = message_id
 
     return message_id
 
@@ -95,22 +97,32 @@ def extend_supply_message(user: User, message: str):
     message_table = _get_message_table()
     message_table.update_item(
         Key={'id': user.editing_message_id, 'user_id': user.id},
-        UpdateExpression="SET #p = list_append(:new_item, #p)",
+        UpdateExpression="SET #p = list_append(#p, :new_item)",
         ExpressionAttributeNames={'#p': 'products'},
         ExpressionAttributeValues={':new_item': [message]},
         ReturnValues="UPDATED_NEW"
     )
 
-def get_supply_editing_message(user: User):
+
+def cancel_supply_message(user: User):
+    state_table = _get_state_table()
+    state_table.update_item(
+        Key={'id': user.id},
+        UpdateExpression="set editing_message_id = :new_message_guid",
+        ExpressionAttributeValues={':new_message_guid': None},
+    )
+    user.editing_message_id = None
+
+
+def get_supply_editing_message(user: User) -> List[str]:
+    if user.editing_message_id is None:
+        return []
+
     table = _get_message_table()
     return table.get_item(
         Key={'id': user.editing_message_id, 'user_id': user.id},
         ConsistentRead=True,
     )['Item']['products']
-
-
-def publish_supply():
-    pass
 
 
 _STATE_TABLE = 'food-state'
@@ -165,17 +177,17 @@ def _get_message_table():
         return db.create_table(
             TableName=_MESSAGE_TABLE,
             AttributeDefinitions=[{
-                'AttributeName': 'id',
+                'AttributeName': 'user_id',
                 'AttributeType': 'S',
             }, {
-                'AttributeName': 'user_id',
+                'AttributeName': 'id',
                 'AttributeType': 'S',
             }],
             KeySchema=[{
-                'AttributeName': 'id',
+                'AttributeName': 'user_id',
                 'KeyType': 'HASH',
             }, {
-                'AttributeName': 'user_id',
+                'AttributeName': 'id',
                 'KeyType': 'RANGE',
             }],
             ProvisionedThroughput={
