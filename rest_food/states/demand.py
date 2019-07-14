@@ -1,9 +1,13 @@
+import logging
 from dataclasses import dataclass
 from typing import List
 
 from rest_food.communication import notify_supply_for_booked
 from rest_food.db import get_user, mark_message_as_booked
 from rest_food.entities import User, Reply, Provider, Workflow
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -45,18 +49,18 @@ def _handle_take(user: User, supply_user_db_id: str, message_id: str):
         demand_user=user
     )
 
-    message = f"{supply_user['info']['name']} is notified that you'll take it.\n" \
-              f"Address: {supply_user['user']['address']}\n" \
-              f"Time: {supply_user['user']['time_to_visit']}"
+    message = f"{supply_user.info['name']} is notified that you'll take it.\n" \
+              f"Address: {supply_user.info['address']}\n" \
+              f"Time: {supply_user.info['time_to_visit']}"
 
     return Reply(text=message)
 
 
-def _handle_info(supply_user_db_id: str, message_id: str):
+def _handle_info(user: User, supply_user_db_id: str, message_id: str):
     supply_user = get_user(supply_user_db_id, provider=Provider.TG, workflow=Workflow.SUPPLY)
 
-    message = f"Address: {supply_user['user']['address']}\n" \
-              f"Time: {supply_user['user']['time_to_visit']}"
+    message = f"Address: {supply_user.info['address']}\n" \
+              f"Time: {supply_user.info['time_to_visit']}"
 
     return Reply(
         text=message,

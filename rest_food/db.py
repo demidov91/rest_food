@@ -125,7 +125,7 @@ def cancel_supply_message(user: User, *, provider:Provider):
     state_table = _get_state_table()
     state_table.update_item(
         Key={
-            'id': user.user_id,
+            'user_id': user.user_id,
             'cluster': _build_user_cluster(provider, workflow=Workflow.SUPPLY),
         },
         UpdateExpression="set editing_message_id = :new_message_guid",
@@ -149,8 +149,9 @@ def get_supply_message(*, user_id, message_id: str):
     )['Item']['products']
 
 
-def mark_message_as_booked(user_id, message_id):
+def mark_message_as_booked(demand_user, supply_user_id, message_id):
     print('Mock marking as booked.')
+    return True
 
 
 _STATE_TABLE = 'food-state'

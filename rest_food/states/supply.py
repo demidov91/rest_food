@@ -19,6 +19,9 @@ class ReadyToPostState(State):
     intro = Reply(text='Enter food you can share and click "send"')
 
     def handle(self, text: str, data: str):
+        if not text:
+            return
+
         create_supply_message(self.db_user, text, provider=self.provider)
         return Reply(next_state=SupplyState.POSTING)
 
@@ -54,4 +57,5 @@ class PostingState(State):
                 next_state=SupplyState.READY_TO_POST,
             )
 
-        extend_supply_message(self.db_user, text)
+        if text:
+            extend_supply_message(self.db_user, text)

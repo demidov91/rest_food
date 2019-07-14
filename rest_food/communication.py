@@ -48,7 +48,7 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
     message_to_send = f"Someone will take the food you've posted:\n\n{message}"
 
     send_messages(
-        tg_chat_id=supply_user.chat_id,
+        tg_chat_id=int(supply_user.chat_id),
         replies=[Reply(text=message_to_send)],
         workflow=Workflow.SUPPLY,
     )
