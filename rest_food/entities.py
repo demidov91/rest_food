@@ -26,12 +26,15 @@ class Workflow(Enum):
 
 @dataclass
 class User:
-    id: Optional[str] = None
+    cluster: Optional[str]=None
     user_id: Optional[Union[str, int]]=None
+    chat_id: Optional[Union[str, int]]=None
     state: Optional[str] = None
     info: Optional[Dict] = None
     editing_message_id: Optional[str]=None
     tg_user: Optional[TgUser]=None
+    provider: Optional[Provider]=None
+    workflow: Optional[Workflow]=None
 
 
 @dataclass

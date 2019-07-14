@@ -1,90 +1,107 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from uuid import uuid4
 
 import boto3
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Key
 
 from rest_food.entities import Provider, Workflow, User
 
 
-def _build_identifier(user_id, provider: Provider, workflow: Workflow):
-    return f'{provider.value}-{workflow.value}-{user_id}'
+def _build_user_cluster(provider: Provider, workflow: Workflow):
+    return f'{provider.value}-{workflow.value}'
 
 
-def get_user_by_id(db_id: str) -> Optional[User]:
+def _build_user(data: dict):
+    return User(
+        cluster=data['cluster'],
+        user_id=data['user_id'],
+        chat_id=data.get('chat_id'),
+        state=data.get('bot_state'),
+        info=data.get('info'),
+        editing_message_id=data.get('editing_message_id'),
+        workflow=Workflow(data.get('workflow')),
+        provider=Provider(data.get('provider')),
+    )
+
+
+def get_user(user_id, provider: Provider, workflow: Workflow):
+    cluster = _build_user_cluster(provider, workflow)
+
     table = _get_state_table()
     response = table.get_item(
-        Key={'id': db_id},
+        Key={'cluster': cluster, 'user_id': str(user_id)},
         ConsistentRead=True,
     )
 
     if 'Item' not in response:
         return None
 
-    data = response['Item']
-    return User(
-        id=data['id'],
-        user_id=data['user_id'],
-        state=data.get('bot_state'),
-        info=data.get('info'),
-        editing_message_id=data.get('editing_message_id'),
-    )
+    return _build_user(response['Item'])
 
 
-def get_user(user_id, provider: Provider, workflow: Workflow) -> User:
-    user = get_user_by_id(_build_identifier(user_id, provider, workflow))
+
+def get_or_create_user(*, user_id, chat_id, provider: Provider, workflow: Workflow) -> User:
+    user = get_user(user_id, provider, workflow)
 
     if user is None:
-        user = User(user_id=user_id)
-        user.id = _create_user(user, provider, workflow)
+        user = User(user_id=user_id, chat_id=chat_id)
+        _create_user(user, provider, workflow)
 
     return user
 
 
 def _create_user(user: User, provider: Provider, workflow: Workflow):
     table = _get_state_table()
-    identifier = _build_identifier(user.user_id, provider, workflow)
+    cluster = _build_user_cluster(provider, workflow)
     table.put_item(Item={
-        'id': identifier,
-        'user_id': user.user_id,
+        'cluster': cluster,
+        'user_id': str(user.user_id),
+        'chat_id': user.chat_id,
+        'provider': provider.value,
+        'workflow': workflow.value,
         'info': {
             'address': 'Minsk, Charužaj, 22',
             'time_to_visit': 'till 23:00',
             'name': 'Demo restaurant',
         },
     })
-    return identifier
 
 
-def get_supply_user(tg_user_id: int):
-    user = get_user(tg_user_id, Provider.TG, Workflow.SUPPLY)
-    if not user.info:
-        return None
+def get_demand_users():
+    table = _get_state_table()
+    yield from (_build_user(x) for x in table.query(
+        KeyConditionExpression=Key('cluster').eq(_build_user_cluster(Provider.TG, Workflow.DEMAND))
+    )['Items'])
+    yield from (_build_user(x) for x in table.query(
+        KeyConditionExpression=Key('cluster').eq(_build_user_cluster(Provider.VB, Workflow.DEMAND))
+    )['Items'])
 
-    return user
 
-
-def set_state(db_id: str, state: str):
+def set_state(*, user_id: str, provider: Provider, workflow: Workflow, state: str):
     table = _get_state_table()
     table.update_item(
-        Key={'id': db_id},
+        Key={'user_id': user_id, 'cluster': _build_user_cluster(provider, workflow)},
         UpdateExpression='SET bot_state = :state',
         ExpressionAttributeValues={':state': state},
     )
 
 
-def create_supply_message(user: User, message: str):
+def create_supply_message(user: User, message: str, *, provider: Provider):
     message_id = str(uuid4())
     message_table = _get_message_table()
     message_table.put_item(Item={
         'id': message_id,
-        'user_id': user.id,
+        'user_id': user.user_id,
         'products': [message],
     })
 
     state_table = _get_state_table()
     state_table.update_item(
-        Key={'id': user.id},
+        Key={
+            'user_id': user.user_id,
+            'cluster': _build_user_cluster(provider, Workflow.SUPPLY),
+        },
         UpdateExpression="set editing_message_id = :new_message_guid",
         ExpressionAttributeValues={':new_message_guid': message_id},
     )
@@ -96,7 +113,7 @@ def create_supply_message(user: User, message: str):
 def extend_supply_message(user: User, message: str):
     message_table = _get_message_table()
     message_table.update_item(
-        Key={'id': user.editing_message_id, 'user_id': user.id},
+        Key={'id': user.editing_message_id, 'user_id': user.user_id},
         UpdateExpression="SET #p = list_append(#p, :new_item)",
         ExpressionAttributeNames={'#p': 'products'},
         ExpressionAttributeValues={':new_item': [message]},
@@ -104,10 +121,13 @@ def extend_supply_message(user: User, message: str):
     )
 
 
-def cancel_supply_message(user: User):
+def cancel_supply_message(user: User, *, provider:Provider):
     state_table = _get_state_table()
     state_table.update_item(
-        Key={'id': user.id},
+        Key={
+            'id': user.user_id,
+            'cluster': _build_user_cluster(provider, workflow=Workflow.SUPPLY),
+        },
         UpdateExpression="set editing_message_id = :new_message_guid",
         ExpressionAttributeValues={':new_message_guid': None},
     )
@@ -118,11 +138,19 @@ def get_supply_editing_message(user: User) -> List[str]:
     if user.editing_message_id is None:
         return []
 
+    return get_supply_message(user_id=user.user_id, message_id=user.editing_message_id)
+
+
+def get_supply_message(*, user_id, message_id: str):
     table = _get_message_table()
     return table.get_item(
-        Key={'id': user.editing_message_id, 'user_id': user.id},
+        Key={'id': message_id, 'user_id': user_id},
         ConsistentRead=True,
     )['Item']['products']
+
+
+def mark_message_as_booked(user_id, message_id):
+    print('Mock marking as booked.')
 
 
 _STATE_TABLE = 'food-state'
@@ -152,12 +180,18 @@ def _get_state_table():
         return db.create_table(
             TableName=_STATE_TABLE,
             AttributeDefinitions=[{
-                'AttributeName': 'id',
+                'AttributeName': 'cluster',
+                'AttributeType': 'S',
+            }, {
+                'AttributeName': 'user_id',
                 'AttributeType': 'S',
             }],
             KeySchema=[{
-                'AttributeName': 'id',
+                'AttributeName': 'cluster',
                 'KeyType': 'HASH',
+            }, {
+                'AttributeName': 'user_id',
+                'KeyType': 'RANGE',
             }],
             ProvisionedThroughput={
                 'ReadCapacityUnits': 1,

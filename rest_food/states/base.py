@@ -1,16 +1,15 @@
 from copy import deepcopy
-from typing import Union, Optional
+from typing import Optional
 
-from telegram import Message
-
-from rest_food.entities import SupplyState, DemandState, Reply
+from rest_food.entities import Reply, Provider
 
 
 class State:
     intro = None    # type: Reply
 
-    def __init__(self, db_user):
+    def __init__(self, db_user, provider=Provider.TG):
         self.db_user = db_user
+        self.provider = provider
 
     def get_intro(self) -> Reply:
         return deepcopy(self.intro)

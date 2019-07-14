@@ -14,4 +14,5 @@ def env_var(var_name: str):
     return os.environ[var_name]
 
 
-TELEGRAM_TOKEN = env_var('TELEGRAM_TOKEN')
+TELEGRAM_TOKEN_SUPPLY = env_var('TELEGRAM_TOKEN_SUPPLY')
+TELEGRAM_TOKEN_DEMAND = env_var('TELEGRAM_TOKEN_DEMAND')

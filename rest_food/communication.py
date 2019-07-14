@@ -3,37 +3,59 @@ from typing import Iterable
 
 from telegram import Bot
 
-from rest_food.entities import Reply, User
-from rest_food.settings import TELEGRAM_TOKEN
-from rest_food.states.utils import build_share_food_message
+from rest_food.db import get_demand_users
+from rest_food.entities import Reply, User, Workflow
+from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
+from rest_food.states.utils import build_active_food_message, build_food_message_by_id
 
 
 logger = logging.getLogger(__name__)
 
 
-def get_bot():
-    return Bot(TELEGRAM_TOKEN)
+def get_bot(workflow: Workflow):
+    if workflow == Workflow.SUPPLY:
+        token = TELEGRAM_TOKEN_SUPPLY
+    else:
+        token = TELEGRAM_TOKEN_DEMAND
 
-
-def notify_admin(user):
-    pass
+    return Bot(token)
 
 
 def publish_supply_event(user: User):
-    text_message = build_share_food_message(user)
+    text_message = build_active_food_message(user)
     message = Reply(
         text=f'{user.info["name"]} can share the following:\n{text_message}',
         buttons=[[{
             'text': 'Take it',
-            'data': f'take|{user.id}|{user.editing_message_id}',
+            'data': f'take|{user.user_id}|{user.editing_message_id}',
+        }, {
+            'text': 'Info',
+            'data': f'info|{user.user_id}|{user.editing_message_id}',
         }]],
     )
 
-    logger.info(f'Mock sending message for demand: {message}')
+    for demand_user in get_demand_users():
+        logger.info('CHAT ID: %s', demand_user.chat_id)
+        send_messages(
+            tg_chat_id=int(demand_user.chat_id),
+            replies=[message],
+            workflow=Workflow.DEMAND
+        )
 
 
-def send_messages(tg_chat_id: int, replies:Iterable[Reply]):
-    bot = get_bot()
+def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user: User):
+    message = build_food_message_by_id(user_id=supply_user.user_id, message_id=message_id)
+    message_to_send = f"Someone will take the food you've posted:\n\n{message}"
+
+    send_messages(
+        tg_chat_id=supply_user.chat_id,
+        replies=[Reply(text=message_to_send)],
+        workflow=Workflow.SUPPLY,
+    )
+
+
+def send_messages(*, tg_chat_id: int, replies:Iterable[Reply], workflow: Workflow):
+    bot = get_bot(workflow)
 
     for reply in filter(lambda x: x is not None and x.text is not None, replies):
         bot.send_message(
