@@ -27,10 +27,10 @@ def publish_supply_event(user: User):
         text=f'{user.info["name"]} can share the following:\n{text_message}',
         buttons=[[{
             'text': 'Take it',
-            'data': f'take|{user.user_id}|{user.editing_message_id}',
+            'data': f'take|{user.provider.value}|{user.user_id}|{user.editing_message_id}',
         }, {
             'text': 'Info',
-            'data': f'info|{user.user_id}|{user.editing_message_id}',
+            'data': f'info|{user.provider.value}|{user.user_id}|{user.editing_message_id}',
         }]],
     )
 
@@ -44,7 +44,7 @@ def publish_supply_event(user: User):
 
 
 def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user: User):
-    message = build_food_message_by_id(user_id=supply_user.user_id, message_id=message_id)
+    message = build_food_message_by_id(user=supply_user, message_id=message_id)
     message_to_send = f"Someone will take the food you've posted:\n\n{message}"
 
     send_messages(

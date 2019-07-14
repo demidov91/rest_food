@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional, Tuple
 from uuid import uuid4
 
@@ -6,6 +7,9 @@ from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
 
 from rest_food.entities import Provider, Workflow, User
+
+
+logger = logging.getLogger(__name__)
 
 
 def _build_user_cluster(provider: Provider, workflow: Workflow):
@@ -92,7 +96,7 @@ def create_supply_message(user: User, message: str, *, provider: Provider):
     message_table = _get_message_table()
     message_table.put_item(Item={
         'id': message_id,
-        'user_id': user.user_id,
+        'user_id': f'{provider.value}|{user.user_id}',
         'products': [message],
     })
 
@@ -110,10 +114,10 @@ def create_supply_message(user: User, message: str, *, provider: Provider):
     return message_id
 
 
-def extend_supply_message(user: User, message: str):
+def extend_supply_message(user: User, message: str, *, provider:Provider):
     message_table = _get_message_table()
     message_table.update_item(
-        Key={'id': user.editing_message_id, 'user_id': user.user_id},
+        Key={'id': user.editing_message_id, 'user_id': f'{provider.value}|{user.user_id}'},
         UpdateExpression="SET #p = list_append(#p, :new_item)",
         ExpressionAttributeNames={'#p': 'products'},
         ExpressionAttributeValues={':new_item': [message]},
@@ -138,19 +142,42 @@ def get_supply_editing_message(user: User) -> List[str]:
     if user.editing_message_id is None:
         return []
 
-    return get_supply_message(user_id=user.user_id, message_id=user.editing_message_id)
+    return get_supply_message(user=user, message_id=user.editing_message_id)
 
 
-def get_supply_message(*, user_id, message_id: str):
+def get_supply_message_record(*, user, message_id: str):
     table = _get_message_table()
     return table.get_item(
-        Key={'id': message_id, 'user_id': user_id},
+        Key={'id': message_id, 'user_id': f'{user.provider.value}|{user.user_id}'},
         ConsistentRead=True,
-    )['Item']['products']
+    )['Item']
 
 
-def mark_message_as_booked(demand_user, supply_user_id, message_id):
-    print('Mock marking as booked.')
+def get_supply_message(*, user, message_id: str):
+    return get_supply_message_record(user=user, message_id=message_id)['products']
+
+
+
+def mark_message_as_booked(demand_user: User, supply_user:User, message_id: str):
+    table = _get_message_table()
+    user_extended_id = f'{demand_user.provider.value}|{demand_user.user_id}'
+
+    try:
+        table.update_item(
+            Key={
+                'user_id': f'{supply_user.provider.value}|{supply_user.user_id}',
+                'id': message_id,
+            },
+            UpdateExpression="SET demand_user_id = :demand_user_extended_id",
+            ExpressionAttributeValues={':demand_user_extended_id': user_extended_id},
+            ConditionExpression='attribute_not_exists(demand_user_id)',
+            ReturnValues="UPDATED_NEW"
+        )
+    except ClientError as e:
+        if e.response['Error']['Code'] == "ConditionalCheckFailedException":
+            return False
+        raise
+
     return True
 
 

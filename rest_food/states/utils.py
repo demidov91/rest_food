@@ -15,5 +15,5 @@ def build_active_food_message(user: User):
     return _message_to_text(message)
 
 
-def build_food_message_by_id(*, user_id, message_id):
-    return _message_to_text(get_supply_message(user_id=user_id, message_id=message_id))
+def build_food_message_by_id(*, user, message_id):
+    return _message_to_text(get_supply_message(user=user, message_id=message_id))

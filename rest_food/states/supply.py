@@ -58,4 +58,4 @@ class PostingState(State):
             )
 
         if text:
-            extend_supply_message(self.db_user, text)
+            extend_supply_message(self.db_user, text, provider=self.provider)
