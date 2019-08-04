@@ -6,8 +6,9 @@ from rest_food.state_machine import (
     get_supply_state,
     set_supply_state,
 )
-from rest_food.communication import send_messages, get_bot
+from rest_food.communication import send_messages, get_bot, build_tg_response
 from rest_food.states.demand import handle_demand_data, handle_demand_text
+from rest_food.states.supply import DefaultState
 
 
 def tg_supply(data):
@@ -29,6 +30,9 @@ def tg_supply(data):
         next_state = set_supply_state(state.db_user, reply.next_state)
     else:
         next_state = state
+
+    if isinstance(state, DefaultState):
+        return build_tg_response(chat_id=chat_id, reply=next_state.get_intro())
 
     send_messages(
         tg_chat_id=chat_id,
