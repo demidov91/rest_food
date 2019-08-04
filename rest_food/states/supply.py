@@ -1,26 +1,53 @@
+from typing import Optional
+
 from rest_food.states.base import State
 from rest_food.entities import Reply, SupplyState
 from rest_food.db import (
     extend_supply_message,
     create_supply_message,
     cancel_supply_message,
+    set_supply_message_time,
+    set_info,
 )
 from rest_food.communication import publish_supply_event
 from .utils import build_active_food_message
 
 
+class ForceInfoMixin:
+    def get_next_state(self):
+        for field, state in (
+                ('name', SupplyState.FORCE_NAME),
+                ('address', SupplyState.FORCE_ADDRESS),
+                ('phone', SupplyState.FORCE_PHONE),
+        ):
+            if not self.db_user.info.get(field):
+                return state
 
-class DefaultState(State):
+        return SupplyState.READY_TO_POST
+
+
+class DefaultState(ForceInfoMixin, State):
     def handle(self, text: str, data: str):
-        return Reply(next_state=SupplyState.READY_TO_POST)
+        return Reply(
+            text='Please, provide information about yourself before getting started',
+            next_state=self.get_next_state()
+        )
 
 
 class ReadyToPostState(State):
-    intro = Reply(text='Enter food you can share and click "send"')
+    intro = Reply(
+        buttons=[
+            [{
+                'text': 'Edit restaurant info',
+                'data': 'view-info',
+            }],
+        ],
+        text='Enter food you can share and click "send"',
+    )
 
     def handle(self, text: str, data: str):
-        if not text:
-            return
+        if data == 'view-info':
+            return Reply(next_state=SupplyState.VIEW_INFO)
 
         create_supply_message(self.db_user, text, provider=self.provider)
         return Reply(next_state=SupplyState.POSTING)
@@ -28,27 +55,24 @@ class ReadyToPostState(State):
 
 class PostingState(State):
     intro = Reply(
-        buttons=[['send', 'cancel']]
+        buttons=[
+            {
+                'text':'set time and send',
+                'data': 'set-time',
+            },
+            ['cancel'],
+        ]
     )
 
     def get_intro(self):
         reply = super().get_intro()
-        reply.text = 'Food you can share:\n' \
-                     '{}\n' \
-                     'Add more items, SEND or CANCEL'.format(
-            build_active_food_message(self.db_user)
-        )
+        reply.text = 'Food you can share:\n{}'.format(build_active_food_message(self.db_user))
         return reply
 
 
     def handle(self, text: str, data: str):
-        if data == 'send':
-            publish_supply_event(self.db_user)
-            return Reply(
-                text="Information is sent. "
-                     "I'll notify you when there is someone to take this food.",
-                next_state=SupplyState.READY_TO_POST,
-            )
+        if data == 'set-time':
+            return Reply(next_state=SupplyState.READY_TO_POST)
 
         if data == 'cancel':
             cancel_supply_message(self.db_user, provider=self.provider)
@@ -59,3 +83,116 @@ class PostingState(State):
 
         if text:
             extend_supply_message(self.db_user, text, provider=self.provider)
+
+
+class SetMessageTimeState(State):
+    intro = Reply(
+        text='Specify the time',
+        buttons=[
+            ['cancel'],
+        ]
+    )
+
+    def handle(self, text: str, data: str):
+        if data == 'cancel':
+            cancel_supply_message(self.db_user, provider=self.provider)
+            return Reply(
+                text='Product list is cleared.',
+                next_state=SupplyState.READY_TO_POST,
+            )
+
+        if text:
+            set_supply_message_time(self.db_user, text)
+            publish_supply_event(self.db_user)
+            return Reply(
+                text="Information is sent. "
+                     "I'll notify you when there is someone to take this food.",
+                next_state=SupplyState.READY_TO_POST,
+            )
+
+
+class ViewInfoState(State):
+    def __init__(self, db_user, provider):
+        super().__init__(db_user, provider)
+
+
+    def get_intro(self):
+        return Reply(
+            buttons=[
+                [{
+                    'text': self.db_user.info['name'],
+                    'data': 'edit-name',
+                }],
+                [{
+                    'text': self.db_user.info['address'],
+                    'data': 'edit-address',
+                }],
+                [{
+                    'text': self.db_user.info['phone'],
+                    'data': 'edit-phone',
+                }],
+            ]
+        )
+
+    def handle(self, text: str, data: Optional[str]):
+        if data == 'edit-name':
+            return Reply(next_state=SupplyState.EDIT_NAME)
+
+        if data == 'edit-address':
+            return Reply(next_state=SupplyState.EDIT_ADDRESS)
+
+        if data == 'edit-phone':
+            return Reply(next_state=SupplyState.EDIT_PHONE)
+
+
+class BaseEditInfoState(State):
+    _message = None         # type: str
+    _info_to_edit = None    # type: str
+
+    def get_intro(self):
+        reply = Reply(text=self._message)
+        if self._info_to_edit in self.db_user.info:
+            reply.buttons = [[{
+                'text': 'cancel',
+                'data': 'cancel',
+            }]]
+
+        return reply
+
+    def get_next_state(self):
+        return SupplyState.VIEW_INFO
+
+    def handle(self, text: str, data: Optional[str]):
+        if data == 'cancel':
+            return Reply(next_state=SupplyState.READY_TO_POST)
+
+        set_info(self.db_user, self._info_to_edit, text)
+
+        return Reply(next_state=self.get_next_state())
+
+
+class SetNameState(BaseEditInfoState):
+    _message = 'Please, enter name of the restaurant.'
+    _info_to_edit = 'name'
+
+
+class SetAddressState(BaseEditInfoState):
+    _message = 'Please, provide restaurant address.'
+    _info_to_edit = 'address'
+
+
+class SetPhoneState(BaseEditInfoState):
+    _message = 'Please, enter contact phone number.'
+    _info_to_edit = 'phone'
+
+
+class ForceSetNameState(ForceInfoMixin, SetNameState):
+    pass
+
+
+class ForceSetAddressState(ForceInfoMixin, SetAddressState):
+    pass
+
+
+class ForceSetPhoneState(ForceInfoMixin, SetPhoneState):
+    pass

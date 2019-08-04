@@ -8,6 +8,13 @@ SUPPLY = {
     None: supply.DefaultState,
     SupplyState.READY_TO_POST: supply.ReadyToPostState,
     SupplyState.POSTING: supply.PostingState,
+    SupplyState.VIEW_INFO: supply.ViewInfoState,
+    SupplyState.EDIT_NAME: supply.SetNameState,
+    SupplyState.EDIT_ADDRESS: supply.SetAddressState,
+    SupplyState.EDIT_PHONE: supply.SetPhoneState,
+    SupplyState.FORCE_NAME: supply.ForceSetNameState,
+    SupplyState.FORCE_ADDRESS: supply.ForceSetAddressState,
+    SupplyState.FORCE_PHONE: supply.ForceSetPhoneState,
 }
 
 
@@ -27,6 +34,6 @@ def set_supply_state(user: User, state: SupplyState) -> State:
         user_id=user.user_id,
         provider=Provider.TG,
         workflow=Workflow.SUPPLY,
-        state=state.value
+        state=state and state.value
     )
     return SUPPLY[state](user)

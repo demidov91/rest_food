@@ -17,6 +17,10 @@ def tg_supply(data):
     tg_user = update.effective_user
 
     state = get_supply_state(tg_user_id=user_id, tg_user=tg_user, tg_chat_id=chat_id)
+
+    if update.message and update.message.text == '/start':
+        state = set_supply_state(state.db_user, None)
+
     reply = state.handle(
         update.message and update.message.text,
         update.callback_query and update.callback_query.data,

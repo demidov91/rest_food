@@ -1,13 +1,13 @@
 from copy import deepcopy
 from typing import Optional
 
-from rest_food.entities import Reply, Provider
+from rest_food.entities import Reply, Provider, User
 
 
 class State:
     intro = None    # type: Reply
 
-    def __init__(self, db_user, provider=Provider.TG):
+    def __init__(self, db_user: User, provider=Provider.TG):
         self.db_user = db_user
         self.provider = provider
 

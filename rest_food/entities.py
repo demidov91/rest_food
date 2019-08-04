@@ -8,6 +8,13 @@ from telegram.user import User as TgUser
 class SupplyState(Enum):
     READY_TO_POST = 'ready_to_post'
     POSTING = 'posting'
+    VIEW_INFO = 'view_info'
+    EDIT_NAME = 'edit_name'
+    EDIT_ADDRESS = 'edit_address'
+    EDIT_PHONE = 'edit_phone'
+    FORCE_NAME = 'force_name'
+    FORCE_ADDRESS = 'force_address'
+    FORCE_PHONE = 'force_phone'
 
 
 class DemandState(Enum):

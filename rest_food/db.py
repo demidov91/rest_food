@@ -64,11 +64,7 @@ def _create_user(user: User, provider: Provider, workflow: Workflow):
         'chat_id': user.chat_id,
         'provider': provider.value,
         'workflow': workflow.value,
-        'info': {
-            'address': 'Minsk, Charužaj, 22',
-            'time_to_visit': 'till 23:00',
-            'name': 'Demo restaurant',
-        },
+        'info': {},
     })
 
 
@@ -89,6 +85,17 @@ def set_state(*, user_id: str, provider: Provider, workflow: Workflow, state: st
         UpdateExpression='SET bot_state = :state',
         ExpressionAttributeValues={':state': state},
     )
+
+
+def set_info(user: User, info_field: str, data: str):
+    table = _get_state_table()
+    table.update_item(
+        Key={'user_id': user.user_id, 'cluster': _build_user_cluster(user.provider, user.workflow)},
+        UpdateExpression='SET info.#info_field = :data',
+        AttributeExpressionNames={'#info_field': info_field},
+        ExpressionAttributeValues={':data': data},
+    )
+    user.info[info_field] = data
 
 
 def create_supply_message(user: User, message: str, *, provider: Provider):
@@ -122,6 +129,15 @@ def extend_supply_message(user: User, message: str, *, provider:Provider):
         ExpressionAttributeNames={'#p': 'products'},
         ExpressionAttributeValues={':new_item': [message]},
         ReturnValues="UPDATED_NEW"
+    )
+
+
+def set_supply_message_time(user: User, time_message: str):
+    message_table = _get_message_table()
+    message_table.update_item(
+        Key={'id': user.editing_message_id, 'user_id': f'{user.provider.value}|{user.user_id}'},
+        UpdateExpression="SET time = :time",
+        ExpressionAttributeValues={':new_item': [time_message]},
     )
 
 

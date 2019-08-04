@@ -3,7 +3,7 @@ from rest_food.db import get_supply_editing_message, get_supply_message
 
 
 def _message_to_text(message):
-    return '\n'.join('* ' + line for line in message)
+    return '\n'.join(message)
 
 
 def build_active_food_message(user: User):
