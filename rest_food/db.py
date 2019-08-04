@@ -92,7 +92,7 @@ def set_info(user: User, info_field: str, data: str):
     table.update_item(
         Key={'user_id': user.user_id, 'cluster': _build_user_cluster(user.provider, user.workflow)},
         UpdateExpression='SET info.#info_field = :data',
-        AttributeExpressionNames={'#info_field': info_field},
+        ExpressionAttributeNames={'#info_field': info_field},
         ExpressionAttributeValues={':data': data},
     )
     user.info[info_field] = data
@@ -136,8 +136,8 @@ def set_supply_message_time(user: User, time_message: str):
     message_table = _get_message_table()
     message_table.update_item(
         Key={'id': user.editing_message_id, 'user_id': f'{user.provider.value}|{user.user_id}'},
-        UpdateExpression="SET time = :time",
-        ExpressionAttributeValues={':new_item': [time_message]},
+        UpdateExpression="SET take_time = :take_time",
+        ExpressionAttributeValues={':take_time': time_message},
     )
 
 

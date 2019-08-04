@@ -72,11 +72,16 @@ def build_tg_response(*, chat_id: int, reply: Reply):
     """
     Use it for direct/sync response.
     """
-    return {
+    response = {
+        'method': 'sendMessage',
         'chat_id': chat_id,
         'text': reply.text,
-        'reply_markup': _build_tg_keyboard(reply.buttons),
     }
+
+    if reply.buttons:
+        response['reply_markup'] = _build_tg_keyboard(reply.buttons)
+
+    return response
 
 
 def _build_tg_keyboard(keyboard):

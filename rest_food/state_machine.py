@@ -8,6 +8,7 @@ SUPPLY = {
     None: supply.DefaultState,
     SupplyState.READY_TO_POST: supply.ReadyToPostState,
     SupplyState.POSTING: supply.PostingState,
+    SupplyState.SET_TIME: supply.SetMessageTimeState,
     SupplyState.VIEW_INFO: supply.ViewInfoState,
     SupplyState.EDIT_NAME: supply.SetNameState,
     SupplyState.EDIT_ADDRESS: supply.SetAddressState,

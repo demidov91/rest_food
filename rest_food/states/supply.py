@@ -1,7 +1,7 @@
 from typing import Optional
 
 from rest_food.states.base import State
-from rest_food.entities import Reply, SupplyState
+from rest_food.entities import Reply, SupplyState, Provider
 from rest_food.db import (
     extend_supply_message,
     create_supply_message,
@@ -55,13 +55,13 @@ class ReadyToPostState(State):
 
 class PostingState(State):
     intro = Reply(
-        buttons=[
+        buttons=[[
             {
                 'text':'set time and send',
                 'data': 'set-time',
             },
-            ['cancel'],
-        ]
+            'cancel',
+        ]]
     )
 
     def get_intro(self):
@@ -72,7 +72,7 @@ class PostingState(State):
 
     def handle(self, text: str, data: str):
         if data == 'set-time':
-            return Reply(next_state=SupplyState.READY_TO_POST)
+            return Reply(next_state=SupplyState.SET_TIME)
 
         if data == 'cancel':
             cancel_supply_message(self.db_user, provider=self.provider)
@@ -112,24 +112,28 @@ class SetMessageTimeState(State):
 
 
 class ViewInfoState(State):
-    def __init__(self, db_user, provider):
-        super().__init__(db_user, provider)
+    def __init__(self, db_user, *, provider: Provider=Provider.TG):
+        super().__init__(db_user, provider=provider)
 
 
     def get_intro(self):
         return Reply(
+            text='You can edit your contact info here',
             buttons=[
                 [{
-                    'text': self.db_user.info['name'],
+                    'text': 'Name: %s' % self.db_user.info['name'],
                     'data': 'edit-name',
                 }],
                 [{
-                    'text': self.db_user.info['address'],
+                    'text': 'Address: %s' % self.db_user.info['address'],
                     'data': 'edit-address',
                 }],
                 [{
-                    'text': self.db_user.info['phone'],
+                    'text': 'Phone: %s' % self.db_user.info['phone'],
                     'data': 'edit-phone',
+                },{
+                    'text': 'Back',
+                    'data': 'back',
                 }],
             ]
         )
@@ -143,6 +147,9 @@ class ViewInfoState(State):
 
         if data == 'edit-phone':
             return Reply(next_state=SupplyState.EDIT_PHONE)
+
+        if data == 'back':
+            return Reply(next_state=SupplyState.READY_TO_POST)
 
 
 class BaseEditInfoState(State):
@@ -164,7 +171,7 @@ class BaseEditInfoState(State):
 
     def handle(self, text: str, data: Optional[str]):
         if data == 'cancel':
-            return Reply(next_state=SupplyState.READY_TO_POST)
+            return Reply(next_state=SupplyState.VIEW_INFO)
 
         set_info(self.db_user, self._info_to_edit, text)
 

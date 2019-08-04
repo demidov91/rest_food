@@ -1,3 +1,5 @@
+import logging
+
 from telegram import Update
 
 from rest_food.db import get_or_create_user
@@ -9,6 +11,9 @@ from rest_food.state_machine import (
 from rest_food.communication import send_messages, get_bot, build_tg_response
 from rest_food.states.demand import handle_demand_data, handle_demand_text
 from rest_food.states.supply import DefaultState
+
+
+logger = logging.getLogger(__name__)
 
 
 def tg_supply(data):
