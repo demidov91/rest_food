@@ -57,8 +57,7 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
     )
 
     message = f"{supply_user.info['name']} is notified that you'll take it.\n" \
-              f"Address: {supply_user.info['address']}\n" \
-              f"Time: {supply_user.info['time_to_visit']}"
+              f"Address: {supply_user.info['address']}\n"
 
     return Reply(text=message)
 
@@ -70,12 +69,16 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
         workflow=Workflow.SUPPLY
     )
 
-    info = f"Address: {supply_user.info['address']}\n" \
-              f"Time: {supply_user.info['time_to_visit']}"
+    if supply_user is None:
+        return Reply('Information was not found.')
+
+    info = f"Restaurant name: {supply_user.info['name']}\n" \
+           f"Address: {supply_user.info['address']}"
+
 
     db_message = get_supply_message_record(user=supply_user, message_id=message_id)
 
-    if db_message.get('demand_user_id') is not None:
+    if db_message.demand_user_id is not None:
         return Reply(text=f"SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{info}")
 
 

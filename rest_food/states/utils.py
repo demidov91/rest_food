@@ -1,9 +1,14 @@
-from rest_food.entities import User
-from rest_food.db import get_supply_editing_message, get_supply_message
+from rest_food.entities import User, Message
+from rest_food.db import get_supply_editing_message, get_supply_message_record
 
 
-def _message_to_text(message):
-    return '\n'.join(message)
+def _message_to_text(message: Message):
+    text_message = '\n'.join(message.products)
+
+    if message.take_time:
+        text_message += f'\nTime: {message.take_time}'
+
+    return text_message
 
 
 def build_active_food_message(user: User):
@@ -16,4 +21,4 @@ def build_active_food_message(user: User):
 
 
 def build_food_message_by_id(*, user, message_id):
-    return _message_to_text(get_supply_message(user=user, message_id=message_id))
+    return _message_to_text(get_supply_message_record(user=user, message_id=message_id))

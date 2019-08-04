@@ -46,6 +46,13 @@ class User:
 
 
 @dataclass
+class Message:
+    products: List[str]
+    take_time: Optional[str]
+    demand_user_id: Optional[Union[str, int]]
+
+
+@dataclass
 class Reply:
     text: Optional[str]=None
     buttons: Optional[List[List[Dict]]]=None

@@ -6,7 +6,7 @@ import boto3
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
 
-from rest_food.entities import Provider, Workflow, User
+from rest_food.entities import Provider, Workflow, User, Message
 
 
 logger = logging.getLogger(__name__)
@@ -154,24 +154,25 @@ def cancel_supply_message(user: User, *, provider:Provider):
     user.editing_message_id = None
 
 
-def get_supply_editing_message(user: User) -> List[str]:
+def get_supply_editing_message(user: User) -> Optional[Message]:
     if user.editing_message_id is None:
-        return []
+        return None
 
-    return get_supply_message(user=user, message_id=user.editing_message_id)
+    return get_supply_message_record(user=user, message_id=user.editing_message_id)
 
 
-def get_supply_message_record(*, user, message_id: str):
+def get_supply_message_record(*, user, message_id: str) -> Message:
     table = _get_message_table()
-    return table.get_item(
+    record = table.get_item(
         Key={'id': message_id, 'user_id': f'{user.provider.value}|{user.user_id}'},
         ConsistentRead=True,
     )['Item']
 
-
-def get_supply_message(*, user, message_id: str):
-    return get_supply_message_record(user=user, message_id=message_id)['products']
-
+    return Message(
+        demand_user_id=record.get('demand_user_id'),
+        products=record.get('products'),
+        take_time=record.get('take_time'),
+    )
 
 
 def mark_message_as_booked(demand_user: User, supply_user:User, message_id: str):
