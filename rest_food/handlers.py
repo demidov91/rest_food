@@ -7,9 +7,11 @@ from rest_food.entities import Workflow, Provider
 from rest_food.state_machine import (
     get_supply_state,
     set_supply_state,
+    get_demand_state,
+    set_demand_state,
 )
 from rest_food.communication import send_messages, get_bot, build_tg_response
-from rest_food.states.demand import handle_demand_data, handle_demand_text
+from rest_food.states.demand import handle_demand_data
 from rest_food.states.supply import DefaultState
 
 
@@ -50,23 +52,38 @@ def tg_demand(data):
     update = Update.de_json(data, None)
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
+    tg_user = update.effective_user
+    text = update.message.text
 
     user = get_or_create_user(
         user_id=user_id,
         chat_id=chat_id,
         provider=Provider.TG,
-        workflow=Workflow.DEMAND
+        workflow=Workflow.DEMAND,
+        info={
+            'name': tg_user.first_name,
+            'username': tg_user.username,
+        },
     )
+
+    state = None
 
     if update.callback_query is not None:
         reply = handle_demand_data(user=user, data=update.callback_query.data)
     else:
-        reply = handle_demand_text(user=user, text=update.message.text)
+        if text == '/start':
+            set_demand_state(user, None)
+
+        state = get_demand_state(user)
+        reply = state.handle(update.message.text, data=None)
 
     if reply is not None:
+        if reply.next_state is not None:
+            state = set_demand_state(user=user, state=reply.next_state)
+
         send_messages(
             tg_chat_id=chat_id,
-            replies=[reply],
+            replies=[reply, state and state.get_intro()],
             workflow=Workflow.DEMAND
         )
 

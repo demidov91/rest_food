@@ -1,7 +1,7 @@
 from typing import Optional
 
 from rest_food.states.base import State
-from rest_food.entities import Reply, SupplyState, Provider
+from rest_food.entities import Reply, SupplyState, Provider, UserInfoField
 from rest_food.db import (
     extend_supply_message,
     create_supply_message,
@@ -154,7 +154,7 @@ class ViewInfoState(State):
 
 class BaseEditInfoState(State):
     _message = None         # type: str
-    _info_to_edit = None    # type: str
+    _info_to_edit = None    # type: UserInfoField
 
     def get_intro(self):
         reply = Reply(text=self._message)
@@ -180,17 +180,17 @@ class BaseEditInfoState(State):
 
 class SetNameState(BaseEditInfoState):
     _message = 'Please, enter name of the restaurant.'
-    _info_to_edit = 'name'
+    _info_to_edit = UserInfoField.NAME
 
 
 class SetAddressState(BaseEditInfoState):
     _message = 'Please, provide restaurant address.'
-    _info_to_edit = 'address'
+    _info_to_edit = UserInfoField.ADDRESS
 
 
 class SetPhoneState(BaseEditInfoState):
     _message = 'Please, enter contact phone number.'
-    _info_to_edit = 'phone'
+    _info_to_edit = UserInfoField.PHONE
 
 
 class ForceSetNameState(ForceInfoMixin, SetNameState):

@@ -6,7 +6,7 @@ import boto3
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
 
-from rest_food.entities import Provider, Workflow, User, Message
+from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,7 @@ def _build_user(data: dict):
         chat_id=data.get('chat_id'),
         state=data.get('bot_state'),
         info=data.get('info'),
+        context=data.get('context'),
         editing_message_id=data.get('editing_message_id'),
         workflow=Workflow(data.get('workflow')),
         provider=Provider(data.get('provider')),
@@ -45,11 +46,20 @@ def get_user(user_id, provider: Provider, workflow: Workflow):
 
 
 
-def get_or_create_user(*, user_id, chat_id, provider: Provider, workflow: Workflow) -> User:
+def get_or_create_user(
+        *,
+        user_id,
+        chat_id,
+        provider: Provider,
+        workflow: Workflow,
+        info: dict=None,
+) -> User:
     user = get_user(user_id, provider, workflow)
 
     if user is None:
-        user = User(user_id=user_id, chat_id=chat_id)
+        info = info or {}
+        info[UserInfoField.DISPLAY_USERNAME.value] = True
+        user = User(user_id=user_id, chat_id=chat_id, info=info)
         _create_user(user, provider, workflow)
 
     return user
@@ -64,7 +74,8 @@ def _create_user(user: User, provider: Provider, workflow: Workflow):
         'chat_id': user.chat_id,
         'provider': provider.value,
         'workflow': workflow.value,
-        'info': {},
+        'info': user.info,
+        'context': {},
     })
 
 
@@ -87,15 +98,30 @@ def set_state(*, user_id: str, provider: Provider, workflow: Workflow, state: st
     )
 
 
-def set_info(user: User, info_field: str, data: str):
+def set_info(user: User, info_field: UserInfoField, data):
     table = _get_state_table()
     table.update_item(
         Key={'user_id': user.user_id, 'cluster': _build_user_cluster(user.provider, user.workflow)},
         UpdateExpression='SET info.#info_field = :data',
-        ExpressionAttributeNames={'#info_field': info_field},
+        ExpressionAttributeNames={'#info_field': info_field.value},
         ExpressionAttributeValues={':data': data},
     )
-    user.info[info_field] = data
+    user.info[info_field.value] = data
+
+
+def set_next_command(user: User, command: Command):
+    table = _get_state_table()
+    table.update_item(
+        Key={'user_id': user.user_id, 'cluster': _build_user_cluster(user.provider, user.workflow)},
+        UpdateExpression='SET context.next_command = :next_command, '
+                         'context.arguments = :arguments',
+        ExpressionAttributeValues={
+            ':next_command': command.command.value,
+            ':arguments': command.arguments,
+        },
+    )
+    user.context['next_command'] = command.command.value
+    user.context['arguments'] = command.arguments
 
 
 def create_supply_message(user: User, message: str, *, provider: Provider):

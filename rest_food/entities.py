@@ -19,7 +19,8 @@ class SupplyState(Enum):
 
 
 class DemandState(Enum):
-    pass
+    EDIT_NAME = 'edit_name'
+    EDIT_PHONE = 'edit_phone'
 
 
 class Provider(Enum):
@@ -30,6 +31,32 @@ class Provider(Enum):
 class Workflow(Enum):
     SUPPLY = 'supply'
     DEMAND = 'demand'
+
+
+class UserInfoField(Enum):
+    USERNAME = 'username'
+    NAME = 'name'
+    ADDRESS = 'address'
+    PHONE = 'phone'
+    DISPLAY_USERNAME = 'display_username'
+
+
+class DemandCommandName(Enum):
+    TAKE = 'take'
+    INFO = 'info'
+    DISABLE_USERNAME = 'disable-username'
+    ENABLE_USERNAME = 'enable-username'
+    EDIT_NAME = 'edit_name'
+    EDIT_PHONE = 'edit_phone'
+    FINISH_TAKE = 'finish_take'
+    CANCEL_TAKE = 'cancel_take'
+
+
+@dataclass
+class Command:
+    command: DemandCommandName
+    arguments: List[str]
+
 
 
 @dataclass
