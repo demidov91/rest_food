@@ -18,6 +18,7 @@ from rest_food.entities import (
     Workflow,
     UserInfoField,
     DemandCommandName,
+    DemandState,
     Command,
 )
 from rest_food.states.base import State
@@ -39,22 +40,16 @@ def handle_demand_data(user: User, data: str):
 
 
 def _get_next_command(user: User) -> Command:
+    logger.info('User context: %s', user.context)
+
     return Command(
         command=DemandCommandName(user.context['next_command']),
         arguments=user.context['arguments'],
     )
 
+
 def _handle(user: User, command: Command):
     return COMMAND_HANDLERS[command.command](user, *command.arguments)
-
-
-def handle_demand_text(user: User, text: str):
-    if text == '/start':
-        return
-
-
-
-    return Reply(text='Sorry, dialog and feedback are not implemented yet.')
 
 
 def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_id: str):
@@ -68,7 +63,7 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
 
     buttons = _get_review_buttons(user)
     buttons.append([{
-        'text': 'ok',
+        'text': 'Confirm and take products',
         'data': f'{DemandCommandName.FINISH_TAKE.value}|'
                 f'{provider_str}|{supply_user_db_id}|{message_id}',
     }, {
@@ -85,7 +80,7 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
 def _get_review_buttons(user: User):
     buttons = [{
         'text': f'Name: {user.info["name"]}',
-        'data': f'{DemandCommandName.EDIT_NAME}',
+        'data': f'{DemandCommandName.EDIT_NAME.value}',
     }]
 
     if user.info['username']:
@@ -107,7 +102,6 @@ def _get_review_buttons(user: User):
     })
 
     return [[x] for x in buttons]
-
 
 
 def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, message_id: str):
@@ -149,12 +143,10 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     info = f"Restaurant name: {supply_user.info['name']}\n" \
            f"Address: {supply_user.info['address']}"
 
-
     db_message = get_supply_message_record(user=supply_user, message_id=message_id)
 
     if db_message.demand_user_id is not None:
         return Reply(text=f"SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{info}")
-
 
     return Reply(
         text=info,
@@ -182,12 +174,28 @@ def _handle_disable_username(user: User):
     return _handle(user, command)
 
 
+def _handle_edit_name(user: User):
+    return Reply(next_state=DemandState.EDIT_NAME)
+
+
+def _handle_edit_phone(user: User):
+    return Reply(next_state=DemandState.EDIT_PHONE)
+
+
+def _handle_cancel_command(user: User):
+    logger.info('Remove the "Edit info" message instead.')
+    return Reply(text='Cancelled.')
+
+
 COMMAND_HANDLERS = {
     DemandCommandName.TAKE: _handle_take,
     DemandCommandName.INFO: _handle_info,
     DemandCommandName.ENABLE_USERNAME: _handle_enable_username,
     DemandCommandName.DISABLE_USERNAME: _handle_disable_username,
     DemandCommandName.FINISH_TAKE: _handle_finish_take,
+    DemandCommandName.EDIT_NAME: _handle_edit_name,
+    DemandCommandName.EDIT_PHONE: _handle_edit_phone,
+    DemandCommandName.CANCEL_TAKE: _handle_cancel_command,
 }
 
 
@@ -225,5 +233,7 @@ class SetPhoneState(BaseSetInfoState):
 
 
 class DefaultState(State):
-    pass
+    def handle(self, text: str, data: Optional[str]) -> Reply:
+        return Reply(text='Hello. Here you will see notifications about available food. ')
+
 

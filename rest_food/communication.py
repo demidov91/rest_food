@@ -56,21 +56,23 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
 
 def send_messages(*, tg_chat_id: int, replies:Iterable[Reply], workflow: Workflow):
     """
-    It's intended to be async.
+    It's intended to be async (vs `build_tg_response`).
     """
     bot = get_bot(workflow)
 
     for reply in filter(lambda x: x is not None and x.text is not None, replies):
+        markup = _build_tg_keyboard(reply.buttons)
+        logger.info(markup)
         bot.send_message(
             tg_chat_id,
             reply.text,
-            reply_markup=_build_tg_keyboard(reply.buttons)
+            reply_markup=markup
         )
 
 
 def build_tg_response(*, chat_id: int, reply: Reply):
     """
-    Use it for direct/sync response.
+    Use it for direct/sync response (vs `send_messages`).
     """
     response = {
         'method': 'sendMessage',

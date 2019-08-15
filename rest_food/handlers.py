@@ -53,7 +53,7 @@ def tg_demand(data):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
     tg_user = update.effective_user
-    text = update.message.text
+    text = update.message and update.message.text
 
     user = get_or_create_user(
         user_id=user_id,
@@ -66,8 +66,6 @@ def tg_demand(data):
         },
     )
 
-    state = None
-
     if update.callback_query is not None:
         reply = handle_demand_data(user=user, data=update.callback_query.data)
     else:
@@ -77,13 +75,16 @@ def tg_demand(data):
         state = get_demand_state(user)
         reply = state.handle(update.message.text, data=None)
 
+    replies = [reply]
+
     if reply is not None:
         if reply.next_state is not None:
-            state = set_demand_state(user=user, state=reply.next_state)
+            next_state = set_demand_state(user=user, state=reply.next_state)
+            replies.append(next_state.get_intro())
 
         send_messages(
             tg_chat_id=chat_id,
-            replies=[reply, state and state.get_intro()],
+            replies=replies,
             workflow=Workflow.DEMAND
         )
 

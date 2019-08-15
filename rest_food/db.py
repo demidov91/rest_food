@@ -235,7 +235,9 @@ def _get_db():
     return boto3.resource(
         'dynamodb',
         endpoint_url='http://localhost:8000',
-        region_name='eu-central-1'
+        region_name='eu-central-1',
+        aws_access_key_id='any',
+        aws_secret_access_key = 'thing',
     )
 
 

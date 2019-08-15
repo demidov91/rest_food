@@ -48,8 +48,8 @@ class DemandCommandName(Enum):
     ENABLE_USERNAME = 'enable-username'
     EDIT_NAME = 'edit_name'
     EDIT_PHONE = 'edit_phone'
-    FINISH_TAKE = 'finish_take'
-    CANCEL_TAKE = 'cancel_take'
+    FINISH_TAKE = 'f_take'
+    CANCEL_TAKE = 'c_take'
 
 
 @dataclass
@@ -66,6 +66,7 @@ class User:
     chat_id: Optional[Union[str, int]]=None
     state: Optional[str] = None
     info: Optional[Dict] = None
+    context: Optional[Dict] = None
     editing_message_id: Optional[str]=None
     tg_user: Optional[TgUser]=None
     provider: Optional[Provider]=None
