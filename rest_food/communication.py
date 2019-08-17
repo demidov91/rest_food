@@ -68,7 +68,6 @@ def send_messages(*, tg_chat_id: int, replies:Iterable[Reply], workflow: Workflo
 
     for reply in filter(lambda x: x is not None and x.text is not None, replies):
         markup = _build_tg_keyboard(reply.buttons)
-        logger.info(markup)
         bot.send_message(
             tg_chat_id,
             reply.text,
@@ -108,13 +107,13 @@ def _build_tg_keyboard(keyboard):
 
 
 def _build_tg_keyboard_cell(cell):
-    if isinstance(cell, str):
+    if isinstance(cell, dict):
         return {
-            'text': cell,
-            'callback_data': cell,
+            'text': cell['text'],
+            'callback_data': cell['data'],
         }
 
     return {
-        'text': cell['text'],
-        'callback_data': cell['data'],
+        'text': cell,
+        'callback_data': cell,
     }

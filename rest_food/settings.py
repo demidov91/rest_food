@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-BASE_DIR = os.path.basename(__file__)
+BASE_DIR = os.path.dirname(__file__)
 
 
 def env_var(var_name: str):

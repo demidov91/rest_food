@@ -13,9 +13,13 @@ from rest_food.state_machine import (
 from rest_food.communication import send_messages, get_bot, build_tg_response
 from rest_food.states.demand import handle_demand_data
 from rest_food.states.supply import DefaultState
+from rest_food.translation import hack_telegram_json_dumps
 
 
 logger = logging.getLogger(__name__)
+
+
+hack_telegram_json_dumps()
 
 
 def tg_supply(data):

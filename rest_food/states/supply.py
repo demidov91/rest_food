@@ -61,7 +61,10 @@ class PostingState(State):
                 'text': _('Set time and send'),
                 'data': 'set-time',
             },
-            _('Cancel'),
+            {
+                'text': _('Cancel'),
+                'data': 'cancel',
+            }
         ]]
     )
 
@@ -89,7 +92,10 @@ class SetMessageTimeState(State):
     intro = Reply(
         text='Specify the time',
         buttons=[
-            [_('Cancel')],
+            [{
+                'text': _('Cancel'),
+                'data': 'cancel',
+            }],
         ]
     )
 
@@ -161,7 +167,7 @@ class BaseEditInfoState(State):
         reply = Reply(text=self._message)
         if self._info_to_edit in self.db_user.info:
             reply.buttons = [[{
-                'text': _('cancel'),
+                'text': _('Cancel'),
                 'data': 'cancel',
             }]]
 

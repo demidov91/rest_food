@@ -1,4 +1,5 @@
 import gettext
+import logging
 import os
 from contextvars import ContextVar
 from functools import partial
@@ -15,6 +16,7 @@ from rest_food.settings import BASE_DIR
 _active_language = ContextVar('active_language', default='ru')
 _translations = {}
 LOCALE_DIR = os.path.join(BASE_DIR, 'locale')
+logger = logging.getLogger(__name__)
 
 
 def set_language(lang_code: str):
@@ -43,7 +45,7 @@ def translate(text:str) -> str:
     return get_translation(_active_language.get()).gettext(text)
 
 
-translate_lazy = make_lazy_gettext(lambda: gettext)
+translate_lazy = make_lazy_gettext(lambda: translate)
 
 
 class LazyAwareJsonEncoder(JSONEncoder):
@@ -55,4 +57,5 @@ class LazyAwareJsonEncoder(JSONEncoder):
 
 
 def hack_telegram_json_dumps():
-    tg_request.json.dumps = partial(tg_request.json.dumps, encoder=LazyAwareJsonEncoder)
+    tg_request.json.dumps = partial(tg_request.json.dumps, cls=LazyAwareJsonEncoder)
+    logger.info("Telegram json.dumps is monkeypatched.")
