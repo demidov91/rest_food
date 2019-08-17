@@ -190,7 +190,7 @@ def _handle_edit_phone(user: User):
 
 def _handle_cancel_command(user: User):
     logger.info('Remove the "Edit info" message instead.')
-    return Reply(text='Cancelled.')
+    return Reply(text=_('Cancelled.'))
 
 
 COMMAND_HANDLERS = {

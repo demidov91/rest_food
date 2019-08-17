@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-17 14:36+0300\n"
+"POT-Creation-Date: 2019-08-17 14:43+0300\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -96,6 +96,10 @@ msgstr ""
 "Кто-то уже забрал (возможно, Вы)\n"
 "\n"
 "{}"
+
+#: rest_food/states/demand.py:193
+msgid "Cancelled."
+msgstr "Отменено."
 
 #: rest_food/states/utils.py:10
 msgid ""
