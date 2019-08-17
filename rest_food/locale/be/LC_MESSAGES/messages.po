@@ -1,3 +1,10 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-17 13:46+0300\n"
+"Language: be.UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
 #: rest_food/states/supply.py:33
 msgid "Please, provide information about yourself before getting started"
 msgstr "Калі ласка, увядзіце кантактную інфармацыю перад тым як пачаць"
@@ -14,60 +21,61 @@ msgstr "Пералічыце прадукты, якія можаце перад�
 msgid "Set time and send"
 msgstr "Увесці час і даслаць"
 
-#: rest_food/states/supply.py:64 rest_food/states/supply.py:92
+#: rest_food/states/supply.py:65 rest_food/states/supply.py:96
+#: rest_food/states/supply.py:170
 msgid "Cancel"
 msgstr "Адмена"
 
-#: rest_food/states/supply.py:70
+#: rest_food/states/supply.py:73
 msgid ""
 "Food you can share:\n"
 "{}"
-msgstr "Прадукты якія можаце перадаць:\n{}"
+msgstr ""
+"Прадукты якія можаце перадаць:\n"
+"{}"
 
-#: rest_food/states/supply.py:80 rest_food/states/supply.py:100
+#: rest_food/states/supply.py:83 rest_food/states/supply.py:106
 msgid "Product list is cleared."
 msgstr "Адменена"
 
-#: rest_food/states/supply.py:109
+#: rest_food/states/supply.py:115
 msgid ""
 "Information is sent. I'll notify you when there is someone to take this food."
-msgstr "Інфармаця выслана. Я павеамлю, калі хтосьці пажадае забраць пералічаныя прадукты."
+msgstr ""
+"Інфармаця выслана. Я павеамлю, калі хтосьці пажадае забраць пералічаныя "
+"прадукты."
 
-#: rest_food/states/supply.py:122
+#: rest_food/states/supply.py:128
 msgid "You can edit your contact info here"
 msgstr "Кантактная інфармацыя"
 
-#: rest_food/states/supply.py:125
+#: rest_food/states/supply.py:131
 #, python-format
 msgid "Name: %s"
 msgstr "Імя: %s"
 
-#: rest_food/states/supply.py:129
+#: rest_food/states/supply.py:135
 #, python-format
 msgid "Address: %s"
 msgstr "Адрас: %s"
 
-#: rest_food/states/supply.py:133
+#: rest_food/states/supply.py:139
 #, python-format
 msgid "Phone: %s"
 msgstr "Тэлефон: %s"
 
-#: rest_food/states/supply.py:136
+#: rest_food/states/supply.py:142
 msgid "Back"
 msgstr "Назад"
 
-#: rest_food/states/supply.py:164
-msgid "cancel"
-msgstr "адмена"
-
-#: rest_food/states/supply.py:183
+#: rest_food/states/supply.py:189
 msgid "Please, enter name of the restaurant."
 msgstr "Калі ласка, увядзіце назву рэстарана."
 
-#: rest_food/states/supply.py:188
+#: rest_food/states/supply.py:194
 msgid "Please, provide restaurant address."
 msgstr "Калі ласка, увядзіце адрас рэстарана."
 
-#: rest_food/states/supply.py:193
+#: rest_food/states/supply.py:199
 msgid "Please, enter contact phone number."
 msgstr "Калі ласка, увядзіце кантактны тэлефон."
