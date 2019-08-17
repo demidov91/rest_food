@@ -1,6 +1,4 @@
 import logging
-from dataclasses import dataclass
-from enum import Enum
 from typing import List, Optional
 
 from rest_food.communication import notify_supply_for_booked

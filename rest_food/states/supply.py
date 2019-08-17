@@ -10,6 +10,7 @@ from rest_food.db import (
     set_info,
 )
 from rest_food.communication import publish_supply_event
+from rest_food.translation import translate_lazy as _
 from .utils import build_active_food_message
 
 
@@ -29,7 +30,7 @@ class ForceInfoMixin:
 class DefaultState(ForceInfoMixin, State):
     def handle(self, text: str, data: str):
         return Reply(
-            text='Please, provide information about yourself before getting started',
+            text=_('Please, provide information about yourself before getting started'),
             next_state=self.get_next_state()
         )
 
@@ -38,11 +39,11 @@ class ReadyToPostState(State):
     intro = Reply(
         buttons=[
             [{
-                'text': 'Edit restaurant info',
+                'text': _('Edit restaurant info'),
                 'data': 'view-info',
             }],
         ],
-        text='Enter food you can share and click "send"',
+        text=_('Enter food you can share and click "send"'),
     )
 
     def handle(self, text: str, data: str):
@@ -57,18 +58,17 @@ class PostingState(State):
     intro = Reply(
         buttons=[[
             {
-                'text':'set time and send',
+                'text': _('Set time and send'),
                 'data': 'set-time',
             },
-            'cancel',
+            _('Cancel'),
         ]]
     )
 
     def get_intro(self):
         reply = super().get_intro()
-        reply.text = 'Food you can share:\n{}'.format(build_active_food_message(self.db_user))
+        reply.text = _('Food you can share:\n{}').format(build_active_food_message(self.db_user))
         return reply
-
 
     def handle(self, text: str, data: str):
         if data == 'set-time':
@@ -77,7 +77,7 @@ class PostingState(State):
         if data == 'cancel':
             cancel_supply_message(self.db_user, provider=self.provider)
             return Reply(
-                text='Product list is cleared.',
+                text=_('Product list is cleared.'),
                 next_state=SupplyState.READY_TO_POST,
             )
 
@@ -89,7 +89,7 @@ class SetMessageTimeState(State):
     intro = Reply(
         text='Specify the time',
         buttons=[
-            ['cancel'],
+            [_('Cancel')],
         ]
     )
 
@@ -97,7 +97,7 @@ class SetMessageTimeState(State):
         if data == 'cancel':
             cancel_supply_message(self.db_user, provider=self.provider)
             return Reply(
-                text='Product list is cleared.',
+                text=_('Product list is cleared.'),
                 next_state=SupplyState.READY_TO_POST,
             )
 
@@ -105,8 +105,10 @@ class SetMessageTimeState(State):
             set_supply_message_time(self.db_user, text)
             publish_supply_event(self.db_user)
             return Reply(
-                text="Information is sent. "
-                     "I'll notify you when there is someone to take this food.",
+                text=_(
+                    "Information is sent. "
+                    "I'll notify you when there is someone to take this food."
+                ),
                 next_state=SupplyState.READY_TO_POST,
             )
 
@@ -115,24 +117,23 @@ class ViewInfoState(State):
     def __init__(self, db_user, *, provider: Provider=Provider.TG):
         super().__init__(db_user, provider=provider)
 
-
     def get_intro(self):
         return Reply(
-            text='You can edit your contact info here',
+            text=_('You can edit your contact info here'),
             buttons=[
                 [{
-                    'text': 'Name: %s' % self.db_user.info['name'],
+                    'text': _('Name: %s') % self.db_user.info['name'],
                     'data': 'edit-name',
                 }],
                 [{
-                    'text': 'Address: %s' % self.db_user.info['address'],
+                    'text': _('Address: %s') % self.db_user.info['address'],
                     'data': 'edit-address',
                 }],
                 [{
-                    'text': 'Phone: %s' % self.db_user.info['phone'],
+                    'text': _('Phone: %s') % self.db_user.info['phone'],
                     'data': 'edit-phone',
                 },{
-                    'text': 'Back',
+                    'text': _('Back'),
                     'data': 'back',
                 }],
             ]
@@ -160,7 +161,7 @@ class BaseEditInfoState(State):
         reply = Reply(text=self._message)
         if self._info_to_edit in self.db_user.info:
             reply.buttons = [[{
-                'text': 'cancel',
+                'text': _('cancel'),
                 'data': 'cancel',
             }]]
 
@@ -179,17 +180,17 @@ class BaseEditInfoState(State):
 
 
 class SetNameState(BaseEditInfoState):
-    _message = 'Please, enter name of the restaurant.'
+    _message = _('Please, enter name of the restaurant.')
     _info_to_edit = UserInfoField.NAME
 
 
 class SetAddressState(BaseEditInfoState):
-    _message = 'Please, provide restaurant address.'
+    _message = _('Please, provide restaurant address.')
     _info_to_edit = UserInfoField.ADDRESS
 
 
 class SetPhoneState(BaseEditInfoState):
-    _message = 'Please, enter contact phone number.'
+    _message = _('Please, enter contact phone number.')
     _info_to_edit = UserInfoField.PHONE
 
 

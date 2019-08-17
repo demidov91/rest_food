@@ -1,0 +1,73 @@
+#: rest_food/states/supply.py:33
+msgid "Please, provide information about yourself before getting started"
+msgstr "Пожалуйста, введите коонтакную информацию прежде чем продолжить"
+
+#: rest_food/states/supply.py:42
+msgid "Edit restaurant info"
+msgstr "Редактировать информаию о ресторне"
+
+#: rest_food/states/supply.py:46
+msgid "Enter food you can share and click \"send\""
+msgstr "Введите продукты, которые можете передать и нажмите \"отправить\""
+
+#: rest_food/states/supply.py:61
+msgid "Set time and send"
+msgstr "Ввести время и выслать"
+
+#: rest_food/states/supply.py:64 rest_food/states/supply.py:92
+msgid "Cancel"
+msgstr "Отмена"
+
+#: rest_food/states/supply.py:70
+msgid ""
+"Food you can share:\n"
+"{}"
+msgstr "Продукты для передачи:\n{}"
+
+#: rest_food/states/supply.py:80 rest_food/states/supply.py:100
+msgid "Product list is cleared."
+msgstr "Отменено"
+
+#: rest_food/states/supply.py:109
+msgid ""
+"Information is sent. I'll notify you when there is someone to take this food."
+msgstr "Информация выслана. Вы получите уведомление, когда кто-то захочет забрать эти продукты."
+
+#: rest_food/states/supply.py:122
+msgid "You can edit your contact info here"
+msgstr "Редактировать контакную информацию"
+
+#: rest_food/states/supply.py:125
+#, python-format
+msgid "Name: %s"
+msgstr "Имя: %s"
+
+#: rest_food/states/supply.py:129
+#, python-format
+msgid "Address: %s"
+msgstr "Адрес: %s"
+
+#: rest_food/states/supply.py:133
+#, python-format
+msgid "Phone: %s"
+msgstr "Телефон: %s"
+
+#: rest_food/states/supply.py:136
+msgid "Back"
+msgstr "Назад"
+
+#: rest_food/states/supply.py:164
+msgid "cancel"
+msgstr "отмена"
+
+#: rest_food/states/supply.py:183
+msgid "Please, enter name of the restaurant."
+msgstr "Пожалуйста, введите название ресторана."
+
+#: rest_food/states/supply.py:188
+msgid "Please, provide restaurant address."
+msgstr "Пожалуста, введите адрес ресторана."
+
+#: rest_food/states/supply.py:193
+msgid "Please, enter contact phone number."
+msgstr "Пожалуйста, введите контактный номер."

@@ -1,0 +1,73 @@
+#: rest_food/states/supply.py:33
+msgid "Please, provide information about yourself before getting started"
+msgstr "Калі ласка, увядзіце кантактную інфармацыю перад тым як пачаць"
+
+#: rest_food/states/supply.py:42
+msgid "Edit restaurant info"
+msgstr "Рдагаваць інфармацыю а рэстаране"
+
+#: rest_food/states/supply.py:46
+msgid "Enter food you can share and click \"send\""
+msgstr "Пералічыце прадукты, якія можаце перадаць і націсніце \"Даслаць\""
+
+#: rest_food/states/supply.py:61
+msgid "Set time and send"
+msgstr "Увесці час і даслаць"
+
+#: rest_food/states/supply.py:64 rest_food/states/supply.py:92
+msgid "Cancel"
+msgstr "Адмена"
+
+#: rest_food/states/supply.py:70
+msgid ""
+"Food you can share:\n"
+"{}"
+msgstr "Прадукты якія можаце перадаць:\n{}"
+
+#: rest_food/states/supply.py:80 rest_food/states/supply.py:100
+msgid "Product list is cleared."
+msgstr "Адменена"
+
+#: rest_food/states/supply.py:109
+msgid ""
+"Information is sent. I'll notify you when there is someone to take this food."
+msgstr "Інфармаця выслана. Я павеамлю, калі хтосьці пажадае забраць пералічаныя прадукты."
+
+#: rest_food/states/supply.py:122
+msgid "You can edit your contact info here"
+msgstr "Кантактная інфармацыя"
+
+#: rest_food/states/supply.py:125
+#, python-format
+msgid "Name: %s"
+msgstr "Імя: %s"
+
+#: rest_food/states/supply.py:129
+#, python-format
+msgid "Address: %s"
+msgstr "Адрас: %s"
+
+#: rest_food/states/supply.py:133
+#, python-format
+msgid "Phone: %s"
+msgstr "Тэлефон: %s"
+
+#: rest_food/states/supply.py:136
+msgid "Back"
+msgstr "Назад"
+
+#: rest_food/states/supply.py:164
+msgid "cancel"
+msgstr "адмена"
+
+#: rest_food/states/supply.py:183
+msgid "Please, enter name of the restaurant."
+msgstr "Калі ласка, увядзіце назву рэстарана."
+
+#: rest_food/states/supply.py:188
+msgid "Please, provide restaurant address."
+msgstr "Калі ласка, увядзіце адрас рэстарана."
+
+#: rest_food/states/supply.py:193
+msgid "Please, enter contact phone number."
+msgstr "Калі ласка, увядзіце кантактны тэлефон."
