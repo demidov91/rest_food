@@ -1,9 +1,39 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-17 14:11+0300\n"
+"POT-Creation-Date: 2019-08-17 14:36+0300\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+
+#: rest_food/communication.py:32
+msgid ""
+"{} can share the following:\n"
+"{}"
+msgstr ""
+"{} может забрать следующее:\n"
+"{}"
+
+#: rest_food/communication.py:34 rest_food/states/demand.py:161
+msgid "Take it"
+msgstr "Забрать"
+
+#: rest_food/communication.py:37
+msgid "Info"
+msgstr "Информация"
+
+#: rest_food/communication.py:54
+msgid ""
+"{}\n"
+"\n"
+"Your message was:\n"
+"\n"
+"{}"
+msgstr ""
+"{}\n"
+"\n"
+"выше сообщение было:\n"
+"\n"
+"{}"
 
 #: rest_food/states/demand.py:65
 msgid "Confirm and take products"
@@ -67,9 +97,29 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/states/demand.py:161
-msgid "Take it"
-msgstr "Забрать"
+#: rest_food/states/utils.py:10
+msgid ""
+"\n"
+"Time: {}"
+msgstr ""
+"\n"
+"Время: {}"
+
+#: rest_food/states/utils.py:29
+msgid "{} will take the food.\n"
+msgstr "{} заберёт продукты.\n"
+
+#: rest_food/states/utils.py:33
+msgid "Phone: {}\n"
+msgstr "Телефон: {}\n"
+
+#: rest_food/states/utils.py:40
+msgid "Telegram: @{}\n"
+msgstr "Телеграм: @{}\n"
+
+#: rest_food/states/utils.py:44
+msgid "No contact info was provided.\n"
+msgstr "Контактная информация не была предоставлена :(\n"
 
 #: rest_food/states/supply.py:33
 msgid "Please, provide information about yourself before getting started"
@@ -139,27 +189,3 @@ msgstr "Пожалуста, введите адрес ресторана."
 #: rest_food/states/supply.py:199
 msgid "Please, enter contact phone number."
 msgstr "Пожалуйста, введите контактный номер."
-
-#: rest_food/states/utils.py:10
-msgid ""
-"\n"
-"Time: {}"
-msgstr ""
-"\n"
-"Время: {}"
-
-#: rest_food/states/utils.py:29
-msgid "{} will take the food.\n"
-msgstr "{} заберёт продукты.\n"
-
-#: rest_food/states/utils.py:33
-msgid "Phone: {}\n"
-msgstr "Телефон: {}\n"
-
-#: rest_food/states/utils.py:40
-msgid "Telegram: @{}\n"
-msgstr "Телеграм: @{}\n"
-
-#: rest_food/states/utils.py:44
-msgid "No contact info was provided.\n"
-msgstr "Контактная информация не была предоставлена :(\n"

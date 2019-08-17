@@ -146,7 +146,7 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
         "Restaurant name: {name}\n"
         "Address: {address}").format(
         name=supply_user.info['name'],
-        assress=supply_user.info['address'],
+        address=supply_user.info['address'],
     )
 
     db_message = get_supply_message_record(user=supply_user, message_id=message_id)

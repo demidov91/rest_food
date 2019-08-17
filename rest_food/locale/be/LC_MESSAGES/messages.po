@@ -1,9 +1,39 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-17 14:11+0300\n"
+"POT-Creation-Date: 2019-08-17 14:36+0300\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+
+#: rest_food/communication.py:32
+msgid ""
+"{} can share the following:\n"
+"{}"
+msgstr ""
+"{} можа забраць наступнае:\n"
+"{}"
+
+#: rest_food/communication.py:34 rest_food/states/demand.py:161
+msgid "Take it"
+msgstr "Забраць"
+
+#: rest_food/communication.py:37
+msgid "Info"
+msgstr "Інфармацыя"
+
+#: rest_food/communication.py:54
+msgid ""
+"{}\n"
+"\n"
+"Your message was:\n"
+"\n"
+"{}"
+msgstr ""
+"{}\n"
+"\n"
+"Ваша паведамленне было:\n"
+"\n"
+"{}"
 
 #: rest_food/states/demand.py:65
 msgid "Confirm and take products"
@@ -67,9 +97,29 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/states/demand.py:161
-msgid "Take it"
-msgstr "Забраць"
+#: rest_food/states/utils.py:10
+msgid ""
+"\n"
+"Time: {}"
+msgstr ""
+"\n"
+"Час: {}"
+
+#: rest_food/states/utils.py:29
+msgid "{} will take the food.\n"
+msgstr "{} забярэ прадукты.\n"
+
+#: rest_food/states/utils.py:33
+msgid "Phone: {}\n"
+msgstr "Тэлефон: {}\n"
+
+#: rest_food/states/utils.py:40
+msgid "Telegram: @{}\n"
+msgstr "Тэлеграм: @{}\n"
+
+#: rest_food/states/utils.py:44
+msgid "No contact info was provided.\n"
+msgstr "Няма кантактнай інфармацыі :(\n"
 
 #: rest_food/states/supply.py:33
 msgid "Please, provide information about yourself before getting started"
@@ -139,27 +189,3 @@ msgstr "Калі ласка, увядзіце адрас рэстарана."
 #: rest_food/states/supply.py:199
 msgid "Please, enter contact phone number."
 msgstr "Калі ласка, увядзіце кантактны тэлефон."
-
-#: rest_food/states/utils.py:10
-msgid ""
-"\n"
-"Time: {}"
-msgstr ""
-"\n"
-"Час: {}"
-
-#: rest_food/states/utils.py:29
-msgid "{} will take the food.\n"
-msgstr "{} забярэ прадукты.\n"
-
-#: rest_food/states/utils.py:33
-msgid "Phone: {}\n"
-msgstr "Тэлефон: {}\n"
-
-#: rest_food/states/utils.py:40
-msgid "Telegram: @{}\n"
-msgstr "Тэлеграм: @{}\n"
-
-#: rest_food/states/utils.py:44
-msgid "No contact info was provided.\n"
-msgstr "Няма кантактнай інфармацыі :(\n"
