@@ -90,7 +90,7 @@ class PostingState(State):
 
 class SetMessageTimeState(State):
     intro = Reply(
-        text='Specify the time',
+        text=_('Specify the time'),
         buttons=[
             [{
                 'text': _('Cancel'),

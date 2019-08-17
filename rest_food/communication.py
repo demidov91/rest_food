@@ -11,6 +11,7 @@ from rest_food.states.utils import (
     build_food_message_by_id,
     build_demand_description,
 )
+from rest_food.translation import translate_lazy as _
 
 
 logger = logging.getLogger(__name__)
@@ -28,18 +29,17 @@ def get_bot(workflow: Workflow):
 def publish_supply_event(user: User):
     text_message = build_active_food_message(user)
     message = Reply(
-        text=f'{user.info["name"]} can share the following:\n{text_message}',
+        text=_('{} can share the following:\n{}').format(user.info["name"], text_message),
         buttons=[[{
-            'text': 'Take it',
+            'text': _('Take it'),
             'data': f'take|{user.provider.value}|{user.user_id}|{user.editing_message_id}',
         }, {
-            'text': 'Info',
+            'text': _('Info'),
             'data': f'info|{user.provider.value}|{user.user_id}|{user.editing_message_id}',
         }]],
     )
 
     for demand_user in get_demand_users():
-        logger.info('CHAT ID: %s', demand_user.chat_id)
         send_messages(
             tg_chat_id=int(demand_user.chat_id),
             replies=[message],
@@ -51,7 +51,10 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
     demand_description = build_demand_description(demand_user)
     food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
 
-    message_to_send = f"{demand_description}\n\nYour message was:\n\n{food_description}"
+    message_to_send = _("{}\n\nYour message was:\n\n{}").format(
+        demand_description,
+        food_description
+    )
 
     send_messages(
         tg_chat_id=int(supply_user.chat_id),

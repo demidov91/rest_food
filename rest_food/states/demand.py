@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from rest_food.communication import notify_supply_for_booked
 from rest_food.db import (
@@ -20,6 +20,7 @@ from rest_food.entities import (
     Command,
 )
 from rest_food.states.base import State
+from rest_food.translation import translate_lazy as _
 
 
 logger = logging.getLogger(__name__)
@@ -61,40 +62,40 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
 
     buttons = _get_review_buttons(user)
     buttons.append([{
-        'text': 'Confirm and take products',
+        'text': _('Confirm and take products'),
         'data': f'{DemandCommandName.FINISH_TAKE.value}|'
                 f'{provider_str}|{supply_user_db_id}|{message_id}',
     }, {
-        'text': 'cancel',
+        'text': _('Cancel'),
         'data': f'{DemandCommandName.CANCEL_TAKE.value}',
     }])
 
     return Reply(
-        text='Please, confirm/edit your contact information to proceed.',
+        text=_('Please, confirm/edit your contact information to proceed.'),
         buttons=buttons,
     )
 
 
 def _get_review_buttons(user: User):
     buttons = [{
-        'text': f'Name: {user.info["name"]}',
+        'text': _('Name: {}').format(user.info["name"]),
         'data': f'{DemandCommandName.EDIT_NAME.value}',
     }]
 
     if user.info['username']:
         if user.info['display_username']:
             buttons.append({
-                'text': f'Connect via {user.provider.value}: ✅',
+                'text': _('Connect via {}: ✅').format(user.provider.value),
                 'data': f'{DemandCommandName.DISABLE_USERNAME.value}',
             })
         else:
             buttons.append({
-                'text': f'Connect via {user.provider.value}: ❌',
+                'text': ('Connect via {}: ❌').format(user.provider.value),
                 'data': DemandCommandName.ENABLE_USERNAME.value,
             })
 
     buttons.append({
-        'text': 'Phone: %s' % (user.info.get(UserInfoField.PHONE.value) or 'not set'),
+        'text': _('Phone: %s') % (user.info.get(UserInfoField.PHONE.value) or 'not set'),
         'data': f'{DemandCommandName.EDIT_PHONE.value}',
 
     })
@@ -114,7 +115,7 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
     )
 
     if not is_successfully_booked:
-        return Reply(text='Someone has already taken it.')
+        return Reply(text=_('Someone has already taken it.'))
 
     notify_supply_for_booked(
         supply_user=supply_user,
@@ -122,8 +123,11 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
         demand_user=user
     )
 
-    message = f"{supply_user.info['name']} is notified that you'll take it.\n" \
-              f"Address: {supply_user.info['address']}\n"
+    message = _("{name} is notified that you'll take it.\n"
+                "Address: {address}\n").format(
+        name=supply_user.info['name'],
+        address=supply_user.info['address'],
+    )
 
     return Reply(text=message)
 
@@ -136,21 +140,25 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     )
 
     if supply_user is None:
-        return Reply('Information was not found.')
+        return Reply(_('Information was not found.'))
 
-    info = f"Restaurant name: {supply_user.info['name']}\n" \
-           f"Address: {supply_user.info['address']}"
+    info = _(
+        "Restaurant name: {name}\n"
+        "Address: {address}").format(
+        name=supply_user.info['name'],
+        assress=supply_user.info['address'],
+    )
 
     db_message = get_supply_message_record(user=supply_user, message_id=message_id)
 
     if db_message.demand_user_id is not None:
-        return Reply(text=f"SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{info}")
+        return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{}").format(info))
 
     return Reply(
         text=info,
         buttons=[[
             {
-                'text': 'Take it',
+                'text': _('Take it'),
                 'data': f'{DemandCommandName.TAKE.value}|'
                         f'{supply_user.provider.value}|'
                         f'{supply_user.user_id}|'
