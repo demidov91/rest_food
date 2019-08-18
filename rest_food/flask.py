@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from rest_food.handlers import tg_supply, tg_demand
-
+from rest_food.translation import LazyAwareJsonEncoder
 
 app = Flask(__name__)
 
@@ -19,4 +19,5 @@ def flask_tg_demand():
 
 
 if __name__ == '__main__':
+    app.json_encoder = LazyAwareJsonEncoder
     app.run()
