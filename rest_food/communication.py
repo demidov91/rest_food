@@ -74,7 +74,7 @@ def send_messages(*, tg_chat_id: int, replies:Iterable[Reply], workflow: Workflo
         if reply.coordinates:
             bot.send_location(
                 tg_chat_id,
-                *reply.coordinates,
+                *(float(x) for x in reply.coordinates),
                 reply_markup=None if reply.text else markup,
             )
 

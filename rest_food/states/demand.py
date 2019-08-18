@@ -22,7 +22,7 @@ from rest_food.entities import (
 from rest_food.exceptions import ValidationError
 from rest_food.states.base import State
 from rest_food.translation import translate_lazy as _
-from rest_food.states.utils import validate_phone_number
+from rest_food.states.utils import validate_phone_number, build_food_message_by_id
 
 
 logger = logging.getLogger(__name__)
@@ -144,12 +144,16 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     if supply_user is None:
         return Reply(_('Information was not found.'))
 
+    logger.info("message_id=%s", message_id)
+
     info = _(
         "Restaurant name: {name}\n"
-        "Address: {address}"
+        "Address: {address}\n\n"
+        "{products}"
     ).format(
         name=supply_user.info['name'],
         address=supply_user.info['address'],
+        products=build_food_message_by_id(user=supply_user, message_id=message_id),
     )
 
     db_message = get_supply_message_record(user=supply_user, message_id=message_id)
@@ -173,7 +177,7 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
         ], [
             {
                 'text': _('Map'),
-                'url': f'geo://{coordinates[0]},{coordinates[1]}',
+                'url': f'https://dzmitry.by/redirect?to=geo:{coordinates[0]},{coordinates[1]}?z=21',
             },
         ]]
     )
