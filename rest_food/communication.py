@@ -2,6 +2,7 @@ import logging
 from typing import Iterable
 
 from telegram import Bot
+from telegram.error import BadRequest
 
 from rest_food.db import get_demand_users
 from rest_food.entities import Reply, User, Workflow
@@ -63,27 +64,50 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
     )
 
 
-def send_messages(*, tg_chat_id: int, replies:Iterable[Reply], workflow: Workflow):
+def send_messages(
+        *,
+        tg_chat_id: int,
+        original_message_id: int=None,
+        replies:Iterable[Reply],
+        workflow: Workflow
+):
     """
     It's intended to be async (vs `build_tg_response`).
     """
     bot = get_bot(workflow)
+    is_the_first_message = True
 
     for reply in filter(lambda x: x is not None and (x.text or x.coordinates) is not None, replies):
         markup = _build_tg_keyboard(reply.buttons)
+
         if reply.coordinates:
             bot.send_location(
                 tg_chat_id,
                 *(float(x) for x in reply.coordinates),
                 reply_markup=None if reply.text else markup,
             )
+            is_the_first_message = False
 
         if reply.text:
-            bot.send_message(
-                tg_chat_id,
-                reply.text,
-                reply_markup=markup
-            )
+            if is_the_first_message and original_message_id is not None:
+                method = bot.edit_message_text
+            else:
+                method = bot.send_message
+
+            try:
+                method(
+                    chat_id=tg_chat_id,
+                    text=reply.text,
+                    reply_markup=markup,
+                    message_id=original_message_id,
+                )
+            except BadRequest as e:
+                if 'the same' in e.message:
+                    pass
+                else:
+                    raise e
+
+        is_the_first_message = False
 
 
 def build_tg_response(*, chat_id: int, reply: Reply):
