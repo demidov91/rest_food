@@ -2,6 +2,7 @@ from typing import Optional
 
 from rest_food.states.base import State
 from rest_food.entities import Reply, SupplyState, Provider, UserInfoField
+from rest_food.exceptions import ValidationError
 from rest_food.db import (
     extend_supply_message,
     create_supply_message,
@@ -10,8 +11,8 @@ from rest_food.db import (
     set_info,
 )
 from rest_food.communication import publish_supply_event
+from rest_food.states.utils import build_active_food_message, validate_phone_number
 from rest_food.translation import translate_lazy as _
-from .utils import build_active_food_message
 
 
 class ForceInfoMixin:
@@ -176,13 +177,15 @@ class BaseEditInfoState(State):
     def get_next_state(self):
         return SupplyState.VIEW_INFO
 
+    def handle_text(self, text):
+        set_info(self.db_user, self._info_to_edit, text)
+        return Reply(next_state=self.get_next_state())
+
     def handle(self, text: str, data: Optional[str]):
         if data == 'cancel':
             return Reply(next_state=SupplyState.VIEW_INFO)
 
-        set_info(self.db_user, self._info_to_edit, text)
-
-        return Reply(next_state=self.get_next_state())
+        return self.handle_text(text)
 
 
 class SetNameState(BaseEditInfoState):
@@ -198,6 +201,14 @@ class SetAddressState(BaseEditInfoState):
 class SetPhoneState(BaseEditInfoState):
     _message = _('Please, enter contact phone number.')
     _info_to_edit = UserInfoField.PHONE
+
+    def handle_text(self, text):
+        try:
+            validate_phone_number(text)
+        except ValidationError as e:
+            return Reply(text=e.message)
+
+        return super().handle_text(text)
 
 
 class ForceSetNameState(ForceInfoMixin, SetNameState):

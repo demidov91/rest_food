@@ -19,8 +19,10 @@ from rest_food.entities import (
     DemandState,
     Command,
 )
+from rest_food.exceptions import ValidationError
 from rest_food.states.base import State
 from rest_food.translation import translate_lazy as _
+from rest_food.states.utils import validate_phone_number
 
 
 logger = logging.getLogger(__name__)
@@ -209,13 +211,13 @@ class BaseSetInfoState(State):
     _intro_text = None  # type: str
     _info_field = None  # type: UserInfoField
 
-    def get_intro(self):
+    def _build_cancellable_message(self, text):
         next_command = _get_next_command(self.db_user)
 
         return Reply(
-            text=self._intro_text,
+            text=text,
             buttons=[[{
-                'text': 'Cancel',
+                'text': _('Cancel'),
                 'data': '{}|{}'.format(
                     next_command.command.value,
                     '|'.join(next_command.arguments)
@@ -223,23 +225,34 @@ class BaseSetInfoState(State):
             }]],
         )
 
+    def get_intro(self):
+        return self._build_cancellable_message(self._intro_text)
+
     def handle(self, text: str, data: Optional[str]=None):
         set_info(self.db_user, self._info_field, text)
         return _handle(self.db_user, _get_next_command(self.db_user))
 
 
 class SetNameState(BaseSetInfoState):
-    _intro_text = 'Enter your name:'
+    _intro_text = _('Enter your name:')
     _info_field = UserInfoField.NAME
 
 
 class SetPhoneState(BaseSetInfoState):
-    _intro_text = 'Enter your phone number:'
+    _intro_text = _('Enter your phone number:')
     _info_field = UserInfoField.PHONE
+
+    def handle(self, text: str, data: Optional[str]=None):
+        try:
+            validate_phone_number(text)
+        except ValidationError as e:
+            return self._build_cancellable_message(e.message)
+
+        return super().handle(text)
 
 
 class DefaultState(State):
     def handle(self, text: str, data: Optional[str]) -> Reply:
-        return Reply(text='Hello. Here you will see notifications about available food. ')
+        return Reply(text=_('Hello. Here you will see notifications about available food.'))
 
 

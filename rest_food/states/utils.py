@@ -1,5 +1,8 @@
+import re
+
 from rest_food.entities import User, Message, UserInfoField
 from rest_food.db import get_supply_editing_message, get_supply_message_record
+from rest_food.exceptions import ValidationError
 from rest_food.translation import translate_lazy as _
 
 
@@ -46,3 +49,10 @@ def build_demand_description(user: User) -> str:
     return message
 
 
+def validate_phone_number(text):
+    if len(text) > 100:
+        raise ValidationError(_('Please, provide only pone number.'))
+
+    number_of_digits = len(re.findall(r'\d', text))
+    if number_of_digits < 7:
+        raise ValidationError(_('This is not a valid phone number.'))
