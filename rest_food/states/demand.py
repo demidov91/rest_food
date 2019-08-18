@@ -228,7 +228,7 @@ class BaseSetInfoState(State):
     def get_intro(self):
         return self._build_cancellable_message(self._intro_text)
 
-    def handle(self, text: str, data: Optional[str]=None):
+    def handle(self, text: str, *args, **kwargs):
         set_info(self.db_user, self._info_field, text)
         return _handle(self.db_user, _get_next_command(self.db_user))
 
@@ -242,7 +242,7 @@ class SetPhoneState(BaseSetInfoState):
     _intro_text = _('Enter your phone number:')
     _info_field = UserInfoField.PHONE
 
-    def handle(self, text: str, data: Optional[str]=None):
+    def handle(self, text: str, *args, **kwargs):
         try:
             validate_phone_number(text)
         except ValidationError as e:
@@ -252,7 +252,7 @@ class SetPhoneState(BaseSetInfoState):
 
 
 class DefaultState(State):
-    def handle(self, text: str, data: Optional[str]) -> Reply:
+    def handle(self, *args, **kwargs) -> Reply:
         return Reply(text=_('Hello. Here you will see notifications about available food.'))
 
 

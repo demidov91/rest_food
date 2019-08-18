@@ -18,18 +18,19 @@ from rest_food.translation import translate_lazy as _
 class ForceInfoMixin:
     def get_next_state(self):
         for field, state in (
-                ('name', SupplyState.FORCE_NAME),
-                ('address', SupplyState.FORCE_ADDRESS),
-                ('phone', SupplyState.FORCE_PHONE),
+                (UserInfoField.NAME, SupplyState.FORCE_NAME),
+                (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
+                (UserInfoField.COORDINATES, SupplyState.FORCE_COORDINATES),
+                (UserInfoField.PHONE, SupplyState.FORCE_PHONE),
         ):
-            if not self.db_user.info.get(field):
+            if not self.db_user.info.get(field.value):
                 return state
 
         return SupplyState.READY_TO_POST
 
 
 class DefaultState(ForceInfoMixin, State):
-    def handle(self, text: str, data: str):
+    def handle(self, *args, **kwargs):
         return Reply(
             text=_('Please, provide information about yourself before getting started'),
             next_state=self.get_next_state()
@@ -47,7 +48,7 @@ class ReadyToPostState(State):
         text=_('Enter food you can share and click "send"'),
     )
 
-    def handle(self, text: str, data: str):
+    def handle(self, text: str, data: str, *args, **kwargs):
         if data == 'view-info':
             return Reply(next_state=SupplyState.VIEW_INFO)
 
@@ -74,7 +75,7 @@ class PostingState(State):
         reply.text = _('Food you can share:\n{}').format(build_active_food_message(self.db_user))
         return reply
 
-    def handle(self, text: str, data: str):
+    def handle(self, text: str, data: str, *args, **kwargs):
         if data == 'set-time':
             return Reply(next_state=SupplyState.SET_TIME)
 
@@ -100,7 +101,7 @@ class SetMessageTimeState(State):
         ]
     )
 
-    def handle(self, text: str, data: str):
+    def handle(self, text: str, data: str, *args, **kwargs):
         if data == 'cancel':
             cancel_supply_message(self.db_user, provider=self.provider)
             return Reply(
@@ -146,7 +147,7 @@ class ViewInfoState(State):
             ]
         )
 
-    def handle(self, text: str, data: Optional[str]):
+    def handle(self, text: str, data: Optional[str], *args, **kwargs):
         if data == 'edit-name':
             return Reply(next_state=SupplyState.EDIT_NAME)
 
@@ -164,9 +165,12 @@ class BaseEditInfoState(State):
     _message = None         # type: str
     _info_to_edit = None    # type: UserInfoField
 
+    def info_field_is_set(self):
+        return self._info_to_edit.value in self.db_user.info
+
     def get_intro(self):
         reply = Reply(text=self._message)
-        if self._info_to_edit.value in self.db_user.info:
+        if self.info_field_is_set():
             reply.buttons = [[{
                 'text': _('Cancel'),
                 'data': 'cancel',
@@ -181,7 +185,7 @@ class BaseEditInfoState(State):
         set_info(self.db_user, self._info_to_edit, text)
         return Reply(next_state=self.get_next_state())
 
-    def handle(self, text: str, data: Optional[str]):
+    def handle(self, text: str, data: Optional[str], coordinates: Optional[tuple]):
         if data == 'cancel':
             return Reply(next_state=SupplyState.VIEW_INFO)
 
@@ -197,6 +201,18 @@ class SetAddressState(BaseEditInfoState):
     _message = _('Please, provide restaurant address.')
     _info_to_edit = UserInfoField.ADDRESS
 
+    def get_next_state(self):
+        if self.db_user.info.get(UserInfoField.IS_APPROVED_COORDINATES.value):
+            return SupplyState.VIEW_INFO
+        return SupplyState.EDIT_COORDINTES
+
+    def handle_text(self, text):
+        initial_address = self.db_user.info[UserInfoField.ADDRESS.value]
+        if text != initial_address:
+            set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, False)
+
+        return super().handle_text(text)
+
 
 class SetPhoneState(BaseEditInfoState):
     _message = _('Please, enter contact phone number.')
@@ -209,6 +225,60 @@ class SetPhoneState(BaseEditInfoState):
             return Reply(text=e.message)
 
         return super().handle_text(text)
+
+
+class SetCoordinatesState(BaseEditInfoState):
+    _info_to_edit = UserInfoField.COORDINATES
+
+    def get_intro(self):
+        if (
+                not self.db_user.info.get(UserInfoField.IS_APPROVED_COORDINATES) and
+                self.db_user.info.get(UserInfoField.COORDINATES)
+        ):
+            reply = Reply(coordinates=self.db_user.info[UserInfoField.COORDINATES], buttons=[
+                [[{
+                    'text': _('No! Edit! 🌍'),
+                    'data': 'change-coordinates',
+                }]],
+                [[{
+                    'text': _('Yes! Approve ✅'),
+                    'data': 'approve-coordinates',
+                }]],
+            ])
+
+            if self.info_field_is_set():
+                reply.buttons.append([{
+                    'text': _('Cancel'),
+                    'data': 'cancel',
+                }])
+
+        else:
+            reply = Reply(text=_('Please, send me your coordinates. (Attach -> Location)'))
+            if self.info_field_is_set():
+                reply.buttons = [[{
+                    'text': _('Cancel'),
+                    'data': 'cancel',
+                }]]
+
+        return reply
+
+    def handle_text(self, text):
+        return
+
+    def handle(self, text: str, data: Optional[str], coordinates: Optional[tuple]):
+        if data == 'change-coordinates':
+            set_info(self.db_user, UserInfoField.COORDINATES, None)
+            return
+
+        if data == 'approve-coordinates':
+            set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, True)
+            return Reply(next_state=self.get_next_state())
+
+        if coordinates:
+            set_info(self.db_user, UserInfoField.COORDINATES, coordinates)
+            return Reply(next_state=self.get_next_state())
+
+        return super().handle(text, data)
 
 
 class ForceSetNameState(ForceInfoMixin, SetNameState):

@@ -36,6 +36,11 @@ def tg_supply(data):
     reply = state.handle(
         update.message and update.message.text,
         update.callback_query and update.callback_query.data,
+        (
+                update.message and
+                update.message.location and
+                (update.message.location.latitude, update.message.location.longitude)
+        )
     )
     if reply is not None and reply.next_state is not None:
         next_state = set_supply_state(state.db_user, reply.next_state)

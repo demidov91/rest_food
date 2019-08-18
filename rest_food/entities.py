@@ -37,8 +37,10 @@ class UserInfoField(Enum):
     USERNAME = 'username'
     NAME = 'name'
     ADDRESS = 'address'
+    COORDINATES = 'coordinates'
     PHONE = 'phone'
     DISPLAY_USERNAME = 'display_username'
+    IS_APPROVED_COORDINATES = 'is_approved_coordinates'
 
 
 class DemandCommandName(Enum):

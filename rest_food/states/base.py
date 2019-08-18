@@ -1,5 +1,6 @@
 from copy import deepcopy
-from typing import Optional
+from typing import Optional, Tuple
+from decimal import Decimal
 
 from rest_food.entities import Reply, Provider, User
 
@@ -14,5 +15,10 @@ class State:
     def get_intro(self) -> Reply:
         return deepcopy(self.intro)
 
-    def handle(self, text: str, data: Optional[str]) -> Reply:
+    def handle(
+            self,
+            text: str,
+            data: Optional[str],
+            coordinates: Optional[Tuple[Decimal, Decimal]]
+    ) -> Reply:
         pass
