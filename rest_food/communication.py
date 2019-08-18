@@ -69,13 +69,21 @@ def send_messages(*, tg_chat_id: int, replies:Iterable[Reply], workflow: Workflo
     """
     bot = get_bot(workflow)
 
-    for reply in filter(lambda x: x is not None and x.text is not None, replies):
+    for reply in filter(lambda x: x is not None and (x.text or x.coordinates) is not None, replies):
         markup = _build_tg_keyboard(reply.buttons)
-        bot.send_message(
-            tg_chat_id,
-            reply.text,
-            reply_markup=markup
-        )
+        if reply.coordinates:
+            bot.send_location(
+                tg_chat_id,
+                *reply.coordinates,
+                reply_markup=None if reply.text else markup,
+            )
+
+        if reply.text:
+            bot.send_message(
+                tg_chat_id,
+                reply.text,
+                reply_markup=markup
+            )
 
 
 def build_tg_response(*, chat_id: int, reply: Reply):

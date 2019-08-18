@@ -1,6 +1,7 @@
 from enum import Enum
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass
+from decimal import Decimal
 
 from telegram.user import User as TgUser
 
@@ -86,6 +87,7 @@ class Message:
 class Reply:
     text: Optional[str]=None
     buttons: Optional[List[List[Dict]]]=None
+    coordinates: Optional[Tuple[Decimal, Decimal]]=None
     next_state: Optional[Union[DemandState, SupplyState]]=None
 
 

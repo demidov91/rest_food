@@ -146,7 +146,8 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
 
     info = _(
         "Restaurant name: {name}\n"
-        "Address: {address}").format(
+        "Address: {address}"
+    ).format(
         name=supply_user.info['name'],
         address=supply_user.info['address'],
     )
@@ -156,8 +157,11 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     if db_message.demand_user_id is not None:
         return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{}").format(info))
 
+    coordinates = supply_user.info[UserInfoField.COORDINATES.value]
+
     return Reply(
         text=info,
+        coordinates=coordinates,
         buttons=[[
             {
                 'text': _('Take it'),
@@ -166,6 +170,11 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
                         f'{supply_user.user_id}|'
                         f'{message_id}',
             },
+        ], [
+            {
+                'text': _('Map'),
+                'url': f'geo://{coordinates[0]},{coordinates[1]}',
+            }
         ]]
     )
 
