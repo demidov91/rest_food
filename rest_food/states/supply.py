@@ -166,7 +166,7 @@ class BaseEditInfoState(State):
 
     def get_intro(self):
         reply = Reply(text=self._message)
-        if self._info_to_edit in self.db_user.info:
+        if self._info_to_edit.value in self.db_user.info:
             reply.buttons = [[{
                 'text': _('Cancel'),
                 'data': 'cancel',
