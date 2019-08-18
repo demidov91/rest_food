@@ -13,9 +13,11 @@ class SupplyState(Enum):
     VIEW_INFO = 'view_info'
     EDIT_NAME = 'edit_name'
     EDIT_ADDRESS = 'edit_address'
+    EDIT_COORDINATES = 'edit-coordinates'
     EDIT_PHONE = 'edit_phone'
     FORCE_NAME = 'force_name'
     FORCE_ADDRESS = 'force_address'
+    FORCE_COORDINATES = 'force_coordinates'
     FORCE_PHONE = 'force_phone'
 
 

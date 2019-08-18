@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 
 from telegram import Update
 
@@ -39,7 +40,10 @@ def tg_supply(data):
         (
                 update.message and
                 update.message.location and
-                (update.message.location.latitude, update.message.location.longitude)
+                (
+                    Decimal(str(update.message.location.latitude)),
+                    Decimal(str(update.message.location.longitude))
+                )
         )
     )
     if reply is not None and reply.next_state is not None:

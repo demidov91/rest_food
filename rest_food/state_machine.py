@@ -12,9 +12,11 @@ SUPPLY = {
     SupplyState.VIEW_INFO: supply.ViewInfoState,
     SupplyState.EDIT_NAME: supply.SetNameState,
     SupplyState.EDIT_ADDRESS: supply.SetAddressState,
+    SupplyState.EDIT_COORDINATES: supply.SetCoordinatesState,
     SupplyState.EDIT_PHONE: supply.SetPhoneState,
     SupplyState.FORCE_NAME: supply.ForceSetNameState,
     SupplyState.FORCE_ADDRESS: supply.ForceSetAddressState,
+    SupplyState.FORCE_COORDINATES: supply.ForceSetCoordinatesState,
     SupplyState.FORCE_PHONE: supply.ForceSetPhoneState,
 }
 

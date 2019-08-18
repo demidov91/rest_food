@@ -119,10 +119,16 @@ def _build_tg_keyboard(keyboard):
 
 def _build_tg_keyboard_cell(cell):
     if isinstance(cell, dict):
-        return {
+        formatted_cell = {
             'text': cell['text'],
-            'callback_data': cell['data'],
         }
+
+        if 'data' in cell:
+            formatted_cell['callback_data'] = cell['data']
+        elif 'url' in cell:
+            formatted_cell['url'] = cell['url']
+
+        return formatted_cell
 
     return {
         'text': cell,

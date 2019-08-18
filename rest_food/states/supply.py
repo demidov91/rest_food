@@ -52,6 +52,9 @@ class ReadyToPostState(State):
         if data == 'view-info':
             return Reply(next_state=SupplyState.VIEW_INFO)
 
+        if not text:
+            return
+
         create_supply_message(self.db_user, text, provider=self.provider)
         return Reply(next_state=SupplyState.POSTING)
 
@@ -185,7 +188,7 @@ class BaseEditInfoState(State):
         set_info(self.db_user, self._info_to_edit, text)
         return Reply(next_state=self.get_next_state())
 
-    def handle(self, text: str, data: Optional[str], coordinates: Optional[tuple]):
+    def handle(self, text: str, data: Optional[str]=None, coordinates: Optional[tuple]=None):
         if data == 'cancel':
             return Reply(next_state=SupplyState.VIEW_INFO)
 
@@ -204,10 +207,10 @@ class SetAddressState(BaseEditInfoState):
     def get_next_state(self):
         if self.db_user.info.get(UserInfoField.IS_APPROVED_COORDINATES.value):
             return SupplyState.VIEW_INFO
-        return SupplyState.EDIT_COORDINTES
+        return SupplyState.EDIT_COORDINATES
 
     def handle_text(self, text):
-        initial_address = self.db_user.info[UserInfoField.ADDRESS.value]
+        initial_address = self.db_user.info.get(UserInfoField.ADDRESS.value)
         if text != initial_address:
             set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, False)
 
@@ -236,14 +239,14 @@ class SetCoordinatesState(BaseEditInfoState):
                 self.db_user.info.get(UserInfoField.COORDINATES)
         ):
             reply = Reply(coordinates=self.db_user.info[UserInfoField.COORDINATES], buttons=[
-                [[{
+                [{
                     'text': _('No! Edit! 🌍'),
                     'data': 'change-coordinates',
-                }]],
-                [[{
+                }],
+                [{
                     'text': _('Yes! Approve ✅'),
                     'data': 'approve-coordinates',
-                }]],
+                }],
             ])
 
             if self.info_field_is_set():
@@ -265,7 +268,7 @@ class SetCoordinatesState(BaseEditInfoState):
     def handle_text(self, text):
         return
 
-    def handle(self, text: str, data: Optional[str], coordinates: Optional[tuple]):
+    def handle(self, text: str, data: Optional[str]=None, coordinates: Optional[tuple]=None):
         if data == 'change-coordinates':
             set_info(self.db_user, UserInfoField.COORDINATES, None)
             return
@@ -275,7 +278,7 @@ class SetCoordinatesState(BaseEditInfoState):
             return Reply(next_state=self.get_next_state())
 
         if coordinates:
-            set_info(self.db_user, UserInfoField.COORDINATES, coordinates)
+            set_info(self.db_user, UserInfoField.COORDINATES, list(coordinates))
             return Reply(next_state=self.get_next_state())
 
         return super().handle(text, data)
@@ -286,6 +289,10 @@ class ForceSetNameState(ForceInfoMixin, SetNameState):
 
 
 class ForceSetAddressState(ForceInfoMixin, SetAddressState):
+    pass
+
+
+class ForceSetCoordinatesState(ForceInfoMixin, SetCoordinatesState):
     pass
 
 

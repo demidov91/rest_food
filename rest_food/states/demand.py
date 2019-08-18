@@ -174,7 +174,7 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
             {
                 'text': _('Map'),
                 'url': f'geo://{coordinates[0]},{coordinates[1]}',
-            }
+            },
         ]]
     )
 

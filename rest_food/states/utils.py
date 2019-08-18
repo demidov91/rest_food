@@ -7,7 +7,7 @@ from rest_food.translation import translate_lazy as _
 
 
 def _message_to_text(message: Message):
-    text_message = '\n'.join(message.products)
+    text_message = '\n'.join([x for x in message.products if x])
 
     if message.take_time:
         text_message += _('\nTime: {}').format(message.take_time)
