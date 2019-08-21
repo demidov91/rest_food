@@ -145,6 +145,12 @@ class ViewInfoState(State):
                     'data': 'edit-address',
                 }],
                 [{
+                    'text': _('Coordinates: %s') % (
+                        '✅' if self.db_user.approved_coordinates() else '❌'
+                    ),
+                    'data': 'edit-coordinates',
+                }],
+                [{
                     'text': _('Phone: %s') % self.db_user.info['phone'],
                     'data': 'edit-phone',
                 },{
@@ -163,6 +169,9 @@ class ViewInfoState(State):
 
         if data == 'edit-phone':
             return Reply(next_state=SupplyState.EDIT_PHONE)
+
+        if data == 'edit-coordinates':
+            return Reply(next_state=SupplyState.EDIT_COORDINATES)
 
         if data == 'back':
             return Reply(next_state=SupplyState.READY_TO_POST)
@@ -235,14 +244,21 @@ class SetPhoneState(BaseEditInfoState):
 
 
 class SetCoordinatesState(BaseEditInfoState):
-    _info_to_edit = UserInfoField.COORDINATES
+    _info_to_edit = UserInfoField.IS_APPROVED_COORDINATES
 
     def get_intro(self):
         if (
-                not self.db_user.info.get(UserInfoField.IS_APPROVED_COORDINATES) and
-                self.db_user.info.get(UserInfoField.COORDINATES)
+                not self.db_user.info.get(UserInfoField.IS_APPROVED_COORDINATES.value) and
+                self.db_user.info.get(UserInfoField.COORDINATES.value)
         ):
-            reply = Reply(coordinates=self.db_user.info[UserInfoField.COORDINATES], buttons=[
+            return self._build_approve_intro()
+
+        return self._build_set_intro()
+
+    def _build_approve_intro(self):
+        return Reply(
+            coordinates=self.db_user.info[UserInfoField.COORDINATES.value],
+            buttons=[
                 [{
                     'text': _('No! Edit! 🌍'),
                     'data': 'change-coordinates',
@@ -251,28 +267,27 @@ class SetCoordinatesState(BaseEditInfoState):
                     'text': _('Yes! Approve ✅'),
                     'data': 'approve-coordinates',
                 }],
+                [{
+                    'text': _('Cancel'),
+                    'data': 'cancel',
+                }]
             ])
 
-            if self.info_field_is_set():
-                reply.buttons.append([{
-                    'text': _('Cancel'),
-                    'data': 'cancel',
-                }])
-
+    def _build_set_intro(self):
+        reply = Reply(text=_('Please, send me your coordinates. (Attach -> Location)'))
+        if self.info_field_is_set():
+            reply.buttons = [[{
+                'text': _('Cancel'),
+                'data': 'cancel',
+            }]]
         else:
-            reply = Reply(text=_('Please, send me your coordinates. (Attach -> Location)'))
-            if self.info_field_is_set():
-                reply.buttons = [[{
-                    'text': _('Cancel'),
-                    'data': 'cancel',
-                }]]
-            else:
-                reply.buttons = [[{
-                    'text': _('Provide later'),
-                    'data': 'later',
-                }]]
+            reply.buttons = [[{
+                'text': _('Provide later'),
+                'data': 'later',
+            }]]
 
         return reply
+
 
     def handle_text(self, text):
         return
@@ -292,6 +307,7 @@ class SetCoordinatesState(BaseEditInfoState):
 
         if coordinates:
             set_info(self.db_user, UserInfoField.COORDINATES, list(coordinates))
+            set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, True)
             return Reply(next_state=self.get_next_state())
 
         return super().handle(text, data)

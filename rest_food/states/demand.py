@@ -161,12 +161,8 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     if db_message.demand_user_id is not None:
         return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{}").format(info))
 
-    coordinates = supply_user.info.get(UserInfoField.COORDINATES.value)
+    coordinates = supply_user.approved_coordinates()
 
-    has_coordinates = (
-        supply_user.info.get(UserInfoField.IS_APPROVED_COORDINATES.value) and
-        supply_user.info.get(UserInfoField.COORDINATES.value)
-    )
     take_it_button = {
         'text': _('Take it'),
         'data': f'{DemandCommandName.TAKE.value}|'
@@ -176,7 +172,7 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     }
 
 
-    if not has_coordinates:
+    if not coordinates:
         return Reply(
             text=info,
             buttons=[[take_it_button]]

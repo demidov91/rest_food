@@ -86,8 +86,8 @@ def send_messages(
                 *(float(x) for x in reply.coordinates),
                 reply_markup=None if reply.text else markup,
             )
-            if original_message:
-                bot.delete_message(chat_id=tg_chat_id, message_id=original_message)
+            if original_message and original_message.message_id:
+                bot.delete_message(chat_id=tg_chat_id, message_id=original_message.message_id)
 
             is_the_first_message = False
 

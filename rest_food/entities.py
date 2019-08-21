@@ -77,6 +77,12 @@ class User:
     provider: Optional[Provider]=None
     workflow: Optional[Workflow]=None
 
+    def approved_coordinates(self):
+        return (
+            self.info.get(UserInfoField.IS_APPROVED_COORDINATES.value) and
+            self.info.get(UserInfoField.COORDINATES.value)
+        )
+
 
 @dataclass
 class Message:
