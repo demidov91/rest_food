@@ -1,7 +1,7 @@
 import logging
 from typing import Iterable
 
-from telegram import Bot
+from telegram import Bot, Message
 from telegram.error import BadRequest
 
 from rest_food.db import get_demand_users
@@ -67,8 +67,8 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
 def send_messages(
         *,
         tg_chat_id: int,
-        original_message_id: int=None,
-        replies:Iterable[Reply],
+        original_message: Message = None,
+        replies: Iterable[Reply],
         workflow: Workflow
 ):
     """
@@ -86,10 +86,13 @@ def send_messages(
                 *(float(x) for x in reply.coordinates),
                 reply_markup=None if reply.text else markup,
             )
+            if original_message:
+                bot.delete_message(chat_id=tg_chat_id, message_id=original_message)
+
             is_the_first_message = False
 
         if reply.text:
-            if is_the_first_message and original_message_id is not None:
+            if is_the_first_message and (original_message and original_message.text) is not None:
                 method = bot.edit_message_text
             else:
                 method = bot.send_message
@@ -99,7 +102,7 @@ def send_messages(
                     chat_id=tg_chat_id,
                     text=reply.text,
                     reply_markup=markup,
-                    message_id=original_message_id,
+                    message_id=original_message and original_message.message_id
                 )
             except BadRequest as e:
                 if 'the same' in e.message:

@@ -161,25 +161,37 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     if db_message.demand_user_id is not None:
         return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{}").format(info))
 
-    coordinates = supply_user.info[UserInfoField.COORDINATES.value]
+    coordinates = supply_user.info.get(UserInfoField.COORDINATES.value)
+
+    has_coordinates = (
+        supply_user.info.get(UserInfoField.IS_APPROVED_COORDINATES.value) and
+        supply_user.info.get(UserInfoField.COORDINATES.value)
+    )
+    take_it_button = {
+        'text': _('Take it'),
+        'data': f'{DemandCommandName.TAKE.value}|'
+                f'{supply_user.provider.value}|'
+                f'{supply_user.user_id}|'
+                f'{message_id}',
+    }
+
+
+    if not has_coordinates:
+        return Reply(
+            text=info,
+            buttons=[[take_it_button]]
+        )
 
     return Reply(
         text=info,
         coordinates=coordinates,
-        buttons=[[
-            {
-                'text': _('Take it'),
-                'data': f'{DemandCommandName.TAKE.value}|'
-                        f'{supply_user.provider.value}|'
-                        f'{supply_user.user_id}|'
-                        f'{message_id}',
-            },
-        ], [
-            {
+        buttons=[
+            [take_it_button],
+            [{
                 'text': _('Map'),
                 'url': f'https://dzmitry.by/redirect?to=geo:{coordinates[0]},{coordinates[1]}?z=21',
-            },
-        ]]
+            }]
+        ]
     )
 
 

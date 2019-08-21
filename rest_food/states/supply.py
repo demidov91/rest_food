@@ -16,13 +16,17 @@ from rest_food.translation import translate_lazy as _
 
 
 class ForceInfoMixin:
+    def __init__(self, *args, **kwargs):
+        super(ForceInfoMixin, self).__init__(*args, **kwargs)
+        self._fields_to_check = dict((
+            (UserInfoField.NAME, SupplyState.FORCE_NAME),
+            (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
+            (UserInfoField.IS_APPROVED_COORDINATES, SupplyState.FORCE_COORDINATES),
+            (UserInfoField.PHONE, SupplyState.FORCE_PHONE),
+        ))
+
     def get_next_state(self):
-        for field, state in (
-                (UserInfoField.NAME, SupplyState.FORCE_NAME),
-                (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
-                (UserInfoField.COORDINATES, SupplyState.FORCE_COORDINATES),
-                (UserInfoField.PHONE, SupplyState.FORCE_PHONE),
-        ):
+        for field, state in self._fields_to_check.items():
             if not self.db_user.info.get(field.value):
                 return state
 
@@ -262,6 +266,11 @@ class SetCoordinatesState(BaseEditInfoState):
                     'text': _('Cancel'),
                     'data': 'cancel',
                 }]]
+            else:
+                reply.buttons = [[{
+                    'text': _('Provide later'),
+                    'data': 'later',
+                }]]
 
         return reply
 
@@ -274,6 +283,10 @@ class SetCoordinatesState(BaseEditInfoState):
             return
 
         if data == 'approve-coordinates':
+            set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, True)
+            return Reply(next_state=self.get_next_state())
+
+        if data == 'later':
             set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, True)
             return Reply(next_state=self.get_next_state())
 
