@@ -181,8 +181,8 @@ class BaseEditInfoState(State):
     _message = None         # type: str
     _info_to_edit = None    # type: UserInfoField
 
-    def info_field_is_set(self):
-        return self._info_to_edit.value in self.db_user.info
+    def info_field_is_set(self) -> bool:
+        return bool(self.db_user.info.get(self._info_to_edit.value))
 
     def get_intro(self):
         reply = Reply(text=self._message)

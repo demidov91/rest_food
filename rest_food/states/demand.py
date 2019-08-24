@@ -69,7 +69,8 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
                 f'{provider_str}|{supply_user_db_id}|{message_id}',
     }, {
         'text': _('Cancel'),
-        'data': f'{DemandCommandName.CANCEL_TAKE.value}',
+        'data': f'{DemandCommandName.INFO.value}|'
+                f'{provider_str}|{supply_user_db_id}|{message_id}',
     }])
 
     return Reply(
@@ -211,10 +212,6 @@ def _handle_edit_phone(user: User):
     return Reply(next_state=DemandState.EDIT_PHONE)
 
 
-def _handle_cancel_command(user: User):
-    return Reply(text=_('Cancelled.'))
-
-
 COMMAND_HANDLERS = {
     DemandCommandName.TAKE: _handle_take,
     DemandCommandName.INFO: _handle_info,
@@ -223,7 +220,6 @@ COMMAND_HANDLERS = {
     DemandCommandName.FINISH_TAKE: _handle_finish_take,
     DemandCommandName.EDIT_NAME: _handle_edit_name,
     DemandCommandName.EDIT_PHONE: _handle_edit_phone,
-    DemandCommandName.CANCEL_TAKE: _handle_cancel_command,
 }
 
 

@@ -54,7 +54,6 @@ class DemandCommandName(Enum):
     EDIT_NAME = 'edit_name'
     EDIT_PHONE = 'edit_phone'
     FINISH_TAKE = 'f_take'
-    CANCEL_TAKE = 'c_take'
 
 
 @dataclass
