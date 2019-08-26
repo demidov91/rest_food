@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import List, Optional, Tuple
 from uuid import uuid4
 
@@ -9,6 +10,7 @@ from boto3.dynamodb.conditions import Key
 from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command
 
 
+is_aws = os.environ.get('STAGE') == 'LIVE'
 logger = logging.getLogger(__name__)
 
 
@@ -251,6 +253,12 @@ def _get_state_table():
     """
     `identifier` is a `provider-workflow-user_id` string.
     """
+    if is_aws:
+        return boto3.resource(
+            'dynamodb',
+            region_name='eu-central-1',
+        ).Table(_STATE_TABLE)
+
     db = _get_db()
 
     try:
@@ -282,6 +290,12 @@ def _get_state_table():
 
 
 def _get_message_table():
+    if is_aws:
+        return boto3.resource(
+            'dynamodb',
+            region_name='eu-central-1',
+        ).Table(_MESSAGE_TABLE)
+
     db = _get_db()
 
     try:
