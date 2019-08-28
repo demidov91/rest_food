@@ -11,7 +11,11 @@ from rest_food.db import (
     set_info,
 )
 from rest_food.communication import publish_supply_event
-from rest_food.states.utils import build_active_food_message, validate_phone_number
+from rest_food.states.utils import (
+    build_active_food_message,
+    get_coordinates,
+    validate_phone_number,
+)
 from rest_food.translation import translate_lazy as _
 
 
@@ -226,7 +230,8 @@ class SetAddressState(BaseEditInfoState):
         initial_address = self.db_user.info.get(UserInfoField.ADDRESS.value)
         if text != initial_address:
             set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, False)
-
+            set_info(self.db_user, UserInfoField.COORDINATES, get_coordinates(text))
+            
         return super().handle_text(text)
 
 
