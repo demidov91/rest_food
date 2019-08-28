@@ -1,9 +1,7 @@
 import argparse
-import sys
 from rest_food.handlers import set_tg_webhook
+from rest_food.settings import BOT_PATH_KEY
 from rest_food.entities import Workflow
-
-
 
 
 parser = argparse.ArgumentParser(description='Process some integers.')
@@ -46,14 +44,14 @@ args = parser.parse_args()
 
 def _set_supply(url: str, is_full_url: bool):
     if not is_full_url:
-        url += '/tg/supply/path-key/'
+        url = f'{url}/tg/supply/{BOT_PATH_KEY}/'
 
     set_tg_webhook(url, workflow=Workflow.SUPPLY)
 
 
 def _set_demand(url: str, is_full_url: bool):
     if not is_full_url:
-        url += '/tg/demand/path-key/'
+        url = f'{url}/tg/demand/{BOT_PATH_KEY}/'
 
     set_tg_webhook(url, workflow=Workflow.DEMAND)
 

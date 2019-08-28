@@ -1,17 +1,18 @@
 from flask import Flask, request, jsonify
 from rest_food.handlers import tg_supply, tg_demand
 from rest_food.translation import LazyAwareJsonEncoder
+from rest_food.settings import BOT_PATH_KEY
 
 app = Flask(__name__)
 
 
-@app.route('/tg/supply/path-key/', methods=['POST'])
+@app.route(f'/tg/supply/{BOT_PATH_KEY}/', methods=['POST'])
 def flask_tg_supply():
     response = tg_supply(request.get_json()) or {}
     return jsonify(response)
 
 
-@app.route('/tg/demand/path-key/', methods=['POST'])
+@app.route(f'/tg/demand/{BOT_PATH_KEY}/', methods=['POST'])
 def flask_tg_demand():
     response = tg_demand(request.get_json()) or {}
     return jsonify(response)

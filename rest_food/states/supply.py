@@ -231,7 +231,7 @@ class SetAddressState(BaseEditInfoState):
         if text != initial_address:
             set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, False)
             set_info(self.db_user, UserInfoField.COORDINATES, get_coordinates(text))
-            
+
         return super().handle_text(text)
 
 

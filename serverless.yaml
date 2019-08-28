@@ -8,7 +8,7 @@ provider:
     STAGE: LIVE
     TELEGRAM_TOKEN_SUPPLY: ${env:TELEGRAM_TOKEN_SUPPLY}
     TELEGRAM_TOKEN_DEMAND: ${env:TELEGRAM_TOKEN_DEMAND}
-    YANDEX_TOKEN: ${env:YANDEX_TOKEN}
+    YANDEX_TOKEN: ${env:YANDEX_API_KEY}
   iamRoleStatements:
   - Effect: Allow
     Action:
