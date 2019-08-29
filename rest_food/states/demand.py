@@ -63,15 +63,18 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
     )
 
     buttons = _get_review_buttons(user)
-    buttons.append([{
-        'text': _('Confirm and take products'),
-        'data': f'{DemandCommandName.FINISH_TAKE.value}|'
-                f'{provider_str}|{supply_user_db_id}|{message_id}',
-    }, {
-        'text': _('Cancel'),
-        'data': f'{DemandCommandName.INFO.value}|'
-                f'{provider_str}|{supply_user_db_id}|{message_id}',
-    }])
+    buttons.extend([
+        [{
+            'text': _('Confirm and take products'),
+            'data': f'{DemandCommandName.FINISH_TAKE.value}|'
+                    f'{provider_str}|{supply_user_db_id}|{message_id}',
+        }],
+        [{
+            'text': _('Cancel'),
+            'data': f'{DemandCommandName.INFO.value}|'
+                    f'{provider_str}|{supply_user_db_id}|{message_id}',
+        }]
+    ])
 
     return Reply(
         text=_('Please, confirm/edit your contact information to proceed.'),
@@ -93,12 +96,12 @@ def _get_review_buttons(user: User):
             })
         else:
             buttons.append({
-                'text': ('Connect via {}: ❌').format(user.provider.value),
+                'text': _('Connect via {}: ❌').format(user.provider.value),
                 'data': DemandCommandName.ENABLE_USERNAME.value,
             })
 
     buttons.append({
-        'text': _('Phone: %s') % (user.info.get(UserInfoField.PHONE.value) or 'not set'),
+        'text': _('Phone: %s') % (user.info.get(UserInfoField.PHONE.value) or _('not set')),
         'data': f'{DemandCommandName.EDIT_PHONE.value}',
 
     })
