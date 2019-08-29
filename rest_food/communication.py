@@ -75,7 +75,9 @@ def send_messages(
     It's intended to be async (vs `build_tg_response`).
     """
     bot = get_bot(workflow)
-    is_the_first_message = True
+    original_message_should_be_replaced = (
+        (original_message and original_message.message_id) is not None
+    )
 
     for reply in filter(lambda x: x is not None and (x.text or x.coordinates) is not None, replies):
         markup = _build_tg_keyboard(reply.buttons)
@@ -86,14 +88,11 @@ def send_messages(
                 *(float(x) for x in reply.coordinates),
                 reply_markup=None if reply.text else markup,
             )
-            if original_message and original_message.message_id:
-                bot.delete_message(chat_id=tg_chat_id, message_id=original_message.message_id)
-
-            is_the_first_message = False
 
         if reply.text:
-            if is_the_first_message and (original_message and original_message.text) is not None:
+            if original_message_should_be_replaced and original_message.text is not None:
                 method = bot.edit_message_text
+                original_message_should_be_replaced = False
             else:
                 method = bot.send_message
 
@@ -110,7 +109,10 @@ def send_messages(
                 else:
                     raise e
 
-        is_the_first_message = False
+        if original_message_should_be_replaced:
+            bot.delete_message(chat_id=tg_chat_id, message_id=original_message.message_id)
+
+        original_message_should_be_replaced = False
 
 
 def build_tg_response(*, chat_id: int, reply: Reply):
