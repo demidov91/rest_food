@@ -99,12 +99,11 @@ msgid ""
 "Address: {address}\n"
 "Phone: {phone}\n"
 "\n"
-"\n"
 "{products}"
 msgstr ""
 "Назва рэстарана: {name}\n"
 "Адрас: {address}\n"
-"Тэлефон: {phone}\n
+"Тэлефон: {phone}\n"
 "\n"
 "{products}"
 
