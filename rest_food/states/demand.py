@@ -152,11 +152,14 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
 
     info = _(
         "Restaurant name: {name}\n"
-        "Address: {address}\n\n"
+        "Address: {address}\n"
+        "Phone: {phone}\n"
+        "\n\n"
         "{products}"
     ).format(
-        name=supply_user.info['name'],
-        address=supply_user.info['address'],
+        name=supply_user.info[UserInfoField.NAME.value],
+        address=supply_user.info[UserInfoField.ADDRESS.value],
+        phone=supply_user.info[UserInfoField.PHONE.value],
         products=build_food_message_by_id(user=supply_user, message_id=message_id),
     )
 

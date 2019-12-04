@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-29 09:45+0300\n"
+"POT-Creation-Date: 2019-12-04 23:25+0300\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -13,7 +13,7 @@ msgstr ""
 "{} может передать следующее:\n"
 "{}"
 
-#: rest_food/communication.py:35 rest_food/states/demand.py:171
+#: rest_food/communication.py:35 rest_food/states/demand.py:174
 msgid "Take it"
 msgstr "Забрать"
 
@@ -43,7 +43,7 @@ msgstr "Что-то пошло не так. Попробуйте что-нибу
 msgid "Confirm and take products"
 msgstr "Подтвердить и забрать"
 
-#: rest_food/states/demand.py:73 rest_food/states/demand.py:239
+#: rest_food/states/demand.py:73 rest_food/states/demand.py:242
 #: rest_food/states/supply.py:78 rest_food/states/supply.py:109
 #: rest_food/states/supply.py:195 rest_food/states/supply.py:276
 #: rest_food/states/supply.py:285
@@ -97,15 +97,18 @@ msgstr "Информация не была найдена."
 msgid ""
 "Restaurant name: {name}\n"
 "Address: {address}\n"
+"Phone: {phone}\n"
+"\n"
 "\n"
 "{products}"
 msgstr ""
 "Ресторан: {name}\n"
 "Адрес: {address}\n"
+"Телефон: {phone}\n"
 "\n"
 "{products}"
 
-#: rest_food/states/demand.py:166
+#: rest_food/states/demand.py:169
 msgid ""
 "SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n"
 "\n"
@@ -115,19 +118,19 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/states/demand.py:191
+#: rest_food/states/demand.py:194
 msgid "Map"
 msgstr "Карта"
 
-#: rest_food/states/demand.py:256
+#: rest_food/states/demand.py:259
 msgid "Enter your name:"
 msgstr "Введите имя:"
 
-#: rest_food/states/demand.py:261
+#: rest_food/states/demand.py:264
 msgid "Enter your phone number:"
 msgstr "Пожалуйста, введите свой контактный номер:"
 
-#: rest_food/states/demand.py:275
+#: rest_food/states/demand.py:278
 msgid "Hello. Here you will see notifications about available food."
 msgstr ""
 "Приветствую. Здесь будут публиковаться объявления о доступных продуктах."
