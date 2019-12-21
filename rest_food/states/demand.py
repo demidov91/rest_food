@@ -20,6 +20,7 @@ from rest_food.entities import (
     Command,
     SocialStatus,
     soc_status_translation,
+    translate_social_status_string,
 )
 from rest_food.exceptions import ValidationError
 from rest_food.states.base import State
@@ -102,14 +103,11 @@ def _get_review_buttons(user: User):
                 'data': DemandCommandName.ENABLE_USERNAME.value,
             })
 
-    soc_status = user.info.get(UserInfoField.SOCIAL_STATUS.value)
-    if soc_status is None:
-        ss_to_display = _('not set')
-    else:
-        ss_to_display = soc_status_translation[SocialStatus(soc_status)]
-
     buttons.append({
-        'text': _('Social status: %s') % ss_to_display,
+        'text': (
+            _('Social status: %s') %
+            translate_social_status_string(user.info.get(UserInfoField.SOCIAL_STATUS.value))
+        ),
         'data': DemandCommandName.EDIT_SOCIAL_STATUS.value,
     })
 
@@ -258,6 +256,8 @@ COMMAND_HANDLERS = {
     DemandCommandName.FINISH_TAKE: _handle_finish_take,
     DemandCommandName.EDIT_NAME: _handle_edit_name,
     DemandCommandName.EDIT_PHONE: _handle_edit_phone,
+    DemandCommandName.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
+    DemandCommandName.SET_SOCIAL_STATUS: _handle_set_social_status,
 }
 
 

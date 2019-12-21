@@ -58,7 +58,25 @@ class SocialStatus(Enum):
     OTHER = 'other'
 
 
-soc_status_translation = {x: _(x.value) for x in SocialStatus}
+def translate_social_status_string(ss_string: Optional[str]) -> str:
+    if not ss_string:
+        return _('not set')
+
+    try:
+        ss = SocialStatus(ss_string)
+    except ValueError:
+        return _('unknown')
+
+    return soc_status_translation.get(ss, _('unknown'))
+
+
+soc_status_translation = {
+    SocialStatus.BIG_FAMILY: _('big family'),
+    SocialStatus.DISABILITY: _('disability'),
+    SocialStatus.HOMELESS: _('homeless'),
+    SocialStatus.HARD_TIMES: _('hard times'),
+    SocialStatus.OTHER: _('other'),
+}
 
 
 class DemandCommandName(Enum):

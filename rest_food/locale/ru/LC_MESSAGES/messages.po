@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-04 23:25+0300\n"
+"POT-Creation-Date: 2019-12-21 13:54+0300\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -13,7 +13,7 @@ msgstr ""
 "{} может передать следующее:\n"
 "{}"
 
-#: rest_food/communication.py:35 rest_food/states/demand.py:174
+#: rest_food/communication.py:35 rest_food/states/demand.py:187
 msgid "Take it"
 msgstr "Забрать"
 
@@ -35,51 +35,72 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/handlers.py:69 rest_food/handlers.py:120
-msgid "Something went wrong. Try something different, please."
-msgstr "Что-то пошло не так. Попробуйте что-нибудь другое."
+#: rest_food/entities.py:62
+msgid "big family"
+msgstr "Многодетная семья"
 
-#: rest_food/states/demand.py:68
+#: rest_food/entities.py:63
+msgid "disability"
+msgstr "Группа инвалидности"
+
+#: rest_food/entities.py:64
+msgid "homeless"
+msgstr "Бездомный/ая"
+
+#: rest_food/entities.py:65
+msgid "hard times"
+msgstr "Затруднительное соц положение"
+
+#: rest_food/entities.py:66
+msgid "other"
+msgstr "Другое"
+
+#: rest_food/states/demand.py:70
 msgid "Confirm and take products"
 msgstr "Подтвердить и забрать"
 
-#: rest_food/states/demand.py:73 rest_food/states/demand.py:242
+#: rest_food/states/demand.py:75 rest_food/states/demand.py:270
 #: rest_food/states/supply.py:78 rest_food/states/supply.py:109
 #: rest_food/states/supply.py:195 rest_food/states/supply.py:276
 #: rest_food/states/supply.py:285
 msgid "Cancel"
 msgstr "Отмена"
 
-#: rest_food/states/demand.py:80
+#: rest_food/states/demand.py:82
 msgid "Please, confirm/edit your contact information to proceed."
 msgstr "Пожалуйста, подвердите контактную информацию, чтобы продолжить."
 
-#: rest_food/states/demand.py:87
+#: rest_food/states/demand.py:89
 msgid "Name: {}"
 msgstr "Имя: {}"
 
-#: rest_food/states/demand.py:94
+#: rest_food/states/demand.py:96
 msgid "Connect via {}: ✅"
 msgstr "Связываться через {}: ✅"
 
-#: rest_food/states/demand.py:99
+#: rest_food/states/demand.py:101
 msgid "Connect via {}: ❌"
 msgstr "Связываться через {}: ❌"
 
-#: rest_food/states/demand.py:104 rest_food/states/supply.py:158
+#: rest_food/states/demand.py:107 rest_food/states/demand.py:117
+msgid "not set"
+msgstr "не предоставлен"
+
+#: rest_food/states/demand.py:112 rest_food/states/utils.py:66
+#, python-format
+msgid "Social status: %s"
+msgstr "Социальный статус: %s"
+
+#: rest_food/states/demand.py:117 rest_food/states/supply.py:158
 #, python-format
 msgid "Phone: %s"
 msgstr "Телефон: %s"
 
-#: rest_food/states/demand.py:104
-msgid "not set"
-msgstr "не предоставлен"
-
-#: rest_food/states/demand.py:124
+#: rest_food/states/demand.py:137
 msgid "Someone has already taken it."
 msgstr "Кто-то уже забрал."
 
-#: rest_food/states/demand.py:132
+#: rest_food/states/demand.py:145
 #, python-brace-format
 msgid ""
 "{name} is notified that you'll take it.\n"
@@ -88,11 +109,11 @@ msgstr ""
 "{name} уведомлён, что Вы заберёте продукты.\n"
 "Адрес: {address}\n"
 
-#: rest_food/states/demand.py:149
+#: rest_food/states/demand.py:162
 msgid "Information was not found."
 msgstr "Информация не была найдена."
 
-#: rest_food/states/demand.py:154
+#: rest_food/states/demand.py:167
 #, python-brace-format
 msgid ""
 "Restaurant name: {name}\n"
@@ -108,7 +129,7 @@ msgstr ""
 "\n"
 "{products}"
 
-#: rest_food/states/demand.py:169
+#: rest_food/states/demand.py:182
 msgid ""
 "SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n"
 "\n"
@@ -118,19 +139,23 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/states/demand.py:194
+#: rest_food/states/demand.py:207
 msgid "Map"
 msgstr "Карта"
 
-#: rest_food/states/demand.py:259
+#: rest_food/states/demand.py:250
+msgid "Choose your social status:"
+msgstr "Выберите социальный статус:"
+
+#: rest_food/states/demand.py:297
 msgid "Enter your name:"
 msgstr "Введите имя:"
 
-#: rest_food/states/demand.py:264
+#: rest_food/states/demand.py:302
 msgid "Enter your phone number:"
 msgstr "Пожалуйста, введите свой контактный номер:"
 
-#: rest_food/states/demand.py:278
+#: rest_food/states/demand.py:316
 msgid "Hello. Here you will see notifications about available food."
 msgstr ""
 "Приветствую. Здесь будут публиковаться объявления о доступных продуктах."
@@ -159,11 +184,15 @@ msgstr "Телеграм: @{}\n"
 msgid "No contact info was provided.\n"
 msgstr "Контактная информация не была предоставлена :(\n"
 
-#: rest_food/states/utils.py:70
+#: rest_food/states/utils.py:69
+msgid "unknown"
+msgstr "неизвестный"
+
+#: rest_food/states/utils.py:77
 msgid "Please, provide only pone number."
 msgstr "Пожалуйста, введите только контактный номер."
 
-#: rest_food/states/utils.py:74
+#: rest_food/states/utils.py:81
 msgid "This is not a valid phone number."
 msgstr "Это невалидный телефонный номер."
 
@@ -256,3 +285,7 @@ msgstr "Пожалуйста, вышлите координаты: Прикре�
 #: rest_food/states/supply.py:290
 msgid "Provide later"
 msgstr "Позже"
+
+#: rest_food/handlers.py:69 rest_food/handlers.py:120
+msgid "Something went wrong. Try something different, please."
+msgstr "Что-то пошло не так. Попробуйте что-нибудь другое."

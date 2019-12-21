@@ -3,11 +3,11 @@ import logging
 import re
 from decimal import Decimal
 from enum import Enum
-from typing import Tuple, Optional, List
+from typing import Optional, List
 
 from requests import Session
 
-from rest_food.entities import User, Message, UserInfoField, soc_status_translation
+from rest_food.entities import User, Message, UserInfoField, translate_social_status_string
 from rest_food.db import get_supply_editing_message, get_supply_message_record
 from rest_food.exceptions import ValidationError
 from rest_food.settings import YANDEX_API_KEY
@@ -63,10 +63,9 @@ def build_demand_description(user: User) -> str:
         message += _('No contact info was provided.\n')
 
     if user.info.get(UserInfoField.SOCIAL_STATUS.value):
-        message += _('Social status: %s') % (
-                soc_status_translation.get(user.info[UserInfoField.SOCIAL_STATUS])
-                or
-                _('unknown')
+        message += (
+            _('Social status: %s') %
+            translate_social_status_string(user.info[UserInfoField.SOCIAL_STATUS.value])
         )
 
     return message
