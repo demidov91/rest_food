@@ -1,6 +1,6 @@
 import re
 
-from rest_food.entities import User, Message, UserInfoField
+from rest_food.entities import User, Message, UserInfoField, soc_status_translation
 from rest_food.db import get_supply_editing_message, get_supply_message_record
 from rest_food.exceptions import ValidationError
 from rest_food.translation import translate_lazy as _
@@ -45,6 +45,13 @@ def build_demand_description(user: User) -> str:
 
     if not is_provided_contact_info:
         message += _('No contact info was provided.\n')
+
+    if user.info.get(UserInfoField.SOCIAL_STATUS.value):
+        message += _('Social status: %s') % (
+                soc_status_translation.get(user.info[UserInfoField.SOCIAL_STATUS])
+                or
+                _('unknown')
+        )
 
     return message
 

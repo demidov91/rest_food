@@ -18,6 +18,8 @@ from rest_food.entities import (
     DemandCommandName,
     DemandState,
     Command,
+    SocialStatus,
+    soc_status_translation,
 )
 from rest_food.exceptions import ValidationError
 from rest_food.states.base import State
@@ -96,8 +98,19 @@ def _get_review_buttons(user: User):
                 'data': DemandCommandName.ENABLE_USERNAME.value,
             })
 
+    soc_status = user.info.get(UserInfoField.SOCIAL_STATUS.value)
+    if soc_status is None:
+        ss_to_display = _('not set')
+    else:
+        ss_to_display = soc_status_translation[SocialStatus(soc_status)]
+
     buttons.append({
-        'text': _('Phone: %s') % (user.info.get(UserInfoField.PHONE.value) or 'not set'),
+        'text': _('Social status: %s') % ss_to_display,
+        'data': DemandCommandName.EDIT_SOCIAL_STATUS.value,
+    })
+
+    buttons.append({
+        'text': _('Phone: %s') % (user.info.get(UserInfoField.PHONE.value) or _('not set')),
         'data': f'{DemandCommandName.EDIT_PHONE.value}',
 
     })
@@ -195,12 +208,31 @@ def _handle_disable_username(user: User):
     return _handle(user, command)
 
 
+def _handle_set_social_status(user: User, social_status: str):
+    set_info(user, UserInfoField.SOCIAL_STATUS, social_status)
+    command = _get_next_command(user)
+    return _handle(user, command)
+
+
 def _handle_edit_name(user: User):
     return Reply(next_state=DemandState.EDIT_NAME)
 
 
 def _handle_edit_phone(user: User):
     return Reply(next_state=DemandState.EDIT_PHONE)
+
+
+def _handle_edit_social_status(user: User):
+    buttons = [[
+        {
+            'text': soc_status_translation.get(x) or '~~',
+            'data': f'{DemandCommandName.SET_SOCIAL_STATUS.value}|{x.value}',
+        }] for x in SocialStatus
+    ]
+
+    buttons.append([_get_back_button(user)])
+
+    return Reply(text=_('Choose your social status:'), buttons=buttons)
 
 
 def _handle_cancel_command(user: User):
@@ -215,8 +247,22 @@ COMMAND_HANDLERS = {
     DemandCommandName.FINISH_TAKE: _handle_finish_take,
     DemandCommandName.EDIT_NAME: _handle_edit_name,
     DemandCommandName.EDIT_PHONE: _handle_edit_phone,
+    DemandCommandName.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
+    DemandCommandName.SET_SOCIAL_STATUS: _handle_set_social_status,
     DemandCommandName.CANCEL_TAKE: _handle_cancel_command,
 }
+
+
+def _get_back_button(db_user):
+    next_command = _get_next_command(db_user)
+
+    return {
+        'text': _('Cancel'),
+        'data': '{}|{}'.format(
+            next_command.command.value,
+            '|'.join(next_command.arguments)
+        ),
+    }
 
 
 class BaseSetInfoState(State):
@@ -224,17 +270,9 @@ class BaseSetInfoState(State):
     _info_field = None  # type: UserInfoField
 
     def _build_cancellable_message(self, text):
-        next_command = _get_next_command(self.db_user)
-
         return Reply(
             text=text,
-            buttons=[[{
-                'text': _('Cancel'),
-                'data': '{}|{}'.format(
-                    next_command.command.value,
-                    '|'.join(next_command.arguments)
-                ),
-            }]],
+            buttons=[[_get_back_button(self.db_user)]],
         )
 
     def get_intro(self):

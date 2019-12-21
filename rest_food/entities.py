@@ -5,6 +5,8 @@ from decimal import Decimal
 
 from telegram.user import User as TgUser
 
+from rest_food.translation import translate_lazy as _
+
 
 class SupplyState(Enum):
     READY_TO_POST = 'ready_to_post'
@@ -24,6 +26,7 @@ class SupplyState(Enum):
 class DemandState(Enum):
     EDIT_NAME = 'edit_name'
     EDIT_PHONE = 'edit_phone'
+    EDIT_SOCIAL_STATUS = 'edit_social_status'
 
 
 class Provider(Enum):
@@ -44,6 +47,18 @@ class UserInfoField(Enum):
     PHONE = 'phone'
     DISPLAY_USERNAME = 'display_username'
     IS_APPROVED_COORDINATES = 'is_approved_coordinates'
+    SOCIAL_STATUS = 'social_status'
+
+
+class SocialStatus(Enum):
+    BIG_FAMILY = 'big_family'
+    DISABILITY = 'disability'
+    HOMELESS = 'homeless'
+    HARD_TIMES = 'hard_times'
+    OTHER = 'other'
+
+
+soc_status_translation = {x: _(x.value) for x in SocialStatus}
 
 
 class DemandCommandName(Enum):
@@ -53,6 +68,8 @@ class DemandCommandName(Enum):
     ENABLE_USERNAME = 'enable-username'
     EDIT_NAME = 'edit_name'
     EDIT_PHONE = 'edit_phone'
+    EDIT_SOCIAL_STATUS = 'edit_ss'
+    SET_SOCIAL_STATUS = 'set_ss'
     FINISH_TAKE = 'f_take'
     CANCEL_TAKE = 'c_take'
 
