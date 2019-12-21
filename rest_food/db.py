@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import List, Optional, Tuple
 from uuid import uuid4
 
@@ -9,6 +10,7 @@ from boto3.dynamodb.conditions import Key
 from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command
 
 
+is_aws = os.environ.get('STAGE') == 'LIVE'
 logger = logging.getLogger(__name__)
 
 
@@ -92,7 +94,10 @@ def get_demand_users():
 def set_state(*, user_id: str, provider: Provider, workflow: Workflow, state: str):
     table = _get_state_table()
     table.update_item(
-        Key={'user_id': user_id, 'cluster': _build_user_cluster(provider, workflow)},
+        Key={
+            'user_id': str(user_id),
+            'cluster': _build_user_cluster(provider, workflow),
+        },
         UpdateExpression='SET bot_state = :state',
         ExpressionAttributeValues={':state': state},
     )
@@ -101,7 +106,10 @@ def set_state(*, user_id: str, provider: Provider, workflow: Workflow, state: st
 def set_info(user: User, info_field: UserInfoField, data):
     table = _get_state_table()
     table.update_item(
-        Key={'user_id': user.user_id, 'cluster': _build_user_cluster(user.provider, user.workflow)},
+        Key={
+            'user_id': str(user.user_id),
+            'cluster': _build_user_cluster(user.provider, user.workflow),
+        },
         UpdateExpression='SET info.#info_field = :data',
         ExpressionAttributeNames={'#info_field': info_field.value},
         ExpressionAttributeValues={':data': data},
@@ -112,7 +120,7 @@ def set_info(user: User, info_field: UserInfoField, data):
 def set_next_command(user: User, command: Command):
     table = _get_state_table()
     table.update_item(
-        Key={'user_id': user.user_id, 'cluster': _build_user_cluster(user.provider, user.workflow)},
+        Key={'user_id': str(user.user_id), 'cluster': _build_user_cluster(user.provider, user.workflow)},
         UpdateExpression='SET context.next_command = :next_command, '
                          'context.arguments = :arguments',
         ExpressionAttributeValues={
@@ -136,7 +144,7 @@ def create_supply_message(user: User, message: str, *, provider: Provider):
     state_table = _get_state_table()
     state_table.update_item(
         Key={
-            'user_id': user.user_id,
+            'user_id': str(user.user_id),
             'cluster': _build_user_cluster(provider, Workflow.SUPPLY),
         },
         UpdateExpression="set editing_message_id = :new_message_guid",
@@ -171,7 +179,7 @@ def cancel_supply_message(user: User, *, provider:Provider):
     state_table = _get_state_table()
     state_table.update_item(
         Key={
-            'user_id': user.user_id,
+            'user_id': str(user.user_id),
             'cluster': _build_user_cluster(provider, workflow=Workflow.SUPPLY),
         },
         UpdateExpression="set editing_message_id = :new_message_guid",
@@ -245,6 +253,12 @@ def _get_state_table():
     """
     `identifier` is a `provider-workflow-user_id` string.
     """
+    if is_aws:
+        return boto3.resource(
+            'dynamodb',
+            region_name='eu-central-1',
+        ).Table(_STATE_TABLE)
+
     db = _get_db()
 
     try:
@@ -276,6 +290,12 @@ def _get_state_table():
 
 
 def _get_message_table():
+    if is_aws:
+        return boto3.resource(
+            'dynamodb',
+            region_name='eu-central-1',
+        ).Table(_MESSAGE_TABLE)
+
     db = _get_db()
 
     try:

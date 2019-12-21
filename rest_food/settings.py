@@ -3,6 +3,7 @@ import os
 
 
 logging.basicConfig(level=logging.INFO)
+logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -19,3 +20,5 @@ def env_var(var_name: str):
 
 TELEGRAM_TOKEN_SUPPLY = env_var('TELEGRAM_TOKEN_SUPPLY')
 TELEGRAM_TOKEN_DEMAND = env_var('TELEGRAM_TOKEN_DEMAND')
+YANDEX_API_KEY = env_var('YANDEX_API_KEY')
+BOT_PATH_KEY = env_var('BOT_PATH_KEY')

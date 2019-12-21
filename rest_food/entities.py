@@ -71,7 +71,6 @@ class DemandCommandName(Enum):
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
     FINISH_TAKE = 'f_take'
-    CANCEL_TAKE = 'c_take'
 
 
 @dataclass
@@ -93,6 +92,12 @@ class User:
     tg_user: Optional[TgUser]=None
     provider: Optional[Provider]=None
     workflow: Optional[Workflow]=None
+
+    def approved_coordinates(self):
+        return (
+            self.info.get(UserInfoField.IS_APPROVED_COORDINATES.value) and
+            self.info.get(UserInfoField.COORDINATES.value)
+        )
 
 
 @dataclass

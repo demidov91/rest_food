@@ -1,0 +1,55 @@
+service: food
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: eu-central-1
+  environment:
+    STAGE: LIVE
+    TELEGRAM_TOKEN_SUPPLY: ${env:TELEGRAM_TOKEN_SUPPLY}
+    TELEGRAM_TOKEN_DEMAND: ${env:TELEGRAM_TOKEN_DEMAND}
+    YANDEX_API_KEY: ${env:YANDEX_API_KEY}
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - dynamodb:DescribeTable
+      - dynamodb:Query
+      - dynamodb:Scan
+      - dynamodb:GetItem
+      - dynamodb:PutItem
+      - dynamodb:UpdateItem
+      - dynamodb:DeleteItem
+      - dynamodb:BatchWriteItem
+    Resource:
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message
+
+
+package:
+  include:
+    - rest_food
+
+custom:
+  pythonRequirements:
+    fileName: requirements/serverless.txt
+    pythonBin: python
+    useDownloadCache: true
+    cacheLocation: .serverless/.cache
+
+functions:
+  supply:
+    handler: rest_food.serverless.supply
+    events:
+      - http:
+          path: supply/${env:BOT_PATH_KEY}/
+          method: post
+  demand:
+    handler: rest_food.serverless.demand
+    events:
+      - http:
+          path: demand/${env:BOT_PATH_KEY}/
+          method: post
+
+
+plugins:
+  - serverless-python-requirements

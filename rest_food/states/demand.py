@@ -65,14 +65,18 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
     )
 
     buttons = _get_review_buttons(user)
-    buttons.append([{
-        'text': _('Confirm and take products'),
-        'data': f'{DemandCommandName.FINISH_TAKE.value}|'
-                f'{provider_str}|{supply_user_db_id}|{message_id}',
-    }, {
-        'text': _('Cancel'),
-        'data': f'{DemandCommandName.CANCEL_TAKE.value}',
-    }])
+    buttons.extend([
+        [{
+            'text': _('Confirm and take products'),
+            'data': f'{DemandCommandName.FINISH_TAKE.value}|'
+                    f'{provider_str}|{supply_user_db_id}|{message_id}',
+        }],
+        [{
+            'text': _('Cancel'),
+            'data': f'{DemandCommandName.INFO.value}|'
+                    f'{provider_str}|{supply_user_db_id}|{message_id}',
+        }]
+    ])
 
     return Reply(
         text=_('Please, confirm/edit your contact information to proceed.'),
@@ -94,7 +98,7 @@ def _get_review_buttons(user: User):
             })
         else:
             buttons.append({
-                'text': ('Connect via {}: ❌').format(user.provider.value),
+                'text': _('Connect via {}: ❌').format(user.provider.value),
                 'data': DemandCommandName.ENABLE_USERNAME.value,
             })
 
@@ -161,11 +165,14 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
 
     info = _(
         "Restaurant name: {name}\n"
-        "Address: {address}\n\n"
+        "Address: {address}\n"
+        "Phone: {phone}\n"
+        "\n\n"
         "{products}"
     ).format(
-        name=supply_user.info['name'],
-        address=supply_user.info['address'],
+        name=supply_user.info[UserInfoField.NAME.value],
+        address=supply_user.info[UserInfoField.ADDRESS.value],
+        phone=supply_user.info[UserInfoField.PHONE.value],
         products=build_food_message_by_id(user=supply_user, message_id=message_id),
     )
 
@@ -174,25 +181,33 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     if db_message.demand_user_id is not None:
         return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{}").format(info))
 
-    coordinates = supply_user.info[UserInfoField.COORDINATES.value]
+    coordinates = supply_user.approved_coordinates()
+
+    take_it_button = {
+        'text': _('Take it'),
+        'data': f'{DemandCommandName.TAKE.value}|'
+                f'{supply_user.provider.value}|'
+                f'{supply_user.user_id}|'
+                f'{message_id}',
+    }
+
+
+    if not coordinates:
+        return Reply(
+            text=info,
+            buttons=[[take_it_button]]
+        )
 
     return Reply(
         text=info,
         coordinates=coordinates,
-        buttons=[[
-            {
-                'text': _('Take it'),
-                'data': f'{DemandCommandName.TAKE.value}|'
-                        f'{supply_user.provider.value}|'
-                        f'{supply_user.user_id}|'
-                        f'{message_id}',
-            },
-        ], [
-            {
+        buttons=[
+            [take_it_button],
+            [{
                 'text': _('Map'),
                 'url': f'https://dzmitry.by/redirect?to=geo:{coordinates[0]},{coordinates[1]}?z=21',
-            },
-        ]]
+            }]
+        ]
     )
 
 
@@ -235,10 +250,6 @@ def _handle_edit_social_status(user: User):
     return Reply(text=_('Choose your social status:'), buttons=buttons)
 
 
-def _handle_cancel_command(user: User):
-    return Reply(text=_('Cancelled.'))
-
-
 COMMAND_HANDLERS = {
     DemandCommandName.TAKE: _handle_take,
     DemandCommandName.INFO: _handle_info,
@@ -247,9 +258,6 @@ COMMAND_HANDLERS = {
     DemandCommandName.FINISH_TAKE: _handle_finish_take,
     DemandCommandName.EDIT_NAME: _handle_edit_name,
     DemandCommandName.EDIT_PHONE: _handle_edit_phone,
-    DemandCommandName.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
-    DemandCommandName.SET_SOCIAL_STATUS: _handle_set_social_status,
-    DemandCommandName.CANCEL_TAKE: _handle_cancel_command,
 }
 
 

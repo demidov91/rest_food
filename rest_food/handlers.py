@@ -22,14 +22,6 @@ logger = logging.getLogger(__name__)
 
 hack_telegram_json_dumps()
 
-def _get_original_message_id(update):
-    return (
-        update.callback_query and
-        update.callback_query.message and
-        update.callback_query.message.message_id
-    )
-
-
 
 def tg_supply(data):
     update = Update.de_json(data, None)
@@ -63,11 +55,9 @@ def tg_supply(data):
         if isinstance(state, DefaultState):
             return build_tg_response(chat_id=chat_id, reply=next_state.get_intro())
 
-        original_message_id = _get_original_message_id(update)
-
         send_messages(
             tg_chat_id=chat_id,
-            original_message_id=original_message_id,
+            original_message=update.callback_query and update.callback_query.message,
             replies=[reply, next_state.get_intro()],
             workflow=Workflow.SUPPLY
         )
@@ -116,11 +106,9 @@ def tg_demand(data):
                 next_state = set_demand_state(user=user, state=reply.next_state)
                 replies.append(next_state.get_intro())
 
-            original_message_id = _get_original_message_id(update)
-
             send_messages(
                 tg_chat_id=chat_id,
-                original_message_id=original_message_id,
+                original_message=update.callback_query and update.callback_query.message,
                 replies=replies,
                 workflow=Workflow.DEMAND
             )
