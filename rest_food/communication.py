@@ -7,6 +7,7 @@ from telegram.error import BadRequest
 from rest_food.db import get_demand_users
 from rest_food.entities import Reply, User, Workflow
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
+from rest_food.states.supply_command import SupplyCommand
 from rest_food.states.utils import (
     build_active_food_message,
     build_food_message_by_id,
@@ -52,14 +53,24 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
     demand_description = build_demand_description(demand_user)
     food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
 
-    message_to_send = _("{}\n\nYour message was:\n\n{}").format(
+    text_to_send = _("{}\n\nYour message was:\n\n{}").format(
         demand_description,
         food_description
     )
+    buttons_to_send = [
+        [{
+            'text': _('Reject'),
+            'data': f'c|{SupplyCommand.CANCEL_BOOKING}|{message_id}',
+        }],
+        [{
+            'text': _('Back to posting'),
+            'data': f'c|{SupplyCommand.BACK_TO_POSTING}',
+        }],
+    ]
 
     send_messages(
         tg_chat_id=int(supply_user.chat_id),
-        replies=[Reply(text=message_to_send)],
+        replies=[Reply(text=text_to_send, buttons=buttons_to_send)],
         workflow=Workflow.SUPPLY,
     )
 
@@ -111,8 +122,6 @@ def send_messages(
 
         if original_message_should_be_replaced:
             bot.delete_message(chat_id=tg_chat_id, message_id=original_message.message_id)
-
-        original_message_should_be_replaced = False
 
 
 def build_tg_response(*, chat_id: int, reply: Reply):

@@ -4,7 +4,7 @@ from decimal import Decimal
 from telegram import Update
 
 from rest_food.db import get_or_create_user
-from rest_food.entities import Workflow, Provider, Reply
+from rest_food.entities import Workflow, Provider, Reply, SupplyState
 from rest_food.state_machine import (
     get_supply_state,
     set_supply_state,
@@ -14,6 +14,7 @@ from rest_food.state_machine import (
 from rest_food.communication import send_messages, get_bot, build_tg_response
 from rest_food.states.demand import handle_demand_data
 from rest_food.states.supply import DefaultState
+from rest_food.states.supply_command import handle_supply_command
 from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _
 
 
@@ -28,27 +29,37 @@ def tg_supply(data):
     chat_id = update.effective_chat.id
     user_id = update.effective_user.id
     tg_user = update.effective_user
+    data = update.callback_query and update.callback_query.data # type: str
 
     try:
         state = get_supply_state(tg_user_id=user_id, tg_user=tg_user, tg_chat_id=chat_id)
+        db_user = state.db_user
 
-        if update.message and update.message.text == '/start':
-            state = set_supply_state(state.db_user, None)
+        if data and data.startswith('c|'):
+            parts = data.split('|')
+            reply = handle_supply_command(db_user, parts[1], parts[2:])
+            if reply.next_state is None:
+                reply.next_state = SupplyState.NO_STATE
 
-        reply = state.handle(
-            update.message and update.message.text,
-            update.callback_query and update.callback_query.data,
-            (
-                    update.message and
-                    update.message.location and
-                    (
-                        Decimal(str(update.message.location.latitude)),
-                        Decimal(str(update.message.location.longitude))
-                    )
+        else:
+            if update.message and update.message.text == '/start':
+                state = set_supply_state(db_user, None)
+
+            reply = state.handle(
+                update.message and update.message.text,
+                data,
+                (
+                        update.message and
+                        update.message.location and
+                        (
+                            Decimal(str(update.message.location.latitude)),
+                            Decimal(str(update.message.location.longitude))
+                        )
+                )
             )
-        )
+
         if reply is not None and reply.next_state is not None:
-            next_state = set_supply_state(state.db_user, reply.next_state)
+            next_state = set_supply_state(db_user, reply.next_state)
         else:
             next_state = state
 

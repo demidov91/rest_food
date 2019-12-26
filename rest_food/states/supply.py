@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from rest_food.states.base import State
 from rest_food.entities import Reply, SupplyState, Provider, UserInfoField
@@ -332,3 +332,28 @@ class ForceSetCoordinatesState(ForceInfoMixin, SetCoordinatesState):
 
 class ForceSetPhoneState(ForceInfoMixin, SetPhoneState):
     pass
+
+
+class BookingCancelReason(State):
+    intro = Reply(text=_('What to tell the foodsaver?'))
+
+
+    def handle(self, text: str, data=None, coordinates=None):
+        # send the reason
+        # republish
+        return Reply(text=_('Cancelled'), next_state=SupplyState.READY_TO_POST)
+
+
+class NoState(State):
+    intro = None
+
+    def handle(
+            self,
+            text: str,
+            data,
+            coordinates
+    ):
+        return Reply(
+            text=_('Sorry, something went wrong.'),
+            next_state=SupplyState.READY_TO_POST
+        )

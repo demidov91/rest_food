@@ -132,6 +132,17 @@ def set_next_command(user: User, command: Command):
     user.context['arguments'] = command.arguments
 
 
+def set_booking_to_cancel(user: User, message_id: str):
+    table = _get_state_table()
+    table.update_item(
+        Key={'user_id': str(user.user_id),
+             'cluster': _build_user_cluster(user.provider, user.workflow)},
+        UpdateExpression='SET context.booking_to_cancel = :btc',
+        ExpressionAttributeValues={':btc': message_id},
+    )
+    user.context['booking_to_cancel'] = message_id
+
+
 def create_supply_message(user: User, message: str, *, provider: Provider):
     message_id = str(uuid4())
     message_table = _get_message_table()
