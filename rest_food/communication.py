@@ -4,8 +4,8 @@ from typing import Iterable
 from telegram import Bot, Message
 from telegram.error import BadRequest
 
-from rest_food.db import get_demand_users
-from rest_food.entities import Reply, User, Workflow
+from rest_food.db import get_demand_users, get_user, get_supply_message_record
+from rest_food.entities import Reply, User, Workflow, Provider
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
 from rest_food.states.supply_command import SupplyCommand
 from rest_food.states.utils import (
@@ -72,6 +72,26 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
         tg_chat_id=int(supply_user.chat_id),
         replies=[Reply(text=text_to_send, buttons=buttons_to_send)],
         workflow=Workflow.SUPPLY,
+    )
+
+
+def notify_demand_for_cancel(*, supply_user: User, message_id: str, message: str):
+    message_record = get_supply_message_record(user=supply_user, message_id=message_id)
+    if message_record.demand_user_id is None:
+        raise ValueError('Demand user is not defined.')
+
+    provider, user_id = message_record.demand_user_id.split('|')
+    demand_user = get_user(user_id=user_id, provider=Provider(provider), workflow=Workflow.DEMAND)
+
+    food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
+    text_to_send = _(
+        'Your request was rejected with the following words:\n%s\n\nRequest was:\n%s'
+    ) % (message, food_description)
+
+    send_messages(
+        tg_chat_id=int(demand_user.chat_id),
+        replies=[Reply(text=text_to_send)],
+        workflow=Workflow.DEMAND,
     )
 
 

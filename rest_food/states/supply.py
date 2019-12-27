@@ -10,7 +10,7 @@ from rest_food.db import (
     set_supply_message_time,
     set_info,
 )
-from rest_food.communication import publish_supply_event
+from rest_food.communication import publish_supply_event, notify_demand_for_cancel
 from rest_food.states.utils import (
     build_active_food_message,
     get_coordinates,
@@ -337,9 +337,12 @@ class ForceSetPhoneState(ForceInfoMixin, SetPhoneState):
 class BookingCancelReason(State):
     intro = Reply(text=_('What to tell the foodsaver?'))
 
-
     def handle(self, text: str, data=None, coordinates=None):
-        # send the reason
+        notify_demand_for_cancel(
+            supply_user=self.db_user,
+            message_id=self.db_user.context['booking_to_cancel'],
+            message=text
+        )
         # republish
         return Reply(text=_('Cancelled'), next_state=SupplyState.READY_TO_POST)
 

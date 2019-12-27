@@ -13,7 +13,6 @@ class SupplyCommand:
     BACK_TO_POSTING = 'back_to_posting'
 
 
-
 def handle_supply_command(user: User, command_name: str, args: List[str]):
     """
     Handle direct stateless command.
