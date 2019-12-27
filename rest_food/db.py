@@ -18,6 +18,10 @@ def _build_user_cluster(provider: Provider, workflow: Workflow):
     return f'{provider.value}-{workflow.value}'
 
 
+def _build_extended_id(user: User) -> str:
+    return f'{user.provider.value}|{user.user_id}'
+
+
 def _build_user(data: dict):
     return User(
         cluster=data['cluster'],
@@ -180,7 +184,7 @@ def extend_supply_message(user: User, message: str, *, provider:Provider):
 def set_supply_message_time(user: User, time_message: str):
     message_table = _get_message_table()
     message_table.update_item(
-        Key={'id': user.editing_message_id, 'user_id': f'{user.provider.value}|{user.user_id}'},
+        Key={'id': user.editing_message_id, 'user_id': _build_extended_id(user)},
         UpdateExpression="SET take_time = :take_time",
         ExpressionAttributeValues={':take_time': time_message},
     )
@@ -209,7 +213,7 @@ def get_supply_editing_message(user: User) -> Optional[Message]:
 def get_supply_message_record(*, user, message_id: str) -> Message:
     table = _get_message_table()
     record = table.get_item(
-        Key={'id': message_id, 'user_id': f'{user.provider.value}|{user.user_id}'},
+        Key={'id': message_id, 'user_id': _build_extended_id(user)},
         ConsistentRead=True,
     )['Item']
 
@@ -222,12 +226,12 @@ def get_supply_message_record(*, user, message_id: str) -> Message:
 
 def mark_message_as_booked(demand_user: User, supply_user:User, message_id: str):
     table = _get_message_table()
-    user_extended_id = f'{demand_user.provider.value}|{demand_user.user_id}'
+    user_extended_id = _build_extended_id(demand_user)
 
     try:
         table.update_item(
             Key={
-                'user_id': f'{supply_user.provider.value}|{supply_user.user_id}',
+                'user_id': _build_extended_id(supply_user),
                 'id': message_id,
             },
             UpdateExpression="SET demand_user_id = :demand_user_extended_id",
@@ -241,6 +245,18 @@ def mark_message_as_booked(demand_user: User, supply_user:User, message_id: str)
         raise
 
     return True
+
+
+def cancel_booking(supply_user: User, message_id: str):
+    table = _get_message_table()
+
+    table.update_item(
+        Key={
+            'user_id': _build_extended_id(supply_user),
+            'id': message_id,
+        },
+        UpdateExpression="REMOVE demand_user_id"
+    )
 
 
 _STATE_TABLE = 'food-state'

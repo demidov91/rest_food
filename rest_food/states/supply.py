@@ -9,6 +9,7 @@ from rest_food.db import (
     cancel_supply_message,
     set_supply_message_time,
     set_info,
+    cancel_booking,
 )
 from rest_food.communication import publish_supply_event, notify_demand_for_cancel
 from rest_food.states.utils import (
@@ -343,7 +344,9 @@ class BookingCancelReason(State):
             message_id=self.db_user.context['booking_to_cancel'],
             message=text
         )
-        # republish
+        cancel_booking(
+            supply_user=self.db_user, message_id=self.db_user.context['booking_to_cancel']
+        )
         return Reply(text=_('Cancelled'), next_state=SupplyState.READY_TO_POST)
 
 
