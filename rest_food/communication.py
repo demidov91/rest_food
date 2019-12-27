@@ -81,8 +81,11 @@ def notify_demand_for_cancel(*, supply_user: User, message_id: str, message: str
 
     food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
     text_to_send = _(
-        'Your request was rejected with the following words:\n%s\n\nRequest was:\n%s'
-    ) % (message, food_description)
+        'Your request was rejected with the following words:\n%(message)s\n\nRequest was:\n%(food)s'
+    ) % {
+        'message': message,
+        'food': food_description,
+    }
 
     send_messages(
         tg_chat_id=int(demand_user.chat_id),
