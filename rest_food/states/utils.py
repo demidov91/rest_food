@@ -2,6 +2,7 @@ import dataclasses
 import datetime
 import logging
 import re
+import time
 from decimal import Decimal
 from enum import Enum
 from typing import Optional, List
@@ -23,12 +24,13 @@ class YandexBBox(Enum):
     MINSK = '27.4,53.83~27.7,54'
 
 
-def to_local_time(utc_time: datetime.datetime):
+def to_local_time(system_time: datetime.datetime):
     """
     No pytz implementation of utc to utc+3 convertion.
-
     """
-    return utc_time + datetime.timedelta(hours=3)
+    utc_offset = -time.timezone
+    target_offset = datetime.timedelta(hours=3) - datetime.timedelta(seconds=utc_offset)
+    return system_time + target_offset
 
 
 def db_time_to_user(db_time: Optional[str], fmt: str) -> str:

@@ -267,7 +267,7 @@ msgstr "Введите продукты, которые можете перед�
 
 #: rest_food/states/supply.py:69
 msgid "View posted products"
-msgstr ""
+msgstr "Просмотреть объявления"
 
 #: rest_food/states/supply.py:90
 msgid "Set time and send"
