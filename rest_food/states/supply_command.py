@@ -68,7 +68,7 @@ def view_messages(user):
         for x in messages
     ]
     buttons.append([{
-        'text': _('Back'),
+        'text': _('Go to product posting'),
         'data': f'c|{SupplyCommand.BACK_TO_POSTING}'
     }])
     return Reply(text=_('Last messages'), buttons=buttons)
@@ -88,7 +88,7 @@ def show_demanded_message(user, message_id: str, demand_provider: str, demand_us
             'data': f'c|{SupplyCommand.CANCEL_BOOKING}|{message_id}',
         }],
         [{
-            'text': _('Back'),
+            'text': _('View all messages'),
             'data': f'c|{SupplyCommand.LIST_MESSAGES}',
         }],
     ]
@@ -104,7 +104,7 @@ def show_non_demanded_message(user, message_id: str):
     return Reply(
         text=message,
         buttons=[[{
-            'text': _('Back'),
+            'text': _('View all messages'),
             'data': f'c|{SupplyCommand.LIST_MESSAGES}',
         }]]
     )

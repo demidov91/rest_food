@@ -11,6 +11,7 @@ from rest_food.db import (
     set_info,
     cancel_booking,
     list_messages,
+    get_supply_message_record,
 )
 from rest_food.communication import publish_supply_event, notify_demand_for_cancel
 from rest_food.states.utils import (
@@ -350,7 +351,17 @@ class ForceSetPhoneState(ForceInfoMixin, SetPhoneState):
 
 
 class BookingCancelReason(State):
-    intro = Reply(text=_('What to tell the foodsaver?'))
+    def get_intro(self) -> Reply:
+        message_id = self.db_user.context['booking_to_cancel']
+        demand_user_extended_id = get_supply_message_record(user=self.db_user, message_id=message_id).demand_user_id
+
+        return Reply(
+            text=_('What to tell the foodsaver?'),
+            buttons=[[{
+                'text': _('Back to the message'),
+                'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|{message_id}|{demand_user_extended_id}'
+            }]]
+        )
 
     def handle(self, text: str, data=None, coordinates=None):
         notify_demand_for_cancel(

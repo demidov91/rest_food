@@ -59,8 +59,8 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
             'data': f'c|{SupplyCommand.CANCEL_BOOKING}|{message_id}',
         }],
         [{
-            'text': _('Back to posting'),
-            'data': f'c|{SupplyCommand.BACK_TO_POSTING}',
+            'text': _('View all messages'),
+            'data': f'c|{SupplyCommand.LIST_MESSAGES}',
         }],
     ]
 
