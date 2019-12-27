@@ -10,6 +10,7 @@ from rest_food.db import (
     set_supply_message_time,
     set_info,
     cancel_booking,
+    list_messages,
 )
 from rest_food.communication import publish_supply_event, notify_demand_for_cancel
 from rest_food.states.utils import (
@@ -17,6 +18,7 @@ from rest_food.states.utils import (
     get_coordinates,
     validate_phone_number,
 )
+from rest_food.states.supply_command import SupplyCommand
 from rest_food.translation import translate_lazy as _
 
 
@@ -56,6 +58,18 @@ class ReadyToPostState(State):
         ],
         text=_('Enter food you can share and click "send"'),
     )
+
+    def get_intro(self) -> Reply:
+        reply = super().get_intro()
+
+        messages = list_messages(self.db_user)
+        if messages:
+            reply.buttons.append([{
+                'text': _('View posted products'),
+                'data': f'c|{SupplyCommand.LIST_MESSAGES}',
+            }])
+
+        return reply
 
     def handle(self, text: str, data: str, *args, **kwargs):
         if data == 'view-info':

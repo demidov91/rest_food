@@ -1,3 +1,5 @@
+import datetime
+
 from enum import Enum
 from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass
@@ -6,6 +8,9 @@ from decimal import Decimal
 from telegram.user import User as TgUser
 
 from rest_food.translation import translate_lazy as _
+
+
+DT_FORMAT = '%Y%m%d%H%M%S'
 
 
 class SupplyState(Enum):
@@ -122,9 +127,21 @@ class User:
 
 @dataclass
 class Message:
+    message_id: str
     products: List[str]
     take_time: Optional[str]
     demand_user_id: Optional[Union[str, int]]
+    dt_created: Optional[str]
+
+    @classmethod
+    def from_db(cls, record: dict):
+        return Message(
+            message_id=record['id'],
+            demand_user_id=record.get('demand_user_id'),
+            products=record.get('products'),
+            take_time=record.get('take_time'),
+            dt_created=record.get('dt_created')
+        )
 
 
 @dataclass

@@ -1,4 +1,5 @@
 import dataclasses
+import datetime
 import logging
 import re
 from decimal import Decimal
@@ -7,7 +8,7 @@ from typing import Optional, List
 
 from requests import Session
 
-from rest_food.entities import User, Message, UserInfoField, translate_social_status_string
+from rest_food.entities import User, Message, UserInfoField, translate_social_status_string, DT_FORMAT
 from rest_food.db import get_supply_editing_message, get_supply_message_record
 from rest_food.exceptions import ValidationError
 from rest_food.settings import YANDEX_API_KEY
@@ -20,6 +21,21 @@ logger = logging.getLogger(__name__)
 class YandexBBox(Enum):
     BELARUS = '23.579,51.5~32.6,56.2'
     MINSK = '27.4,53.83~27.7,54'
+
+
+def to_local_time(utc_time: datetime.datetime):
+    """
+    No pytz implementation of utc to utc+3 convertion.
+
+    """
+    return utc_time + datetime.timedelta(hours=3)
+
+
+def db_time_to_user(db_time: Optional[str], fmt: str) -> str:
+    if not db_time:
+        return '~~~'
+
+    return to_local_time(datetime.datetime.strptime(db_time, DT_FORMAT)).strftime(fmt)
 
 
 def _message_to_text(message: Message):
@@ -69,6 +85,16 @@ def build_demand_description(user: User) -> str:
         )
 
     return message
+
+
+def build_demanded_message_text(*, demand_user: User, supply_user: User, message_id: str) -> str:
+    demand_description = build_demand_description(demand_user)
+    food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
+
+    return _("{}\n\nYour message was:\n\n{}").format(
+        demand_description,
+        food_description
+    )
 
 
 def validate_phone_number(text):

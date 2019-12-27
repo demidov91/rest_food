@@ -11,7 +11,7 @@ from rest_food.states.supply_command import SupplyCommand
 from rest_food.states.utils import (
     build_active_food_message,
     build_food_message_by_id,
-    build_demand_description,
+    build_demanded_message_text,
 )
 from rest_food.translation import translate_lazy as _
 
@@ -50,12 +50,8 @@ def publish_supply_event(user: User):
 
 
 def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user: User):
-    demand_description = build_demand_description(demand_user)
-    food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
-
-    text_to_send = _("{}\n\nYour message was:\n\n{}").format(
-        demand_description,
-        food_description
+    text_to_send = build_demanded_message_text(
+        supply_user=supply_user, demand_user=demand_user, message_id=message_id
     )
     buttons_to_send = [
         [{

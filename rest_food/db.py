@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 from typing import List, Optional, Tuple
@@ -7,11 +8,12 @@ import boto3
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
 
-from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command
+from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command, DT_FORMAT
 
 
 is_aws = os.environ.get('STAGE') == 'LIVE'
 logger = logging.getLogger(__name__)
+
 
 
 def _build_user_cluster(provider: Provider, workflow: Workflow):
@@ -20,6 +22,10 @@ def _build_user_cluster(provider: Provider, workflow: Workflow):
 
 def _build_extended_id(user: User) -> str:
     return f'{user.provider.value}|{user.user_id}'
+
+
+def _build_cluster_by_user(user: User):
+    return _build_user_cluster(user.provider, user.workflow)
 
 
 def _build_user(data: dict):
@@ -150,10 +156,12 @@ def set_booking_to_cancel(user: User, message_id: str):
 def create_supply_message(user: User, message: str, *, provider: Provider):
     message_id = str(uuid4())
     message_table = _get_message_table()
+    dt_created = datetime.datetime.now().strftime(DT_FORMAT)
     message_table.put_item(Item={
         'id': message_id,
         'user_id': f'{provider.value}|{user.user_id}',
         'products': [message],
+        'dt_created': dt_created,
     })
 
     state_table = _get_state_table()
@@ -203,6 +211,21 @@ def cancel_supply_message(user: User, *, provider:Provider):
     user.editing_message_id = None
 
 
+def list_messages(supply_user: User, interval: datetime.timedelta=datetime.timedelta(days=2)):
+    dt_from = (datetime.datetime.now() - interval).strftime(DT_FORMAT)
+    message_table = _get_message_table()
+    records = message_table.query(
+        KeyConditionExpression=Key('cluster').eq(_build_cluster_by_user(supply_user)) and Key('user_id').eq(_build_extended_id(supply_user)),# f"user_id = :extended_uid AND cluster = :cluster_value",
+        FilterExpression=f"dt_created > :dt_from",
+        ExpressionAttributeValues={
+            # ':extended_uid': _build_extended_id(supply_user),
+            # ':cluster_value': _build_cluster_by_user(supply_user),
+            ':dt_from': dt_from,
+        }
+    )['Items']
+    return [Message.from_db(x) for x in records]
+
+
 def get_supply_editing_message(user: User) -> Optional[Message]:
     if user.editing_message_id is None:
         return None
@@ -217,11 +240,7 @@ def get_supply_message_record(*, user, message_id: str) -> Message:
         ConsistentRead=True,
     )['Item']
 
-    return Message(
-        demand_user_id=record.get('demand_user_id'),
-        products=record.get('products'),
-        take_time=record.get('take_time'),
-    )
+    return Message.from_db(record)
 
 
 def mark_message_as_booked(demand_user: User, supply_user:User, message_id: str):
