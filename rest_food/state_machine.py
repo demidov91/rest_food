@@ -1,5 +1,5 @@
 from rest_food.states.base import State
-from rest_food.states import demand, supply_state
+from rest_food.states import demand_state, supply_state
 from rest_food.db import get_or_create_user, set_state
 from rest_food.entities import Provider, Workflow, SupplyState, DemandState, User
 
@@ -23,9 +23,9 @@ SUPPLY = {
 }
 
 DEMAND = {
-    None: demand.DefaultState,
-    DemandState.EDIT_NAME: demand.SetNameState,
-    DemandState.EDIT_PHONE: demand.SetPhoneState,
+    None: demand_state.DefaultState,
+    DemandState.EDIT_NAME: demand_state.SetNameState,
+    DemandState.EDIT_PHONE: demand_state.SetPhoneState,
 }
 
 

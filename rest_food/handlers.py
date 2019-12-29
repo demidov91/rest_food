@@ -12,7 +12,7 @@ from rest_food.state_machine import (
     set_demand_state,
 )
 from rest_food.communication import send_messages, get_bot, build_tg_response
-from rest_food.states.demand import handle_demand_data
+from rest_food.states.demand_command import handle_demand_data
 from rest_food.states.supply_state import DefaultState
 from rest_food.states.supply_command import handle_supply_command
 from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _
