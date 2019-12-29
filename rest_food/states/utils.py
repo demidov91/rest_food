@@ -81,10 +81,13 @@ def build_demand_description(user: User) -> str:
     if not is_provided_contact_info:
         message += _('No contact info was provided.\n')
 
-    if user.info.get(UserInfoField.SOCIAL_STATUS.value):
+    social_status_verbose = translate_social_status_string(
+        user.info.get(UserInfoField.SOCIAL_STATUS.value)
+    )
+    if social_status_verbose is not None:
         message += (
-            _('Social status: %s') %
-            translate_social_status_string(user.info[UserInfoField.SOCIAL_STATUS.value])
+            _('Social status: %s') % social_status_verbose
+
         )
 
     return message

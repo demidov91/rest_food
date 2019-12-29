@@ -65,16 +65,16 @@ class SocialStatus(Enum):
     OTHER = 'other'
 
 
-def translate_social_status_string(ss_string: Optional[str]) -> str:
+def translate_social_status_string(ss_string: Optional[str]) -> Optional[str]:
     if not ss_string:
-        return _('not set ❓')
+        return None
 
     try:
         ss = SocialStatus(ss_string)
     except ValueError:
-        return _('unknown ❓')
+        return None
 
-    return soc_status_translation.get(ss, _('unknown ❓'))
+    return soc_status_translation.get(ss)
 
 
 soc_status_translation = {

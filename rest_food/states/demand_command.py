@@ -112,16 +112,25 @@ def _get_review_buttons(user: User):
                 'data': DemandCommandName.ENABLE_USERNAME.value,
             })
 
+    social_status_translated = translate_social_status_string(
+        user.info.get(UserInfoField.SOCIAL_STATUS.value)
+    )
+
+    if social_status_translated is None:
+        social_status_text = _('Social status: not set ❌')
+    else:
+        social_status_text = _('Social status: %s ✅') % social_status_translated
+
     buttons.append({
-        'text': (
-            _('Social status: %s') %
-            translate_social_status_string(user.info.get(UserInfoField.SOCIAL_STATUS.value))
-        ),
+        'text': social_status_text,
         'data': DemandCommandName.EDIT_SOCIAL_STATUS.value,
     })
 
+    phone = user.info.get(UserInfoField.PHONE.value)
+    phone_verbose = phone + ' ✅' if phone else _('not set ❓')
+
     buttons.append({
-        'text': _('Phone: %s') % (user.info.get(UserInfoField.PHONE.value) or _('not set ❓')),
+        'text': _('Phone: %s') % phone_verbose,
         'data': f'{DemandCommandName.EDIT_PHONE.value}',
 
     })
