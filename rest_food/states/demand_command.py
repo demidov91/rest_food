@@ -22,7 +22,11 @@ from rest_food.entities import (
     translate_social_status_string,
 )
 from rest_food.translation import translate_lazy as _
-from rest_food.states.demand_reply import build_demand_side_short_message
+from rest_food.states.demand_reply import (
+    build_demand_side_short_message,
+    MapInfoHandler,
+    MapTakeHandler,
+)
 from rest_food.states.formatters import (
     build_demand_side_full_message_text,
     build_demand_side_full_message_text_by_id,
@@ -68,7 +72,7 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
     if coordinates is not None:
         buttons.append([{
             'text': _('🌍 Map'),
-            'data': DemandCommandName.MAP.build(provider_str, supply_user_id, message_id),
+            'data': DemandCommandName.MAP_TAKE.build(provider_str, supply_user_id, message_id),
         }])
 
     buttons.append([
@@ -207,7 +211,7 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
     if coordinates is not None:
         buttons.append([{
             'text': _('Map'),
-            'data': DemandCommandName.MAP.build(provider_str, supply_user_id, message_id),
+            'data': DemandCommandName.MAP_INFO.build(provider_str, supply_user_id, message_id),
         }])
 
     take_it_button = {
@@ -236,35 +240,12 @@ def _handle_short_info(user: User, supply_provider: str, supply_user_id: str, me
     return build_demand_side_short_message(supply_user, message_id)
 
 
-def _handle_map(user: User, supply_provider: str, supply_user_id: str, message_id: str):
-    supply_user = get_supply_user(user_id=supply_user_id, provider=Provider(supply_provider))
-    coordinates = supply_user.approved_coordinates()
+def _handle_map_info(user: User, supply_provider: str, supply_user_id: str, message_id: str):
+    return MapInfoHandler.create(supply_provider, supply_user_id).build(message_id)
 
-    if coordinates is None:
-        logger.error('Map is requested while coordinates where not set.')
-        return Reply(text=_('Coordinates where not provided.'))
 
-    map_links = [{
-        'text': _('Open in app'),
-        'url': f'https://dzmitry.by/redirect?to=geo:{coordinates[0]},{coordinates[1]}?z=21',
-    }]
-
-    back_command = get_next_command(user)
-    take_button = None
-    if back_command.name != DemandCommandName.TAKE.value:
-        take_button = {
-            'text': _('Take it'),
-            'data': DemandCommandName.TAKE.build(supply_provider, supply_user_id, message_id),
-        }
-
-    action_links = [build_demand_command_button(_('Back'), back_command)]
-    if take_button is not None:
-        action_links.append(take_button)
-
-    return Reply(
-        coordinates=coordinates,
-        buttons=[map_links, action_links]
-    )
+def _handle_map_take(user: User, supply_provider: str, supply_user_id: str, message_id: str):
+    return MapTakeHandler.create(supply_provider, supply_user_id).build(message_id)
 
 
 def _handle_enable_username(user: User):
@@ -310,7 +291,8 @@ COMMAND_HANDLERS = {
     DemandCommandName.TAKE: _handle_take,
     DemandCommandName.INFO: _handle_info,
     DemandCommandName.SHORT_INFO: _handle_short_info,
-    DemandCommandName.MAP: _handle_map,
+    DemandCommandName.MAP_INFO: _handle_map_info,
+    DemandCommandName.MAP_TAKE: _handle_map_take,
     DemandCommandName.ENABLE_USERNAME: _handle_enable_username,
     DemandCommandName.DISABLE_USERNAME: _handle_disable_username,
     DemandCommandName.FINISH_TAKE: _handle_finish_take,

@@ -95,10 +95,9 @@ class DemandCommandName(Enum):
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
     FINISH_TAKE = 'f_take'
-    MAP = 'map'
     MAP_INFO = 'mapi'
-    MAP_BOOK = 'mapb'
-    MAP_AFTER_BOOKED = 'mapd'
+    MAP_TAKE = 'mapt'
+    MAP_BOOKED = 'mapb'
 
     def build(self, *args):
         return '|'.join((self.value, ) + args)
