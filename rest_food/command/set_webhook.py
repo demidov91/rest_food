@@ -1,7 +1,14 @@
 import argparse
+from enum import Enum
+
 from rest_food.handlers import set_tg_webhook
 from rest_food.settings import BOT_PATH_KEY
 from rest_food.entities import Workflow
+
+
+class Server(Enum):
+    AMAZON = 0
+    FLASK = 1
 
 
 parser = argparse.ArgumentParser(description='Process some integers.')
@@ -22,47 +29,48 @@ parser.add_argument(
     help='is demand bot'
 )
 parser.add_argument(
-    '--both',
-    dest='set_both',
+    '-l',
+    dest='server',
     nargs='?',
-    const=True,
-    default=False,
-    help='both bots'
+    const=Server.AMAZON,
+    help='amazon lambda as a server'
 )
 parser.add_argument(
-    '--full',
-    dest='is_full_url',
+    '-f',
+    dest='server',
     nargs='?',
-    const=True,
-    default=False,
-    help='full url was provided'
+    const=Server.FLASK,
+    help='flask as a server'
 )
 parser.add_argument('url')
 
 args = parser.parse_args()
 
 
-def _set_supply(url: str, is_full_url: bool):
-    if not is_full_url:
-        url = f'{url}/tg/supply/{BOT_PATH_KEY}/'
+SERVER_PREFIX = {
+    Server.AMAZON: 'dev',
+    Server.FLASK: 'tg',
+}
 
-    set_tg_webhook(url, workflow=Workflow.SUPPLY)
+WORKFLOW_PREFIX = {
+    Workflow.DEMAND: 'demand',
+    Workflow.SUPPLY: 'supply',
+}
 
 
-def _set_demand(url: str, is_full_url: bool):
-    if not is_full_url:
-        url = f'{url}/tg/demand/{BOT_PATH_KEY}/'
-
-    set_tg_webhook(url, workflow=Workflow.DEMAND)
+def _set_webhook(*, url: str, server: Server, workflow: Workflow):
+    url = f'{url}/{SERVER_PREFIX[server]}/{WORKFLOW_PREFIX[workflow]}/{BOT_PATH_KEY}/'
+    set_tg_webhook(url, workflow=workflow)
 
 
 if __name__ == '__main__':
+    if args.server is None:
+        raise ValueError('Please, provide either -l (amazon lambda) or -f (flask) key. ')
+
     if args.is_supply:
-        _set_supply(args.url, args.is_full_url)
+        _set_webhook(url=args.url, server=args.server, workflow=Workflow.SUPPLY)
     elif args.is_demand:
-        _set_demand(args.url, args.is_full_url)
-    elif args.set_both:
-        _set_demand(args.url, args.is_full_url)
-        _set_supply(args.url, args.is_full_url)
+        _set_webhook(url=args.url, server=args.server, workflow=Workflow.DEMAND)
     else:
-        raise ValueError('Specify either -s for supply or -d for demand or --both.')
+        _set_webhook(url=args.url, server=args.server, workflow=Workflow.SUPPLY)
+        _set_webhook(url=args.url, server=args.server, workflow=Workflow.DEMAND)
