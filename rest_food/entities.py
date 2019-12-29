@@ -89,6 +89,7 @@ soc_status_translation = {
 class DemandCommandName(Enum):
     TAKE = 'take'
     INFO = 'info'
+    SHORT_INFO = 'sinf'
     DISABLE_USERNAME = 'disable-username'
     ENABLE_USERNAME = 'enable-username'
     EDIT_NAME = 'edit_name'
@@ -96,6 +97,9 @@ class DemandCommandName(Enum):
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
     FINISH_TAKE = 'f_take'
+
+    def build(self, *args):
+        return '|'.join((self.value, ) + args)
 
 
 @dataclass

@@ -26,7 +26,7 @@ from rest_food.states.utils import (
     build_food_message_by_id,
     get_next_command,
     get_demand_back_button,
-)
+    build_demand_side_short_message)
 
 logger = logging.getLogger(__name__)
 
@@ -47,12 +47,12 @@ def handle(user: User, command: Command):
     return COMMAND_HANDLERS[DemandCommandName(command.name)](user, *command.arguments)
 
 
-def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_id: str):
+def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id: str):
     set_next_command(
         user,
         Command(
             name=DemandCommandName.TAKE.value,
-            arguments=[provider_str, supply_user_db_id, message_id],
+            arguments=[provider_str, supply_user_id, message_id],
         )
     )
 
@@ -61,12 +61,12 @@ def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_
         [{
             'text': _('Confirm and take products'),
             'data': f'{DemandCommandName.FINISH_TAKE.value}|'
-                    f'{provider_str}|{supply_user_db_id}|{message_id}',
+                    f'{provider_str}|{supply_user_id}|{message_id}',
         }],
         [{
             'text': _('Cancel'),
-            'data': f'{DemandCommandName.INFO.value}|'
-                    f'{provider_str}|{supply_user_db_id}|{message_id}',
+            'data': f'{DemandCommandName.SHORT_INFO.value}|'
+                    f'{provider_str}|{supply_user_id}|{message_id}',
         }]
     ])
 
@@ -200,6 +200,13 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     )
 
 
+def _handle_short_info(user: User, supply_provider: str, supply_user_id: str, message_id: str):
+    supply_user = get_user(
+        user_id=supply_user_id, provider=Provider(supply_provider), workflow=Workflow.SUPPLY
+    )
+    return build_demand_side_short_message(supply_user, message_id)
+
+
 def _handle_enable_username(user: User):
     set_info(user, UserInfoField.DISPLAY_USERNAME, True)
     command = get_next_command(user)
@@ -242,6 +249,7 @@ def _handle_edit_social_status(user: User):
 COMMAND_HANDLERS = {
     DemandCommandName.TAKE: _handle_take,
     DemandCommandName.INFO: _handle_info,
+    DemandCommandName.SHORT_INFO: _handle_short_info,
     DemandCommandName.ENABLE_USERNAME: _handle_enable_username,
     DemandCommandName.DISABLE_USERNAME: _handle_disable_username,
     DemandCommandName.FINISH_TAKE: _handle_finish_take,

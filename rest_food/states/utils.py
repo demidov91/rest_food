@@ -10,7 +10,7 @@ from typing import Optional, List
 from requests import Session
 
 from rest_food.entities import User, Message, UserInfoField, translate_social_status_string, \
-    DT_FORMAT, Command
+    DT_FORMAT, Command, Reply, DemandCommandName
 from rest_food.db import get_supply_editing_message, get_supply_message_record
 from rest_food.exceptions import ValidationError
 from rest_food.settings import YANDEX_API_KEY
@@ -226,3 +226,23 @@ def get_demand_back_button(user: User):
             '|'.join(next_command.arguments)
         ),
     }
+
+
+def build_demand_side_short_message(supply_user: User, message_id: str):
+    text_message = build_active_food_message(supply_user)
+    return Reply(
+        text=_('{} can share the following:\n{}').format(
+            supply_user.info[UserInfoField.NAME.value], text_message
+        ),
+        buttons=[[{
+            'text': _('Take it'),
+            'data': DemandCommandName.TAKE.build(
+                supply_user.provider.value, supply_user.user_id, supply_user.editing_message_id
+            ),
+        }, {
+            'text': _('Info'),
+            'data': DemandCommandName.INFO.build(
+                supply_user.provider.value, supply_user.user_id, message_id
+            )
+        }]],
+    )
