@@ -105,7 +105,6 @@ class DemandCommandName(Enum):
 
 class SupplyCommand:
     CANCEL_BOOKING = 'cancel_booking'
-    ASK_TO_CONTACT = 'ac'
     APPROVE_BOOKING = 'approve_booking'
     BACK_TO_POSTING = 'back_to_posting'
     LIST_MESSAGES = 'list_messages'

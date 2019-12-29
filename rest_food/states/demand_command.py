@@ -23,11 +23,11 @@ from rest_food.entities import (
 )
 from rest_food.translation import translate_lazy as _
 from rest_food.states.utils import (
-    build_food_message_by_id,
+    build_short_message_text_by_id,
     get_next_command,
     get_demand_back_button,
     build_demand_side_short_message, build_demand_side_full_message_text,
-    build_demand_command_button)
+    build_demand_command_button, build_demand_side_full_message_text_by_id)
 
 logger = logging.getLogger(__name__)
 
@@ -158,10 +158,11 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
         demand_user=user
     )
 
-    message = _("{name} is notified that you'll take it.\n"
-                "Address: {address}\n").format(
-        name=supply_user.info['name'],
-        address=supply_user.info['address'],
+    info = build_demand_side_full_message_text_by_id(supply_user, message_id)
+
+    message = '{}\n--------\n\n{}'.format(
+        _("Restaurant is notified that you'll take it."),
+        info
     )
 
     return Reply(text=message)

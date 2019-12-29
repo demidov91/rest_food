@@ -59,7 +59,7 @@ def build_active_food_message(user: User):
     return message_to_text(message)
 
 
-def build_food_message_by_id(*, user, message_id):
+def build_short_message_text_by_id(*, user: User, message_id: str):
     return message_to_text(get_supply_message_record(user=user, message_id=message_id))
 
 
@@ -95,7 +95,7 @@ def build_demand_description(user: User) -> str:
 
 def build_demanded_message_text(*, demand_user: User, supply_user: User, message_id: str) -> str:
     demand_description = build_demand_description(demand_user)
-    food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
+    food_description = build_short_message_text_by_id(user=supply_user, message_id=message_id)
 
     return _("{}\n\nYour message was:\n\n{}").format(
         demand_description,
@@ -231,7 +231,7 @@ def get_demand_back_button(user: User, text: str=_('Back')):
 
 
 def build_demand_side_short_message(supply_user: User, message_id: str):
-    text_message = build_food_message_by_id(user=supply_user, message_id=message_id)
+    text_message = build_short_message_text_by_id(user=supply_user, message_id=message_id)
     return Reply(
         text=_('{} can share the following:\n{}').format(
             supply_user.info[UserInfoField.NAME.value], text_message
@@ -265,6 +265,12 @@ def build_demand_side_full_message_text(supply_user: User, message: Message) -> 
     )
 
 
+def build_demand_side_full_message_text_by_id(supply_user: User, message_id: str) -> str:
+    return build_demand_side_full_message_text(
+        supply_user, get_supply_message_record(user=supply_user, message_id=message_id)
+    )
+
+
 def build_supply_side_booked_message(*, demand_user: User, supply_user: User, message_id: str):
     message = build_demanded_message_text(
         demand_user=demand_user, supply_user=supply_user, message_id=message_id
@@ -274,9 +280,6 @@ def build_supply_side_booked_message(*, demand_user: User, supply_user: User, me
         [{
             'text': _('Reject'),
             'data': f'c|{SupplyCommand.CANCEL_BOOKING}|{message_id}',
-        }, {
-            'text': _('Ask to contact'),
-            'data': f'c|{SupplyCommand.ASK_TO_CONTACT}|{message_id}|{demand_user.provider.value}|{demand_user.user_id}',
         }, {
             'text': _('Approve'),
             'data': f'c|{SupplyCommand.APPROVE_BOOKING}|{message_id}',

@@ -3,10 +3,14 @@ from typing import List
 
 from rest_food.communication import notify_demand_for_approved
 from rest_food.translation import translate_lazy as _
-from rest_food.db import set_booking_to_cancel, list_messages, get_user
-from rest_food.entities import Reply, SupplyState, User, Provider, Workflow, Message, SupplyCommand
-from rest_food.states.utils import build_demanded_message_text, build_food_message_by_id, \
-    db_time_to_user, build_supply_side_booked_message
+from rest_food.db import set_booking_to_cancel, list_messages, get_user, get_demand_user
+from rest_food.entities import Reply, SupplyState, User, Provider, Workflow, Message, SupplyCommand, \
+    UserInfoField
+from rest_food.states.utils import (
+    build_short_message_text_by_id,
+    db_time_to_user,
+    build_supply_side_booked_message,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +87,7 @@ def show_demanded_message(user, message_id: str, demand_provider: str, demand_us
 
 
 def show_non_demanded_message(user, message_id: str):
-    message = _('Not yet booked.\n\n%s') % build_food_message_by_id(
+    message = _('Not yet booked.\n\n%s') % build_short_message_text_by_id(
         user=user, message_id=message_id
     )
 
