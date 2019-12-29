@@ -14,8 +14,8 @@ from rest_food.db import (
     get_supply_message_record,
 )
 from rest_food.communication import publish_supply_event, notify_demand_for_cancel
+from rest_food.states.formatters import build_active_food_message
 from rest_food.states.utils import (
-    build_active_food_message,
     get_coordinates,
     validate_phone_number,
 )

@@ -22,11 +22,16 @@ from rest_food.entities import (
     translate_social_status_string,
 )
 from rest_food.translation import translate_lazy as _
+from rest_food.states.demand_reply import build_demand_side_short_message
+from rest_food.states.formatters import (
+    build_demand_side_full_message_text,
+    build_demand_side_full_message_text_by_id,
+)
 from rest_food.states.utils import (
     get_next_command,
     get_demand_back_button,
-    build_demand_side_short_message, build_demand_side_full_message_text,
-    build_demand_command_button, build_demand_side_full_message_text_by_id)
+    build_demand_command_button
+)
 
 logger = logging.getLogger(__name__)
 
@@ -314,11 +319,3 @@ COMMAND_HANDLERS = {
     DemandCommandName.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
     DemandCommandName.SET_SOCIAL_STATUS: _handle_set_social_status,
 }
-
-
-
-
-
-
-
-

@@ -119,7 +119,6 @@ class Command:
     arguments: List[str]
 
 
-
 @dataclass
 class User:
     cluster: Optional[str]=None
