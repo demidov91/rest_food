@@ -38,8 +38,10 @@ def build_demand_side_message_by_id(supply_user: User, message_id: str, *, intro
         text = '{}\n------\n{}'.format(intro, text)
 
     return Reply(text=text, buttons=[[{
-        'text': _('Map'),
-        'data': DemandCommandName.MAP_AFTER_BOOKED.build(supply_user, message_id),
+        'text': _('🌍 Map'),
+        'data': DemandCommandName.MAP_BOOKED.build(
+            supply_user.provider.value, supply_user.user_id, message_id
+        ),
     }]])
 
 
@@ -94,6 +96,16 @@ class MapTakeHandler(MapHandler):
         return [{
             'text': _('Back'),
             'data': DemandCommandName.INFO.build(
+                self.supply_user.provider.value, self.supply_user.user_id, message_id
+            )
+        }]
+
+
+class MapBookedHandler(MapHandler):
+    def _get_action_buttons(self, message_id: str):
+        return [{
+            'text': _('Back'),
+            'data': DemandCommandName.BOOKED.build(
                 self.supply_user.provider.value, self.supply_user.user_id, message_id
             )
         }]

@@ -26,7 +26,7 @@ from rest_food.states.demand_reply import (
     build_demand_side_short_message,
     MapInfoHandler,
     MapTakeHandler,
-)
+    build_demand_side_message_by_id, MapBookedHandler)
 from rest_food.states.formatters import (
     build_demand_side_full_message_text,
     build_demand_side_full_message_text_by_id,
@@ -34,7 +34,6 @@ from rest_food.states.formatters import (
 from rest_food.states.utils import (
     get_next_command,
     get_demand_back_button,
-    build_demand_command_button
 )
 
 logger = logging.getLogger(__name__)
@@ -166,14 +165,9 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
         demand_user=user
     )
 
-    info = build_demand_side_full_message_text_by_id(supply_user, message_id)
-
-    message = '{}\n--------\n\n{}'.format(
-        _("Restaurant is notified that you'll take it."),
-        info
+    return build_demand_side_message_by_id(
+        supply_user, message_id, intro=_("Restaurant is notified that you'll take it.")
     )
-
-    return Reply(text=message)
 
 
 def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id: str):
@@ -210,7 +204,7 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
 
     if coordinates is not None:
         buttons.append([{
-            'text': _('Map'),
+            'text': _('🌍 Map'),
             'data': DemandCommandName.MAP_INFO.build(provider_str, supply_user_id, message_id),
         }])
 
@@ -240,12 +234,21 @@ def _handle_short_info(user: User, supply_provider: str, supply_user_id: str, me
     return build_demand_side_short_message(supply_user, message_id)
 
 
+def _handle_booked(user: User, supply_provider: str, supply_user_id: str, message_id: str):
+    supply_user = get_supply_user(user_id=supply_user_id, provider=Provider(supply_provider))
+    return build_demand_side_message_by_id(supply_user, message_id, intro=_("You've booked this"))
+
+
 def _handle_map_info(user: User, supply_provider: str, supply_user_id: str, message_id: str):
     return MapInfoHandler.create(supply_provider, supply_user_id).build(message_id)
 
 
 def _handle_map_take(user: User, supply_provider: str, supply_user_id: str, message_id: str):
     return MapTakeHandler.create(supply_provider, supply_user_id).build(message_id)
+
+
+def _handle_map_booked(user: User, supply_provider: str, supply_user_id: str, message_id: str):
+    return MapBookedHandler.create(supply_provider, supply_user_id).build(message_id)
 
 
 def _handle_enable_username(user: User):
@@ -293,9 +296,11 @@ COMMAND_HANDLERS = {
     DemandCommandName.SHORT_INFO: _handle_short_info,
     DemandCommandName.MAP_INFO: _handle_map_info,
     DemandCommandName.MAP_TAKE: _handle_map_take,
+    DemandCommandName.MAP_BOOKED: _handle_map_booked,
     DemandCommandName.ENABLE_USERNAME: _handle_enable_username,
     DemandCommandName.DISABLE_USERNAME: _handle_disable_username,
     DemandCommandName.FINISH_TAKE: _handle_finish_take,
+    DemandCommandName.BOOKED: _handle_booked,
     DemandCommandName.EDIT_NAME: _handle_edit_name,
     DemandCommandName.EDIT_PHONE: _handle_edit_phone,
     DemandCommandName.EDIT_SOCIAL_STATUS: _handle_edit_social_status,

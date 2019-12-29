@@ -7,7 +7,8 @@ from telegram.error import BadRequest
 from rest_food.db import get_demand_users, get_message_demanded_user
 from rest_food.entities import Reply, User, Workflow
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
-from rest_food.states.demand_reply import build_demand_side_short_message
+from rest_food.states.demand_reply import build_demand_side_short_message, \
+    build_demand_side_message_by_id
 from rest_food.states.supply_reply import build_supply_side_booked_message
 from rest_food.states.formatters import build_demand_side_full_message_text_by_id
 from rest_food.translation import translate_lazy as _
@@ -75,14 +76,13 @@ def notify_demand_for_approved(*, supply_user: User, message_id: str):
     if demand_user is None:
         raise ValueError('Demand user is not defined.')
 
-    food_description = build_demand_side_full_message_text_by_id(
-        supply_user=supply_user, message_id=message_id
-    )
-    text_to_send = _('Your request was approved\n------\n\n%s') % food_description
-
     send_messages(
         tg_chat_id=int(demand_user.chat_id),
-        replies=[Reply(text=text_to_send)],
+        replies=[
+            build_demand_side_message_by_id(
+                supply_user, message_id, intro=_('Your request was approved')
+            )
+        ],
         workflow=Workflow.DEMAND,
     )
 

@@ -95,6 +95,7 @@ class DemandCommandName(Enum):
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
     FINISH_TAKE = 'f_take'
+    BOOKED = 'bkd'
     MAP_INFO = 'mapi'
     MAP_TAKE = 'mapt'
     MAP_BOOKED = 'mapb'
