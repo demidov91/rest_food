@@ -5,13 +5,14 @@ from telegram import Bot, Message
 from telegram.error import BadRequest
 
 from rest_food.db import get_demand_users, get_user, get_supply_message_record
-from rest_food.entities import Reply, User, Workflow, Provider
+from rest_food.entities import Reply, User, Workflow, Provider, UserInfoField, DemandCommandName
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
 from rest_food.states.supply_command import SupplyCommand
 from rest_food.states.utils import (
     build_active_food_message,
     build_food_message_by_id,
     build_demanded_message_text,
+    build_demand_side_short_message,
 )
 from rest_food.translation import translate_lazy as _
 
@@ -28,18 +29,8 @@ def get_bot(workflow: Workflow):
     return Bot(token)
 
 
-def publish_supply_event(user: User):
-    text_message = build_active_food_message(user)
-    message = Reply(
-        text=_('{} can share the following:\n{}').format(user.info["name"], text_message),
-        buttons=[[{
-            'text': _('Take it'),
-            'data': f'take|{user.provider.value}|{user.user_id}|{user.editing_message_id}',
-        }, {
-            'text': _('Info'),
-            'data': f'info|{user.provider.value}|{user.user_id}|{user.editing_message_id}',
-        }]],
-    )
+def publish_supply_event(supply_user: User):
+    message = build_demand_side_short_message(supply_user, supply_user.editing_message_id)
 
     for demand_user in get_demand_users():
         send_messages(

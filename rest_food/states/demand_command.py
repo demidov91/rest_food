@@ -7,7 +7,7 @@ from rest_food.db import (
     get_supply_message_record,
     set_info,
     set_next_command,
-)
+    get_supply_user)
 from rest_food.entities import (
     User,
     Reply,
@@ -26,7 +26,8 @@ from rest_food.states.utils import (
     build_food_message_by_id,
     get_next_command,
     get_demand_back_button,
-)
+    build_demand_side_short_message, build_demand_side_full_message_text,
+    build_demand_command_button)
 
 logger = logging.getLogger(__name__)
 
@@ -47,31 +48,48 @@ def handle(user: User, command: Command):
     return COMMAND_HANDLERS[DemandCommandName(command.name)](user, *command.arguments)
 
 
-def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_id: str):
+def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id: str):
     set_next_command(
         user,
         Command(
             name=DemandCommandName.TAKE.value,
-            arguments=[provider_str, supply_user_db_id, message_id],
+            arguments=[provider_str, supply_user_id, message_id],
         )
     )
+    supply_user = get_supply_user(supply_user_id, Provider(provider_str))
+    coordinates = supply_user.approved_coordinates()
 
     buttons = _get_review_buttons(user)
-    buttons.extend([
-        [{
-            'text': _('Confirm and take products'),
+
+    if coordinates is not None:
+        buttons.append([{
+            'text': _('🌍 Map'),
+            'data': DemandCommandName.MAP.build(provider_str, supply_user_id, message_id),
+        }])
+
+    buttons.append([
+        {
+            'text': _('❌ Cancel'),
+            'data': f'{DemandCommandName.SHORT_INFO.value}|'
+                    f'{provider_str}|{supply_user_id}|{message_id}',
+        },
+        {
+            'text': _('Confirm 🆗✅'),
             'data': f'{DemandCommandName.FINISH_TAKE.value}|'
-                    f'{provider_str}|{supply_user_db_id}|{message_id}',
-        }],
-        [{
-            'text': _('Cancel'),
-            'data': f'{DemandCommandName.INFO.value}|'
-                    f'{provider_str}|{supply_user_db_id}|{message_id}',
-        }]
+                    f'{provider_str}|{supply_user_id}|{message_id}',
+        }
     ])
 
+    info = build_demand_side_full_message_text(
+        supply_user,
+        get_supply_message_record(user=supply_user, message_id=message_id)
+    )
+
     return Reply(
-        text=_('Please, confirm/edit your contact information to proceed.'),
+        text=_('%(info)s\n-----------\n%(ask_for_approve)s') % {
+            'info': info,
+            'ask_for_approve': _('Please, confirm/edit your contact information to proceed.'),
+        },
         buttons=buttons,
     )
 
@@ -82,8 +100,8 @@ def _get_review_buttons(user: User):
         'data': f'{DemandCommandName.EDIT_NAME.value}',
     }]
 
-    if user.info['username']:
-        if user.info['display_username']:
+    if user.info[UserInfoField.USERNAME.value]:
+        if user.info[UserInfoField.DISPLAY_USERNAME.value]:
             buttons.append({
                 'text': _('Connect via {}: ✅').format(user.provider.value),
                 'data': f'{DemandCommandName.DISABLE_USERNAME.value}',
@@ -94,16 +112,25 @@ def _get_review_buttons(user: User):
                 'data': DemandCommandName.ENABLE_USERNAME.value,
             })
 
+    social_status_translated = translate_social_status_string(
+        user.info.get(UserInfoField.SOCIAL_STATUS.value)
+    )
+
+    if social_status_translated is None:
+        social_status_text = _('Social status: not set ❌')
+    else:
+        social_status_text = _('Social status: %s ✅') % social_status_translated
+
     buttons.append({
-        'text': (
-            _('Social status: %s') %
-            translate_social_status_string(user.info.get(UserInfoField.SOCIAL_STATUS.value))
-        ),
+        'text': social_status_text,
         'data': DemandCommandName.EDIT_SOCIAL_STATUS.value,
     })
 
+    phone = user.info.get(UserInfoField.PHONE.value)
+    phone_verbose = phone + ' ✅' if phone else _('not set ❓')
+
     buttons.append({
-        'text': _('Phone: %s') % (user.info.get(UserInfoField.PHONE.value) or _('not set')),
+        'text': _('Phone: %s') % phone_verbose,
         'data': f'{DemandCommandName.EDIT_PHONE.value}',
 
     })
@@ -140,9 +167,9 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
     return Reply(text=message)
 
 
-def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_id: str):
+def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id: str):
     supply_user = get_user(
-        supply_user_db_id,
+        supply_user_id,
         provider=Provider(provider_str),
         workflow=Workflow.SUPPLY
     )
@@ -150,27 +177,33 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
     if supply_user is None:
         return Reply(_('Information was not found.'))
 
-    logger.info("message_id=%s", message_id)
-
-    info = _(
-        "Restaurant name: {name}\n"
-        "Address: {address}\n"
-        "Phone: {phone}\n"
-        "\n\n"
-        "{products}"
-    ).format(
-        name=supply_user.info[UserInfoField.NAME.value],
-        address=supply_user.info[UserInfoField.ADDRESS.value],
-        phone=supply_user.info[UserInfoField.PHONE.value],
-        products=build_food_message_by_id(user=supply_user, message_id=message_id),
+    set_next_command(
+        user,
+        Command(
+            name=DemandCommandName.INFO.value,
+            arguments=[provider_str, supply_user_id, message_id],
+        )
     )
 
-    db_message = get_supply_message_record(user=supply_user, message_id=message_id)
+    message_record = get_supply_message_record(user=supply_user, message_id=message_id)
+    info = build_demand_side_full_message_text(supply_user, message_record)
 
-    if db_message.demand_user_id is not None:
-        return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT! (maybe you)\n\n{}").format(info))
+    if message_record.demand_user_id is not None:
+        if message_record.demand_user_id.endswith(user.user_id):
+            logger.warning('Viewing taken food info.')
+            return Reply(text=_("You've already taken it.\n\n{}".format(info)))
+
+        return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT!\n\n{}").format(info))
 
     coordinates = supply_user.approved_coordinates()
+
+    buttons = []
+
+    if coordinates is not None:
+        buttons.append([{
+            'text': _('Map'),
+            'data': DemandCommandName.MAP.build(provider_str, supply_user_id, message_id),
+        }])
 
     take_it_button = {
         'text': _('Take it'),
@@ -179,24 +212,53 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
                 f'{supply_user.user_id}|'
                 f'{message_id}',
     }
-
-
-    if not coordinates:
-        return Reply(
-            text=info,
-            buttons=[[take_it_button]]
-        )
+    back_button = {
+        'text': _('Back'),
+        'data': DemandCommandName.SHORT_INFO.build(provider_str, supply_user_id, message_id),
+    }
+    buttons.append([back_button, take_it_button])
 
     return Reply(
         text=info,
+        buttons=buttons
+    )
+
+
+def _handle_short_info(user: User, supply_provider: str, supply_user_id: str, message_id: str):
+    supply_user = get_user(
+        user_id=supply_user_id, provider=Provider(supply_provider), workflow=Workflow.SUPPLY
+    )
+    return build_demand_side_short_message(supply_user, message_id)
+
+
+def _handle_map(user: User, supply_provider: str, supply_user_id: str, message_id: str):
+    supply_user = get_supply_user(user_id=supply_user_id, provider=Provider(supply_provider))
+    coordinates = supply_user.approved_coordinates()
+
+    if coordinates is None:
+        logger.error('Map is requested while coordinates where not set.')
+        return Reply(text=_('Coordinates where not provided.'))
+
+    map_links = [{
+        'text': _('Open in app'),
+        'url': f'https://dzmitry.by/redirect?to=geo:{coordinates[0]},{coordinates[1]}?z=21',
+    }]
+
+    back_command = get_next_command(user)
+    take_button = None
+    if back_command.name != DemandCommandName.TAKE.value:
+        take_button = {
+            'text': _('Take it'),
+            'data': DemandCommandName.TAKE.build(supply_provider, supply_user_id, message_id),
+        }
+
+    action_links = [build_demand_command_button(_('Back'), back_command)]
+    if take_button is not None:
+        action_links.append(take_button)
+
+    return Reply(
         coordinates=coordinates,
-        buttons=[
-            [take_it_button],
-            [{
-                'text': _('Map'),
-                'url': f'https://dzmitry.by/redirect?to=geo:{coordinates[0]},{coordinates[1]}?z=21',
-            }]
-        ]
+        buttons=[map_links, action_links]
     )
 
 
@@ -242,6 +304,8 @@ def _handle_edit_social_status(user: User):
 COMMAND_HANDLERS = {
     DemandCommandName.TAKE: _handle_take,
     DemandCommandName.INFO: _handle_info,
+    DemandCommandName.SHORT_INFO: _handle_short_info,
+    DemandCommandName.MAP: _handle_map,
     DemandCommandName.ENABLE_USERNAME: _handle_enable_username,
     DemandCommandName.DISABLE_USERNAME: _handle_disable_username,
     DemandCommandName.FINISH_TAKE: _handle_finish_take,

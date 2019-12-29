@@ -57,6 +57,13 @@ def get_user(user_id, provider: Provider, workflow: Workflow):
     return _build_user(response['Item'])
 
 
+def get_supply_user(user_id: str, provider: Provider) -> User:
+    return get_user(user_id, provider, workflow=Workflow.SUPPLY)
+
+
+def get_demand_user(user_id: str, provider: Provider) -> User:
+    return get_user(user_id, provider, workflow=Workflow.DEMAND)
+
 
 def get_or_create_user(
         *,

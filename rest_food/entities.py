@@ -65,16 +65,16 @@ class SocialStatus(Enum):
     OTHER = 'other'
 
 
-def translate_social_status_string(ss_string: Optional[str]) -> str:
+def translate_social_status_string(ss_string: Optional[str]) -> Optional[str]:
     if not ss_string:
-        return _('not set')
+        return None
 
     try:
         ss = SocialStatus(ss_string)
     except ValueError:
-        return _('unknown')
+        return None
 
-    return soc_status_translation.get(ss, _('unknown'))
+    return soc_status_translation.get(ss)
 
 
 soc_status_translation = {
@@ -89,6 +89,7 @@ soc_status_translation = {
 class DemandCommandName(Enum):
     TAKE = 'take'
     INFO = 'info'
+    SHORT_INFO = 'sinf'
     DISABLE_USERNAME = 'disable-username'
     ENABLE_USERNAME = 'enable-username'
     EDIT_NAME = 'edit_name'
@@ -96,6 +97,10 @@ class DemandCommandName(Enum):
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
     FINISH_TAKE = 'f_take'
+    MAP = 'map'
+
+    def build(self, *args):
+        return '|'.join((self.value, ) + args)
 
 
 @dataclass
