@@ -103,6 +103,16 @@ class DemandCommandName(Enum):
         return '|'.join((self.value, ) + args)
 
 
+class SupplyCommand:
+    CANCEL_BOOKING = 'cancel_booking'
+    ASK_TO_CONTACT = 'ac'
+    APPROVE_BOOKING = 'approve_booking'
+    BACK_TO_POSTING = 'back_to_posting'
+    LIST_MESSAGES = 'list_messages'
+    SHOW_DEMANDED_MESSAGE = 'sdm'
+    SHOW_NON_DEMANDED_MESSAGE = 'show_ndm'
+
+
 @dataclass
 class Command:
     name: str

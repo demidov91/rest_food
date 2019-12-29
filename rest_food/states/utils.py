@@ -10,7 +10,7 @@ from typing import Optional, List
 from requests import Session
 
 from rest_food.entities import User, Message, UserInfoField, translate_social_status_string, \
-    DT_FORMAT, Command, Reply, DemandCommandName
+    DT_FORMAT, Command, Reply, DemandCommandName, SupplyCommand
 from rest_food.db import get_supply_editing_message, get_supply_message_record
 from rest_food.exceptions import ValidationError
 from rest_food.settings import YANDEX_API_KEY
@@ -263,3 +263,28 @@ def build_demand_side_full_message_text(supply_user: User, message: Message) -> 
         phone=supply_user.info[UserInfoField.PHONE.value],
         products=message_to_text(message),
     )
+
+
+def build_supply_side_booked_message(*, demand_user: User, supply_user: User, message_id: str):
+    message = build_demanded_message_text(
+        demand_user=demand_user, supply_user=supply_user, message_id=message_id
+    )
+
+    buttons = [
+        [{
+            'text': _('Reject'),
+            'data': f'c|{SupplyCommand.CANCEL_BOOKING}|{message_id}',
+        }, {
+            'text': _('Ask to contact'),
+            'data': f'c|{SupplyCommand.ASK_TO_CONTACT}|{message_id}|{demand_user.provider.value}|{demand_user.user_id}',
+        }, {
+            'text': _('Approve'),
+            'data': f'c|{SupplyCommand.APPROVE_BOOKING}|{message_id}',
+        }],
+        [{
+            'text': _('View all messages'),
+            'data': f'c|{SupplyCommand.LIST_MESSAGES}',
+        }],
+    ]
+
+    return Reply(text=message, buttons=buttons)

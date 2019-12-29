@@ -1,7 +1,7 @@
-from typing import Optional, List
+from typing import Optional
 
 from rest_food.states.base import State
-from rest_food.entities import Reply, SupplyState, Provider, UserInfoField
+from rest_food.entities import Reply, SupplyState, Provider, UserInfoField, SupplyCommand
 from rest_food.exceptions import ValidationError
 from rest_food.db import (
     extend_supply_message,

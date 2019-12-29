@@ -250,6 +250,15 @@ def get_supply_message_record(*, user, message_id: str) -> Message:
     return Message.from_db(record)
 
 
+def get_message_demanded_user(*, supply_user, message_id: str) -> Optional[User]:
+    message_record = get_supply_message_record(user=supply_user, message_id=message_id)
+    if message_record.demand_user_id is None:
+        return None
+
+    provider, user_id = message_record.demand_user_id.split('|')
+    return get_user(user_id=user_id, provider=Provider(provider), workflow=Workflow.DEMAND)
+
+
 def mark_message_as_booked(demand_user: User, supply_user:User, message_id: str):
     table = _get_message_table()
     user_extended_id = _build_extended_id(demand_user)
