@@ -23,7 +23,6 @@ from rest_food.entities import (
 )
 from rest_food.translation import translate_lazy as _
 from rest_food.states.utils import (
-    build_short_message_text_by_id,
     get_next_command,
     get_demand_back_button,
     build_demand_side_short_message, build_demand_side_full_message_text,

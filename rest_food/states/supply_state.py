@@ -19,7 +19,6 @@ from rest_food.states.utils import (
     get_coordinates,
     validate_phone_number,
 )
-from rest_food.states.supply_command import SupplyCommand
 from rest_food.translation import translate_lazy as _
 
 

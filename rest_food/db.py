@@ -1,7 +1,7 @@
 import datetime
 import logging
 import os
-from typing import List, Optional, Tuple
+from typing import Optional
 from uuid import uuid4
 
 import boto3

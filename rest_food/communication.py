@@ -5,10 +5,9 @@ from telegram import Bot, Message
 from telegram.error import BadRequest
 
 from rest_food.db import get_demand_users, get_message_demanded_user
-from rest_food.entities import Reply, User, Workflow, SupplyCommand
+from rest_food.entities import Reply, User, Workflow
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
 from rest_food.states.utils import (
-    build_short_message_text_by_id,
     build_demand_side_full_message_text_by_id,
     build_demand_side_short_message,
     build_supply_side_booked_message)
