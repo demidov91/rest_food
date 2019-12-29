@@ -9,7 +9,8 @@ from typing import Optional, List
 
 from requests import Session
 
-from rest_food.entities import User, Message, UserInfoField, translate_social_status_string, DT_FORMAT
+from rest_food.entities import User, Message, UserInfoField, translate_social_status_string, \
+    DT_FORMAT, Command
 from rest_food.db import get_supply_editing_message, get_supply_message_record
 from rest_food.exceptions import ValidationError
 from rest_food.settings import YANDEX_API_KEY
@@ -204,3 +205,24 @@ def geocode(address: str) -> Optional[GeoCoderResult]:
 def get_coordinates(address: str) -> Optional[List[Decimal]]:
     geocoded = geocode(address)
     return geocoded and [geocoded.latitude, geocoded.longitude]
+
+
+def get_next_command(user: User) -> Command:
+    logger.info('User context: %s', user.context)
+
+    return Command(
+        name=user.context['next_command'],
+        arguments=user.context['arguments'],
+    )
+
+
+def get_demand_back_button(user: User):
+    next_command = get_next_command(user)
+
+    return {
+        'text': _('Cancel'),
+        'data': '{}|{}'.format(
+            next_command.name,
+            '|'.join(next_command.arguments)
+        ),
+    }

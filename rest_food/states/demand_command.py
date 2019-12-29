@@ -1,5 +1,4 @@
 import logging
-from typing import Optional
 
 from rest_food.communication import notify_supply_for_booked
 from rest_food.db import (
@@ -22,11 +21,12 @@ from rest_food.entities import (
     soc_status_translation,
     translate_social_status_string,
 )
-from rest_food.exceptions import ValidationError
-from rest_food.states.base import State
 from rest_food.translation import translate_lazy as _
-from rest_food.states.utils import validate_phone_number, build_food_message_by_id
-
+from rest_food.states.utils import (
+    build_food_message_by_id,
+    get_next_command,
+    get_demand_back_button,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,31 +36,22 @@ def parse_data(data) -> Command:
 
     logger.info(parts)
 
-    return Command(command=DemandCommandName(parts[0]), arguments=parts[1:])
+    return Command(name=parts[0], arguments=parts[1:])
 
 
 def handle_demand_data(user: User, data: str):
-    return _handle(user, parse_data(data))
+    return handle(user, parse_data(data))
 
 
-def _get_next_command(user: User) -> Command:
-    logger.info('User context: %s', user.context)
-
-    return Command(
-        command=DemandCommandName(user.context['next_command']),
-        arguments=user.context['arguments'],
-    )
-
-
-def _handle(user: User, command: Command):
-    return COMMAND_HANDLERS[command.command](user, *command.arguments)
+def handle(user: User, command: Command):
+    return COMMAND_HANDLERS[DemandCommandName(command.name)](user, *command.arguments)
 
 
 def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_id: str):
     set_next_command(
         user,
         Command(
-            command=DemandCommandName.TAKE,
+            name=DemandCommandName.TAKE.value,
             arguments=[provider_str, supply_user_db_id, message_id],
         )
     )
@@ -211,20 +202,20 @@ def _handle_info(user: User, provider_str: str, supply_user_db_id: str, message_
 
 def _handle_enable_username(user: User):
     set_info(user, UserInfoField.DISPLAY_USERNAME, True)
-    command = _get_next_command(user)
-    return _handle(user, command)
+    command = get_next_command(user)
+    return handle(user, command)
 
 
 def _handle_disable_username(user: User):
     set_info(user, UserInfoField.DISPLAY_USERNAME, False)
-    command = _get_next_command(user)
-    return _handle(user, command)
+    command = get_next_command(user)
+    return handle(user, command)
 
 
 def _handle_set_social_status(user: User, social_status: str):
     set_info(user, UserInfoField.SOCIAL_STATUS, social_status)
-    command = _get_next_command(user)
-    return _handle(user, command)
+    command = get_next_command(user)
+    return handle(user, command)
 
 
 def _handle_edit_name(user: User):
@@ -243,7 +234,7 @@ def _handle_edit_social_status(user: User):
         }] for x in SocialStatus
     ]
 
-    buttons.append([_get_back_button(user)])
+    buttons.append([get_demand_back_button(user)])
 
     return Reply(text=_('Choose your social status:'), buttons=buttons)
 
@@ -261,56 +252,9 @@ COMMAND_HANDLERS = {
 }
 
 
-def _get_back_button(db_user):
-    next_command = _get_next_command(db_user)
-
-    return {
-        'text': _('Cancel'),
-        'data': '{}|{}'.format(
-            next_command.command.value,
-            '|'.join(next_command.arguments)
-        ),
-    }
 
 
-class BaseSetInfoState(State):
-    _intro_text = None  # type: str
-    _info_field = None  # type: UserInfoField
-
-    def _build_cancellable_message(self, text):
-        return Reply(
-            text=text,
-            buttons=[[_get_back_button(self.db_user)]],
-        )
-
-    def get_intro(self):
-        return self._build_cancellable_message(self._intro_text)
-
-    def handle(self, text: str, *args, **kwargs):
-        set_info(self.db_user, self._info_field, text)
-        return _handle(self.db_user, _get_next_command(self.db_user))
 
 
-class SetNameState(BaseSetInfoState):
-    _intro_text = _('Enter your name:')
-    _info_field = UserInfoField.NAME
-
-
-class SetPhoneState(BaseSetInfoState):
-    _intro_text = _('Enter your phone number:')
-    _info_field = UserInfoField.PHONE
-
-    def handle(self, text: str, *args, **kwargs):
-        try:
-            validate_phone_number(text)
-        except ValidationError as e:
-            return self._build_cancellable_message(e.message)
-
-        return super().handle(text)
-
-
-class DefaultState(State):
-    def handle(self, *args, **kwargs) -> Reply:
-        return Reply(text=_('Hello. Here you will see notifications about available food.'))
 
 
