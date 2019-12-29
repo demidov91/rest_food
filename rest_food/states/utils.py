@@ -271,6 +271,18 @@ def build_demand_side_full_message_text_by_id(supply_user: User, message_id: str
     )
 
 
+def build_demand_side_message_by_id(supply_user: User, message_id: str, *, intro: str=None):
+    text = build_demand_side_full_message_text_by_id(supply_user, message_id)
+
+    if intro:
+        text = '{}\n------\n{}'.format(intro, text)
+
+    return Reply(text=text, buttons=[[{
+        'text': _('Map'),
+        'data': DemandCommandName.MAP_AFTER_BOOKED.build(supply_user, message_id),
+    }]])
+
+
 def build_supply_side_booked_message(*, demand_user: User, supply_user: User, message_id: str):
     message = build_demanded_message_text(
         demand_user=demand_user, supply_user=supply_user, message_id=message_id
