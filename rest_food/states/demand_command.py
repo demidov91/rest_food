@@ -63,7 +63,7 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
 
     if coordinates is not None:
         buttons.append([{
-            'text': _('\U0001f30d Map'),
+            'text': _('🌍 Map'),
             'data': DemandCommandName.MAP.build(provider_str, supply_user_id, message_id),
         }])
 
