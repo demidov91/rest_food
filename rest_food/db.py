@@ -134,11 +134,11 @@ def set_next_command(user: User, command: Command):
         UpdateExpression='SET context.next_command = :next_command, '
                          'context.arguments = :arguments',
         ExpressionAttributeValues={
-            ':next_command': command.command.value,
+            ':next_command': command.name,
             ':arguments': command.arguments,
         },
     )
-    user.context['next_command'] = command.command.value
+    user.context['next_command'] = command.name
     user.context['arguments'] = command.arguments
 
 

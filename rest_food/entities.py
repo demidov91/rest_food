@@ -100,7 +100,7 @@ class DemandCommandName(Enum):
 
 @dataclass
 class Command:
-    command: DemandCommandName
+    name: str
     arguments: List[str]
 
 

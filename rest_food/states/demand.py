@@ -36,7 +36,7 @@ def parse_data(data) -> Command:
 
     logger.info(parts)
 
-    return Command(command=DemandCommandName(parts[0]), arguments=parts[1:])
+    return Command(name=parts[0], arguments=parts[1:])
 
 
 def handle_demand_data(user: User, data: str):
@@ -47,20 +47,20 @@ def _get_next_command(user: User) -> Command:
     logger.info('User context: %s', user.context)
 
     return Command(
-        command=DemandCommandName(user.context['next_command']),
+        name=user.context['next_command'],
         arguments=user.context['arguments'],
     )
 
 
 def _handle(user: User, command: Command):
-    return COMMAND_HANDLERS[command.command](user, *command.arguments)
+    return COMMAND_HANDLERS[DemandCommandName(command.name)](user, *command.arguments)
 
 
 def _handle_take(user: User, provider_str: str, supply_user_db_id: str, message_id: str):
     set_next_command(
         user,
         Command(
-            command=DemandCommandName.TAKE,
+            name=DemandCommandName.TAKE.value,
             arguments=[provider_str, supply_user_db_id, message_id],
         )
     )
@@ -267,7 +267,7 @@ def _get_back_button(db_user):
     return {
         'text': _('Cancel'),
         'data': '{}|{}'.format(
-            next_command.command.value,
+            next_command.name,
             '|'.join(next_command.arguments)
         ),
     }
