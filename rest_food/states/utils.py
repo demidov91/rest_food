@@ -41,7 +41,7 @@ def db_time_to_user(db_time: Optional[str], fmt: str) -> str:
     return to_local_time(datetime.datetime.strptime(db_time, DT_FORMAT)).strftime(fmt)
 
 
-def _message_to_text(message: Message):
+def message_to_text(message: Message):
     text_message = '\n'.join([x for x in message.products if x])
 
     if message.take_time:
@@ -56,11 +56,11 @@ def build_active_food_message(user: User):
 
     message = get_supply_editing_message(user)
 
-    return _message_to_text(message)
+    return message_to_text(message)
 
 
 def build_food_message_by_id(*, user, message_id):
-    return _message_to_text(get_supply_message_record(user=user, message_id=message_id))
+    return message_to_text(get_supply_message_record(user=user, message_id=message_id))
 
 
 def build_demand_description(user: User) -> str:
@@ -216,20 +216,19 @@ def get_next_command(user: User) -> Command:
     )
 
 
-def get_demand_back_button(user: User):
-    next_command = get_next_command(user)
-
+def build_demand_command_button(text: str, command: Command):
     return {
-        'text': _('Cancel'),
-        'data': '{}|{}'.format(
-            next_command.name,
-            '|'.join(next_command.arguments)
-        ),
+        'text': text,
+        'data': DemandCommandName(command.name).build(*command.arguments),
     }
 
 
+def get_demand_back_button(user: User, text: str=_('Back')):
+    return build_demand_command_button(text, get_next_command(user))
+
+
 def build_demand_side_short_message(supply_user: User, message_id: str):
-    text_message = build_active_food_message(supply_user)
+    text_message = build_food_message_by_id(user=supply_user, message_id=message_id)
     return Reply(
         text=_('{} can share the following:\n{}').format(
             supply_user.info[UserInfoField.NAME.value], text_message
@@ -245,4 +244,19 @@ def build_demand_side_short_message(supply_user: User, message_id: str):
                 supply_user.provider.value, supply_user.user_id, message_id
             )
         }]],
+    )
+
+
+def build_demand_side_full_message_text(supply_user: User, message: Message) -> str:
+    return _(
+        "Restaurant name: {name}\n"
+        "Address: {address}\n"
+        "Phone: {phone}\n"
+        "\n\n"
+        "{products}"
+    ).format(
+        name=supply_user.info[UserInfoField.NAME.value],
+        address=supply_user.info[UserInfoField.ADDRESS.value],
+        phone=supply_user.info[UserInfoField.PHONE.value],
+        products=message_to_text(message),
     )
