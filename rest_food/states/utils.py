@@ -9,9 +9,12 @@ from typing import Optional, List
 
 from requests import Session
 
-from rest_food.entities import User, Message, UserInfoField, translate_social_status_string, \
-    DT_FORMAT, Command, Reply, DemandCommandName
-from rest_food.db import get_supply_editing_message, get_supply_message_record
+from rest_food.entities import (
+    Command,
+    DemandCommandName,
+    DT_FORMAT,
+    User,
+)
 from rest_food.exceptions import ValidationError
 from rest_food.settings import YANDEX_API_KEY
 from rest_food.translation import translate_lazy as _
@@ -41,66 +44,6 @@ def db_time_to_user(db_time: Optional[str], fmt: str) -> str:
     return to_local_time(datetime.datetime.strptime(db_time, DT_FORMAT)).strftime(fmt)
 
 
-def message_to_text(message: Message):
-    text_message = '\n'.join([x for x in message.products if x])
-
-    if message.take_time:
-        text_message += _('\nTime: {}').format(message.take_time)
-
-    return text_message
-
-
-def build_active_food_message(user: User):
-    if not user.editing_message_id:
-        raise ValueError("Active message wasn't defined.")
-
-    message = get_supply_editing_message(user)
-
-    return message_to_text(message)
-
-
-def build_food_message_by_id(*, user, message_id):
-    return message_to_text(get_supply_message_record(user=user, message_id=message_id))
-
-
-def build_demand_description(user: User) -> str:
-    message = _('{} will take the food.\n').format(user.info[UserInfoField.NAME.value])
-    is_provided_contact_info = False
-
-    if user.info.get(UserInfoField.PHONE.value):
-        message += _('Phone: {}\n').format(user.info[UserInfoField.PHONE.value])
-        is_provided_contact_info = True
-
-    if (
-            user.info.get(UserInfoField.USERNAME.value) and
-            user.info.get(UserInfoField.DISPLAY_USERNAME.value)
-    ):
-        message += _('Telegram: @{}\n').format(user.info[UserInfoField.USERNAME.value])
-        is_provided_contact_info = True
-
-    if not is_provided_contact_info:
-        message += _('No contact info was provided.\n')
-
-    social_status_verbose = translate_social_status_string(
-        user.info.get(UserInfoField.SOCIAL_STATUS.value)
-    )
-    if social_status_verbose is not None:
-        message += (
-            _('Social status: %s') % social_status_verbose
-
-        )
-
-    return message
-
-
-def build_demanded_message_text(*, demand_user: User, supply_user: User, message_id: str) -> str:
-    demand_description = build_demand_description(demand_user)
-    food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
-
-    return _("{}\n\nYour message was:\n\n{}").format(
-        demand_description,
-        food_description
-    )
 
 
 def validate_phone_number(text):
@@ -228,38 +171,3 @@ def build_demand_command_button(text: str, command: Command):
 
 def get_demand_back_button(user: User, text: str=_('Back')):
     return build_demand_command_button(text, get_next_command(user))
-
-
-def build_demand_side_short_message(supply_user: User, message_id: str):
-    text_message = build_food_message_by_id(user=supply_user, message_id=message_id)
-    return Reply(
-        text=_('{} can share the following:\n{}').format(
-            supply_user.info[UserInfoField.NAME.value], text_message
-        ),
-        buttons=[[{
-            'text': _('Take it'),
-            'data': DemandCommandName.TAKE.build(
-                supply_user.provider.value, supply_user.user_id, supply_user.editing_message_id
-            ),
-        }, {
-            'text': _('Info'),
-            'data': DemandCommandName.INFO.build(
-                supply_user.provider.value, supply_user.user_id, message_id
-            )
-        }]],
-    )
-
-
-def build_demand_side_full_message_text(supply_user: User, message: Message) -> str:
-    return _(
-        "Restaurant name: {name}\n"
-        "Address: {address}\n"
-        "Phone: {phone}\n"
-        "\n\n"
-        "{products}"
-    ).format(
-        name=supply_user.info[UserInfoField.NAME.value],
-        address=supply_user.info[UserInfoField.ADDRESS.value],
-        phone=supply_user.info[UserInfoField.PHONE.value],
-        products=message_to_text(message),
-    )

@@ -1,5 +1,3 @@
-import datetime
-
 from enum import Enum
 from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass
@@ -97,17 +95,28 @@ class DemandCommandName(Enum):
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
     FINISH_TAKE = 'f_take'
-    MAP = 'map'
+    BOOKED = 'bkd'
+    MAP_INFO = 'mapi'
+    MAP_TAKE = 'mapt'
+    MAP_BOOKED = 'mapb'
 
     def build(self, *args):
         return '|'.join((self.value, ) + args)
+
+
+class SupplyCommand:
+    CANCEL_BOOKING = 'cancel_booking'
+    APPROVE_BOOKING = 'approve_booking'
+    BACK_TO_POSTING = 'back_to_posting'
+    LIST_MESSAGES = 'list_messages'
+    SHOW_DEMANDED_MESSAGE = 'sdm'
+    SHOW_NON_DEMANDED_MESSAGE = 'show_ndm'
 
 
 @dataclass
 class Command:
     name: str
     arguments: List[str]
-
 
 
 @dataclass

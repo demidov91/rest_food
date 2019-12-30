@@ -4,16 +4,13 @@ from typing import Iterable
 from telegram import Bot, Message
 from telegram.error import BadRequest
 
-from rest_food.db import get_demand_users, get_user, get_supply_message_record
-from rest_food.entities import Reply, User, Workflow, Provider, UserInfoField, DemandCommandName
+from rest_food.db import get_demand_users, get_message_demanded_user
+from rest_food.entities import Reply, User, Workflow
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
-from rest_food.states.supply_command import SupplyCommand
-from rest_food.states.utils import (
-    build_active_food_message,
-    build_food_message_by_id,
-    build_demanded_message_text,
-    build_demand_side_short_message,
-)
+from rest_food.states.demand_reply import build_demand_side_short_message, \
+    build_demand_side_message_by_id
+from rest_food.states.supply_reply import build_supply_side_booked_message
+from rest_food.states.formatters import build_demand_side_full_message_text_by_id
 from rest_food.translation import translate_lazy as _
 
 
@@ -41,36 +38,25 @@ def publish_supply_event(supply_user: User):
 
 
 def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user: User):
-    text_to_send = build_demanded_message_text(
-        supply_user=supply_user, demand_user=demand_user, message_id=message_id
+    reply = build_supply_side_booked_message(
+        demand_user=demand_user, supply_user=supply_user, message_id=message_id
     )
-    buttons_to_send = [
-        [{
-            'text': _('Reject'),
-            'data': f'c|{SupplyCommand.CANCEL_BOOKING}|{message_id}',
-        }],
-        [{
-            'text': _('View all messages'),
-            'data': f'c|{SupplyCommand.LIST_MESSAGES}',
-        }],
-    ]
 
     send_messages(
         tg_chat_id=int(supply_user.chat_id),
-        replies=[Reply(text=text_to_send, buttons=buttons_to_send)],
+        replies=[reply],
         workflow=Workflow.SUPPLY,
     )
 
 
 def notify_demand_for_cancel(*, supply_user: User, message_id: str, message: str):
-    message_record = get_supply_message_record(user=supply_user, message_id=message_id)
-    if message_record.demand_user_id is None:
+    demand_user = get_message_demanded_user(supply_user=supply_user, message_id=message_id)
+    if demand_user is None:
         raise ValueError('Demand user is not defined.')
 
-    provider, user_id = message_record.demand_user_id.split('|')
-    demand_user = get_user(user_id=user_id, provider=Provider(provider), workflow=Workflow.DEMAND)
-
-    food_description = build_food_message_by_id(user=supply_user, message_id=message_id)
+    food_description = build_demand_side_full_message_text_by_id(
+        supply_user=supply_user, message_id=message_id
+    )
     text_to_send = _(
         'Your request was rejected with the following words:\n%(message)s\n\nRequest was:\n%(food)s'
     ) % {
@@ -81,6 +67,22 @@ def notify_demand_for_cancel(*, supply_user: User, message_id: str, message: str
     send_messages(
         tg_chat_id=int(demand_user.chat_id),
         replies=[Reply(text=text_to_send)],
+        workflow=Workflow.DEMAND,
+    )
+
+
+def notify_demand_for_approved(*, supply_user: User, message_id: str):
+    demand_user = get_message_demanded_user(supply_user=supply_user, message_id=message_id)
+    if demand_user is None:
+        raise ValueError('Demand user is not defined.')
+
+    send_messages(
+        tg_chat_id=int(demand_user.chat_id),
+        replies=[
+            build_demand_side_message_by_id(
+                supply_user, message_id, intro=_('Your request was approved')
+            )
+        ],
         workflow=Workflow.DEMAND,
     )
 

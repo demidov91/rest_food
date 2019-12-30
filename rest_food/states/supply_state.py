@@ -1,7 +1,7 @@
-from typing import Optional, List
+from typing import Optional
 
 from rest_food.states.base import State
-from rest_food.entities import Reply, SupplyState, Provider, UserInfoField
+from rest_food.entities import Reply, SupplyState, Provider, UserInfoField, SupplyCommand
 from rest_food.exceptions import ValidationError
 from rest_food.db import (
     extend_supply_message,
@@ -14,12 +14,11 @@ from rest_food.db import (
     get_supply_message_record,
 )
 from rest_food.communication import publish_supply_event, notify_demand_for_cancel
+from rest_food.states.formatters import build_active_food_message
 from rest_food.states.utils import (
-    build_active_food_message,
     get_coordinates,
     validate_phone_number,
 )
-from rest_food.states.supply_command import SupplyCommand
 from rest_food.translation import translate_lazy as _
 
 
