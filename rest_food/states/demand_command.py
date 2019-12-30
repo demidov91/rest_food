@@ -166,7 +166,12 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
     )
 
     return build_demand_side_message_by_id(
-        supply_user, message_id, intro=_("Restaurant is notified that you'll take it.")
+        supply_user,
+        message_id,
+        intro=_(
+            "Restaurant is notified that you'll take the food. "
+            "Please, contact it before going out."
+        )
     )
 
 

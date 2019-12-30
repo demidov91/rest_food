@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-30 02:32+0300\n"
+"POT-Creation-Date: 2019-12-30 02:48+0300\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
 #: rest_food/communication.py:61
 #, python-format
 msgid ""
-"Your request was rejected with the following words:\n"
+"❌ Your request was rejected with the following words:\n"
 "%(message)s\n"
 "\n"
 "Request was:\n"
@@ -56,13 +56,13 @@ msgstr "Калі ласка, увядзіце толькі кантактны т
 msgid "This is not a valid phone number."
 msgstr "Гэта не валідны тэлефонны нумары."
 
-#: rest_food/states/utils.py:172 rest_food/states/demand_command.py:219
+#: rest_food/states/utils.py:172 rest_food/states/demand_command.py:224
 #: rest_food/states/demand_reply.py:82 rest_food/states/demand_reply.py:97
 #: rest_food/states/demand_reply.py:107 rest_food/states/supply_state.py:176
 msgid "Back"
 msgstr "Назад"
 
-#: rest_food/states/demand_command.py:73 rest_food/states/demand_command.py:207
+#: rest_food/states/demand_command.py:73 rest_food/states/demand_command.py:212
 #: rest_food/states/demand_reply.py:41
 msgid "🌍 Map"
 msgstr "🌍 Мапа"
@@ -124,15 +124,17 @@ msgstr "Тэлефон: %s"
 msgid "Someone has already taken it."
 msgstr "Хтосьці ўжо забраў."
 
-#: rest_food/states/demand_command.py:169
-msgid "Restaurant is notified that you'll take it."
-msgstr "Мы апавясцілі рэстаран, што вы забярэце прадукты."
+#: rest_food/states/demand_command.py:172
+msgid ""
+"Restaurant is notified that you'll take the food. Please, contact it before "
+"going out."
+msgstr "Рэстаран абвешчаны, што Вы забярэце прадукты. Калі ласка, патэлефануйце ім, каб пацвердзіць."
 
-#: rest_food/states/demand_command.py:181
+#: rest_food/states/demand_command.py:186
 msgid "Information was not found."
 msgstr "Інфармацыя не была знойдзена."
 
-#: rest_food/states/demand_command.py:197
+#: rest_food/states/demand_command.py:202
 msgid ""
 "You've already taken it.\n"
 "\n"
@@ -142,7 +144,7 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/states/demand_command.py:199
+#: rest_food/states/demand_command.py:204
 msgid ""
 "SOMEONE HAS ALREADY TAKEN IT!\n"
 "\n"
@@ -152,16 +154,16 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/states/demand_command.py:212 rest_food/states/demand_reply.py:21
+#: rest_food/states/demand_command.py:217 rest_food/states/demand_reply.py:21
 #: rest_food/states/demand_reply.py:87
 msgid "Take it"
 msgstr "Забраць"
 
-#: rest_food/states/demand_command.py:239
+#: rest_food/states/demand_command.py:244
 msgid "You've booked this"
 msgstr "Вы паабяцалі забраць прадукты"
 
-#: rest_food/states/demand_command.py:290
+#: rest_food/states/demand_command.py:295
 msgid "Choose your social status:"
 msgstr "Абярыце свой сацыяльны статус:"
 
