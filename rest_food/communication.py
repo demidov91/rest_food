@@ -28,13 +28,24 @@ def get_bot(workflow: Workflow):
 
 def publish_supply_event(supply_user: User):
     message = build_demand_side_short_message(supply_user, supply_user.editing_message_id)
+    errors = []
+    demand_users = tuple(get_demand_users())
 
-    for demand_user in get_demand_users():
-        send_messages(
-            tg_chat_id=int(demand_user.chat_id),
-            replies=[message],
-            workflow=Workflow.DEMAND
-        )
+    for demand_user in demand_users:
+        try:
+            send_messages(
+                tg_chat_id=int(demand_user.chat_id),
+                replies=[message],
+                workflow=Workflow.DEMAND
+            )
+        except Exception as e:
+            errors.append(e)
+
+    if errors:
+        if len(errors) < len(demand_users):
+            logger.info('Some messages where not found. Errors were: %s', errors)
+        else:
+            logger.error('No messages was sent. Errors were: %s', errors)
 
 
 def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user: User):
