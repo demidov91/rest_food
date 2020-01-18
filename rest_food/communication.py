@@ -43,7 +43,7 @@ def publish_supply_event(supply_user: User):
 
     if errors:
         if len(errors) < len(demand_users):
-            logger.info('Some messages where not found. Errors were: %s', errors)
+            logger.info('Some messages where not sent. Errors were: %s', errors)
         else:
             logger.error('No messages was sent. Errors were: %s', errors)
 
