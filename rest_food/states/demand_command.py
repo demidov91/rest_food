@@ -169,8 +169,7 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
         supply_user,
         message_id,
         intro=_(
-            "Restaurant is notified that you'll take the food. "
-            "Please, contact it before going out."
+            "Restaurant is notified that you'll take the food. Please, wait for approval."
         )
     )
 
