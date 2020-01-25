@@ -162,21 +162,8 @@ def set_supply_message_time(user: User, time_message: str):
     )
 
 
-def cancel_supply_message(user: User, *, provider:Provider):
-    result = db.users.update_one(
-        {
-            'user_id': str(user.user_id),
-            'provider': provider.value,
-            'workflow': Workflow.SUPPLY.value,
-        },
-        {
-            'editing_message_id': None,
-        }
-    )
-
-    if result['modified_count'] != 1:
-        logger.error('Supply message was not cancelled. Update result: %s', result)
-
+def cancel_supply_message(user: User, *, provider: Provider):
+    _update_user(user.user_id, provider, Workflow.SUPPLY, update={'editing_message_id': None})
     user.editing_message_id = None
 
 
