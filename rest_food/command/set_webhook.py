@@ -1,9 +1,8 @@
 import argparse
-import os
 from enum import Enum
 
 from rest_food.handlers import set_tg_webhook
-from rest_food.settings import BOT_PATH_KEY
+from rest_food.settings import BOT_PATH_KEY, STAGE
 from rest_food.entities import Workflow
 
 
@@ -48,19 +47,24 @@ parser.add_argument('url')
 args = parser.parse_args()
 
 
-SERVER_PREFIX = {
-    Server.AMAZON: os.environ['STAGE'],
-    Server.FLASK: 'tg',
-}
-
 WORKFLOW_PREFIX = {
     Workflow.DEMAND: 'demand',
     Workflow.SUPPLY: 'supply',
 }
 
 
+def _get_prefix_by_server(server: Server) -> str:
+    if server == Server.FLASK:
+        return 'tg'
+
+    if server != Server.AMAZON:
+        raise ValueError(server)
+
+    return STAGE
+
+
 def _set_webhook(*, url: str, server: Server, workflow: Workflow):
-    url = f'{url}/{SERVER_PREFIX[server]}/{WORKFLOW_PREFIX[workflow]}/{BOT_PATH_KEY}/'
+    url = f'{url}/{_get_prefix_by_server(server)}/{WORKFLOW_PREFIX[workflow]}/{BOT_PATH_KEY}/'
     set_tg_webhook(url, workflow=workflow)
 
 

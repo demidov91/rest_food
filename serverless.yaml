@@ -10,22 +10,9 @@ provider:
     TELEGRAM_TOKEN_SUPPLY: ${env:TELEGRAM_TOKEN_SUPPLY}
     TELEGRAM_TOKEN_DEMAND: ${env:TELEGRAM_TOKEN_DEMAND}
     YANDEX_API_KEY: ${env:YANDEX_API_KEY}
+    DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
+    DB_NAME: ${env:DB_NAME}
   iamRoleStatements:
-  - Effect: Allow
-    Action:
-      - dynamodb:DescribeTable
-      - dynamodb:Query
-      - dynamodb:Scan
-      - dynamodb:GetItem
-      - dynamodb:PutItem
-      - dynamodb:UpdateItem
-      - dynamodb:DeleteItem
-      - dynamodb:BatchWriteItem
-    Resource:
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state-staging
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message-staging
   - Effect: Allow
     Action:
       - sqs:*
