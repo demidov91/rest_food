@@ -118,7 +118,7 @@ class PostingState(State):
             )
 
         if text:
-            extend_supply_message(self.db_user, text, provider=self.provider)
+            extend_supply_message(self.db_user, text)
 
 
 class SetMessageTimeState(State):
@@ -261,8 +261,10 @@ class SetAddressState(BaseEditInfoState):
     def handle_text(self, text):
         initial_address = self.db_user.info.get(UserInfoField.ADDRESS.value)
         if text != initial_address:
+            coordinates = get_coordinates(text)
             set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, False)
-            set_info(self.db_user, UserInfoField.COORDINATES, get_coordinates(text))
+            if coordinates:
+                set_info(self.db_user, UserInfoField.COORDINATES, [str(x) for x in coordinates])
 
         return super().handle_text(text)
 
@@ -343,7 +345,7 @@ class SetCoordinatesState(BaseEditInfoState):
             return Reply(next_state=self.get_next_state())
 
         if coordinates:
-            set_info(self.db_user, UserInfoField.COORDINATES, list(coordinates))
+            set_info(self.db_user, UserInfoField.COORDINATES, [str(x) for x in coordinates])
             set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, True)
             return Reply(next_state=self.get_next_state())
 

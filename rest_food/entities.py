@@ -121,7 +121,7 @@ class Command:
 
 @dataclass
 class User:
-    cluster: Optional[str]=None
+    _id: Optional[str]=None
     user_id: Optional[Union[str, int]]=None
     chat_id: Optional[Union[str, int]]=None
     state: Optional[str] = None
@@ -132,10 +132,28 @@ class User:
     provider: Optional[Provider]=None
     workflow: Optional[Workflow]=None
 
+    @property
+    def id(self) -> Optional[str]:
+        return self._id
+
     def approved_coordinates(self):
         return (
             self.info.get(UserInfoField.IS_APPROVED_COORDINATES.value) and
             self.info.get(UserInfoField.COORDINATES.value)
+        )
+
+    @classmethod
+    def from_dict(cls, record: dict):
+        return cls(
+            _id=str(record.get('_id')),
+            user_id=record['user_id'],
+            chat_id=record.get('chat_id'),
+            state=record.get('bot_state'),
+            info=record.get('info'),
+            context=record.get('context'),
+            editing_message_id=record.get('editing_message_id'),
+            workflow=Workflow(record.get('workflow')),
+            provider=Provider(record.get('provider')),
         )
 
 
@@ -150,7 +168,7 @@ class Message:
     @classmethod
     def from_db(cls, record: dict):
         return Message(
-            message_id=record['id'],
+            message_id=str(record['_id']),
             demand_user_id=record.get('demand_user_id'),
             products=record.get('products'),
             take_time=record.get('take_time'),
