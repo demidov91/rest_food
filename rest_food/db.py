@@ -38,16 +38,8 @@ def _update_message(message_id: str, *, owner_id: Optional[str], update: dict):
     db.messages.update_one(find, {'$set': update})
 
 
-def _build_user_cluster(provider: Provider, workflow: Workflow):
-    return f'{provider.value}-{workflow.value}'
-
-
 def _build_extended_id(user: User) -> str:
     return f'{user.provider.value}|{user.user_id}'
-
-
-def _build_cluster_by_user(user: User):
-    return _build_user_cluster(user.provider, user.workflow)
 
 
 def get_user(user_id, provider: Provider, workflow: Workflow) -> Optional[User]:
