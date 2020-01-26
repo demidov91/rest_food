@@ -11,7 +11,7 @@ from boto3.dynamodb.conditions import Key
 from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command, DT_FORMAT
 
 
-is_aws = os.environ.get('STAGE') == 'LIVE'
+is_aws = os.environ.get('STAGE') in ('LIVE', 'live', 'staging')
 logger = logging.getLogger(__name__)
 
 
@@ -294,8 +294,8 @@ def cancel_booking(supply_user: User, message_id: str):
     )
 
 
-_STATE_TABLE = 'food-state'
-_MESSAGE_TABLE = 'food-message'
+_STATE_TABLE = 'food-state-staging'
+_MESSAGE_TABLE = 'food-message-staging'
 
 
 def _get_db():
