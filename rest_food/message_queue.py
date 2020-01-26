@@ -14,6 +14,10 @@ from rest_food.translation import LazyAwareJsonEncoder
 logger = logging.getLogger(__name__)
 
 
+# It's declared here to prevent future merge conflict in settings.py
+stage = os.environ.get('STAGE')
+
+
 class BaseMessageQueue:
     batch_size = None   # type: int
 
@@ -58,7 +62,7 @@ class AwsMessageQueue(BaseMessageQueue):
 
     def __init__(self):
         sqs = boto3.resource('sqs', region_name='eu-central-1')
-        self._queue = sqs.get_queue_by_name(QueueName='send_message.live')
+        self._queue = sqs.get_queue_by_name(QueueName=f'send_message_{stage}')
 
     def put_batch_into_queue(self, data: List[str]):
         self._queue.send_messages([{
@@ -85,7 +89,7 @@ class LocalMessageQueue(BaseMessageQueue):
 
 
 def _get_queue() -> BaseMessageQueue:
-    if os.environ.get('STAGE') == 'LIVE':
+    if stage == 'LIVE':
         return AwsMessageQueue()
 
     return LocalMessageQueue()

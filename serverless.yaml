@@ -4,8 +4,9 @@ provider:
   name: aws
   runtime: python3.7
   region: eu-central-1
+  stage: ${env:STAGE}
   environment:
-    STAGE: LIVE
+    STAGE: ${env:STAGE}
     TELEGRAM_TOKEN_SUPPLY: ${env:TELEGRAM_TOKEN_SUPPLY}
     TELEGRAM_TOKEN_DEMAND: ${env:TELEGRAM_TOKEN_DEMAND}
     YANDEX_API_KEY: ${env:YANDEX_API_KEY}
@@ -21,8 +22,8 @@ provider:
       - dynamodb:DeleteItem
       - dynamodb:BatchWriteItem
     Resource:
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state-staging
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message-staging
 
 
 package:
@@ -53,7 +54,7 @@ functions:
   send_message:
     handler: rest_food.sereverless.send_message
     events:
-      - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_live.fifo
+      - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_${env:STAGE}.fifo
 
 
 plugins:
