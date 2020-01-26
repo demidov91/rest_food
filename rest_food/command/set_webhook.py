@@ -11,7 +11,7 @@ class Server(Enum):
     FLASK = 1
 
 
-parser = argparse.ArgumentParser(description='Process some integers.')
+parser = argparse.ArgumentParser(description='Set bot webhooks.')
 parser.add_argument(
     '-s',
     dest='is_supply',

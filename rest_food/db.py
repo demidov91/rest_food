@@ -1,6 +1,6 @@
 import datetime
 import logging
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from bson.objectid import ObjectId
 from pymongo import MongoClient
@@ -11,6 +11,14 @@ from rest_food.settings import DB_CONNECTION_STRING, DB_NAME
 
 logger = logging.getLogger(__name__)
 db = MongoClient(DB_CONNECTION_STRING)[DB_NAME]
+
+
+def import_users(data: List[dict]):
+    db.users.insert(data)
+
+
+def import_messages(data: List[dict]):
+    db.messages.insert(data)
 
 
 def _update_user(user_id: Union[str, int], provider: Provider, workflow: Workflow, *, update: dict):
