@@ -50,6 +50,11 @@ functions:
           path: demand/${env:BOT_PATH_KEY}/
           method: post
 
+  send_message:
+    handler: rest_food.sereverless.send_message
+    events:
+      - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_live.fifo
+
 
 plugins:
   - serverless-python-requirements
