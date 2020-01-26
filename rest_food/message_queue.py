@@ -8,6 +8,7 @@ import boto3
 
 
 from rest_food.entities import Workflow, Reply
+from rest_food.translation import LazyAwareJsonEncoder
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ class BaseMessageQueue:
             'reply': asdict(message),
             'chat_id': int(chat_id),
             'workflow': workflow.value,
-        })
+        }, cls=LazyAwareJsonEncoder)
 
     def process(self, queue_entry: dict):
         from rest_food.communication import send_messages
@@ -40,9 +41,9 @@ class BaseMessageQueue:
                 workflow=Workflow(data['workflow'])
             )
         except Exception as e:
-            logger.error('Message was not send:\n%s', data)
+            logger.exception('Message was not send:\n%s', data)
 
-    def push_many(self, *, message_and_chat_id: Tuple[Reply, int], workflow: Workflow):
+    def push_many(self, *, message_and_chat_id: List[Tuple[Reply, int]], workflow: Workflow):
         for i in range(0, len(message_and_chat_id), self.batch_size):
             self.put_batch_into_queue(
                 [
@@ -55,10 +56,9 @@ class BaseMessageQueue:
 class AwsMessageQueue(BaseMessageQueue):
     batch_size = 10
 
-    _sqs = boto3.resource('sqs')
-
     def __init__(self):
-        self._queue = self._sqs.get_queue_by_name(QueueName='send_message.live')
+        sqs = boto3.resource('sqs', region_name='eu-central-1')
+        self._queue = sqs.get_queue_by_name(QueueName='send_message.live')
 
     def put_batch_into_queue(self, data: List[str]):
         self._queue.send_messages([{
@@ -81,7 +81,7 @@ class LocalMessageQueue(BaseMessageQueue):
             self.process({'data': x})
 
     def deserialize(self, queue_entry: dict) -> dict:
-        return queue_entry['data']
+        return json.loads(queue_entry['data'])
 
 
 def _get_queue() -> BaseMessageQueue:
