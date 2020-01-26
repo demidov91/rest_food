@@ -1,7 +1,7 @@
 import json
 import logging
 
-from rest_food.message_queue import message_queue
+from rest_food.message_queue import get_queue
 from rest_food.handlers import tg_supply, tg_demand
 
 
@@ -32,4 +32,5 @@ def demand(event, context):
 
 def send_message(event, context):
     logger.info(event['body'])
-    message_queue.process(json.loads(event['body']))
+    queue = get_queue()
+    queue.process(json.loads(event['body']))

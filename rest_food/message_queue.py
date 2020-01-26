@@ -61,8 +61,11 @@ class AwsMessageQueue(BaseMessageQueue):
     batch_size = 10
 
     def __init__(self):
+        logger.info('Before creating sqs service.')
         sqs = boto3.resource('sqs', region_name='eu-central-1')
+        logger.info('Before connecting to sqs.')
         self._queue = sqs.get_queue_by_name(QueueName=f'send_message_{stage}')
+        logger.info('After connecting to sqs.')
 
     def put_batch_into_queue(self, data: List[str]):
         self._queue.send_messages([{
@@ -88,11 +91,11 @@ class LocalMessageQueue(BaseMessageQueue):
         return json.loads(queue_entry['data'])
 
 
-def _get_queue() -> BaseMessageQueue:
+def get_queue() -> BaseMessageQueue:
     if stage == 'LIVE':
         return AwsMessageQueue()
 
     return LocalMessageQueue()
 
 
-message_queue = _get_queue()
+message_queue = get_queue()

@@ -6,7 +6,7 @@ from telegram.error import BadRequest
 
 from rest_food.db import get_demand_users, get_message_demanded_user
 from rest_food.entities import Reply, User, Workflow
-from rest_food.message_queue import message_queue
+from rest_food.message_queue import get_queue
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
 from rest_food.states.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
@@ -29,7 +29,8 @@ def get_bot(workflow: Workflow):
 
 def publish_supply_event(supply_user: User):
     message = build_demand_side_short_message(supply_user, supply_user.editing_message_id)
-    message_queue.push_many(
+    queue = get_queue()
+    queue.push_many(
         message_and_chat_id=[(message, x.chat_id) for x in get_demand_users()],
         workflow=Workflow.DEMAND
     )
