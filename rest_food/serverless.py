@@ -1,7 +1,7 @@
 import json
 import logging
 
-from rest_food.message_queue import _get_queue, message_queue
+from rest_food.message_queue import message_queue
 from rest_food.handlers import tg_supply, tg_demand
 
 

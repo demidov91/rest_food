@@ -294,8 +294,8 @@ def cancel_booking(supply_user: User, message_id: str):
     )
 
 
-_STATE_TABLE = 'food-state-staging'
-_MESSAGE_TABLE = 'food-message-staging'
+_STATE_TABLE = 'food-state'
+_MESSAGE_TABLE = 'food-message'
 
 
 def _get_db():

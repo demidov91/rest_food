@@ -22,8 +22,8 @@ provider:
       - dynamodb:DeleteItem
       - dynamodb:BatchWriteItem
     Resource:
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state-staging
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message-staging
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message
   - Effect: Allow
     Action:
       - sqs:*
