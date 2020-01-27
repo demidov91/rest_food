@@ -141,8 +141,8 @@ class SetMessageTimeState(State):
 
         if text:
             if self.db_user.user_id not in (
-                '1020027359', '274229718', '524816100',
-                1020027359, 274229718, 524816100
+                '1020027359', '793014155', '274229718', '524816100',
+                1020027359, 793014155, 274229718, 524816100,
             ):
                 logger.warning(
                     'There is an attempt to post a message by user %s', self.db_user.user_id
