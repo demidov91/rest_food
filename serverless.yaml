@@ -67,7 +67,9 @@ functions:
   super_send:
     handler: rest_food.serverless.super_send
     events:
-      - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:super_send_${env:STAGE}.fifo
+      - sqs:
+          arn: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:super_send_${env:STAGE}.fifo
+          batchSize: 1
 
 
 plugins:
