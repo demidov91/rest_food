@@ -3,6 +3,7 @@ import logging
 import os
 from dataclasses import asdict
 from typing import Tuple, List
+from uuid import uuid4
 
 import boto3
 
@@ -24,9 +25,6 @@ class BaseMessageQueue:
     def put_batch_into_queue(self, data: List[str]):
         raise NotImplementedError()
 
-    def deserialize(self, queue_entry: dict) -> dict:
-        raise NotImplementedError()
-
     def serialize(self, message: Reply, chat_id: int, workflow: Workflow) -> str:
         return json.dumps({
             'reply': asdict(message),
@@ -34,10 +32,10 @@ class BaseMessageQueue:
             'workflow': workflow.value,
         }, cls=LazyAwareJsonEncoder)
 
-    def process(self, queue_entry: dict):
+    def process(self, serialized_data: str):
         from rest_food.communication import send_messages
 
-        data = self.deserialize(queue_entry)
+        data = json.loads(serialized_data)
         try:
             send_messages(
                 tg_chat_id=data['chat_id'],
@@ -69,12 +67,11 @@ class AwsMessageQueue(BaseMessageQueue):
 
     def put_batch_into_queue(self, data: List[str]):
         self._queue.send_messages(Entries=[{
-            'Id': i,
+            'Id': str(i),
             'MessageBody': x,
+            'MessageGroupId': str(i),
+            'MessageDeduplicationId': str(uuid4()),
         } for i, x in enumerate(data)])
-
-    def deserialize(self, queue_entry: dict) -> dict:
-        pass
 
 
 class LocalMessageQueue(BaseMessageQueue):
@@ -85,10 +82,7 @@ class LocalMessageQueue(BaseMessageQueue):
 
     def put_batch_into_queue(self, data: List[str]):
         for x in data:
-            self.process({'data': x})
-
-    def deserialize(self, queue_entry: dict) -> dict:
-        return json.loads(queue_entry['data'])
+            self.process(x)
 
 
 def _get_queue() -> BaseMessageQueue:

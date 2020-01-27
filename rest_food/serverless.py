@@ -31,5 +31,9 @@ def demand(event, context):
 
 
 def send_message(event, context):
-    logger.info(event['body'])
-    message_queue.process(json.loads(event['body']))
+    logger.info(event)
+    for record in event['Records']:
+        try:
+            message_queue.process(record['body'])
+        except Exception:
+            logger.exception('Send message event was processed with unexpected exception.')

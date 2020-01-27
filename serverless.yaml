@@ -57,7 +57,7 @@ functions:
           method: post
 
   send_message:
-    handler: rest_food.sereverless.send_message
+    handler: rest_food.serverless.send_message
     events:
       - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_${env:STAGE}.fifo
 
