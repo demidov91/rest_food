@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 from dataclasses import asdict
 from typing import Tuple, List
 from hashlib import sha256
@@ -10,20 +9,17 @@ import boto3
 
 from rest_food.entities import Workflow, Reply
 from rest_food.translation import LazyAwareJsonEncoder
+from rest_food.settings import STAGE
 
 
 logger = logging.getLogger(__name__)
-
-
-# It's declared here to prevent future merge conflict in settings.py
-stage = os.environ.get('STAGE')
 
 
 class BaseMessageQueue:
     batch_size = None   # type: int
     super_batch_size = None     # type: int
 
-    def put_batch_into_queue(self, data: List[str]):
+    def put_batch_into_queue(self, items: List[str]):
         raise NotImplementedError()
 
     def serialize(self, message: Reply, chat_id: int, workflow: Workflow) -> str:
@@ -95,12 +91,12 @@ class AwsMessageQueue(BaseMessageQueue):
             MessageGroupId='CommonGroup',
         )
 
-    def put_batch_into_queue(self, data: List[str]):
+    def put_batch_into_queue(self, items: List[str]):
         """
 
         Parameters
         ----------
-        data
+        items
             10 items
         """
         self._queue.send_messages(Entries=[{
@@ -108,7 +104,7 @@ class AwsMessageQueue(BaseMessageQueue):
             'MessageBody': x,
             'MessageGroupId': str(i),
             'MessageDeduplicationId': sha256(x.encode()).hexdigest(),
-        } for i, x in enumerate(data)])
+        } for i, x in enumerate(items)])
 
 
 class LocalMessageQueue(BaseMessageQueue):
@@ -116,14 +112,18 @@ class LocalMessageQueue(BaseMessageQueue):
     This is to be implemented with process queue for the flask mode.
     """
     batch_size = 1
+    super_batch_size = 1
 
-    def put_batch_into_queue(self, data: List[str]):
-        for x in data:
+    def put_super_batch_into_queue(self, items: List[str]):
+        self.put_batch_into_queue(items)
+
+    def put_batch_into_queue(self, items: List[str]):
+        for x in items:
             self.process(x)
 
 
 def _get_queue() -> BaseMessageQueue:
-    if stage in ('LIVE', 'live', 'staging'):
+    if STAGE in ('LIVE', 'live', 'staging'):
         return AwsMessageQueue()
 
     return LocalMessageQueue()
