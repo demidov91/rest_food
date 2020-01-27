@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from rest_food.states.base import State
@@ -20,6 +21,9 @@ from rest_food.states.utils import (
     validate_phone_number,
 )
 from rest_food.translation import translate_lazy as _
+
+
+logger = logging.getLogger(__name__)
 
 
 class ForceInfoMixin:
@@ -136,6 +140,21 @@ class SetMessageTimeState(State):
             )
 
         if text:
+            if self.db_user.user_id not in (
+                '1020027359', '274229718', '524816100',
+                1020027359, 274229718, 524816100
+            ):
+                logger.warning(
+                    'There is an attempt to post a message by user %s', self.db_user.user_id
+                )
+                cancel_supply_message(self.db_user, provider=self.provider)
+                return Reply(
+                    text=_(
+                        "Please, contact @foodsharingsupportbot to use this bot."
+                    ),
+                    next_state=SupplyState.READY_TO_POST,
+                )
+
             set_supply_message_time(self.db_user, text)
             publish_supply_event(self.db_user)
             return Reply(
