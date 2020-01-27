@@ -11,7 +11,7 @@ from boto3.dynamodb.conditions import Key
 from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command, DT_FORMAT
 
 
-is_aws = os.environ.get('STAGE') == 'LIVE'
+is_aws = os.environ.get('STAGE') in ('LIVE', 'live', 'staging')
 logger = logging.getLogger(__name__)
 
 

@@ -6,6 +6,7 @@ from telegram.error import BadRequest
 
 from rest_food.db import get_demand_users, get_message_demanded_user
 from rest_food.entities import Reply, User, Workflow
+from rest_food.message_queue import message_queue
 from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
 from rest_food.states.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
@@ -28,24 +29,10 @@ def get_bot(workflow: Workflow):
 
 def publish_supply_event(supply_user: User):
     message = build_demand_side_short_message(supply_user, supply_user.editing_message_id)
-    errors = []
-    demand_users = tuple(get_demand_users())
-
-    for demand_user in demand_users:
-        try:
-            send_messages(
-                tg_chat_id=int(demand_user.chat_id),
-                replies=[message],
-                workflow=Workflow.DEMAND
-            )
-        except Exception as e:
-            errors.append(e)
-
-    if errors:
-        if len(errors) < len(demand_users):
-            logger.info('Some messages where not sent. Errors were: %s', errors)
-        else:
-            logger.error('No messages was sent. Errors were: %s', errors)
+    message_queue.push_many(
+        message_and_chat_id=[(message, x.chat_id) for x in get_demand_users()],
+        workflow=Workflow.DEMAND
+    )
 
 
 def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user: User):
