@@ -1,4 +1,5 @@
 import argparse
+import os
 from enum import Enum
 
 from rest_food.handlers import set_tg_webhook
@@ -48,7 +49,7 @@ args = parser.parse_args()
 
 
 SERVER_PREFIX = {
-    Server.AMAZON: 'dev',
+    Server.AMAZON: os.environ['STAGE'],
     Server.FLASK: 'tg',
 }
 
