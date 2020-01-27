@@ -3,7 +3,6 @@ import logging
 import os
 from dataclasses import asdict
 from typing import Tuple, List
-from uuid import uuid4
 from hashlib import sha256
 
 import boto3
@@ -54,6 +53,8 @@ class BaseMessageQueue:
         for i in range(0, len(items), self.batch_size):
             self.put_batch_into_queue(items[i:i + self.batch_size])
 
+            logger.info('%s messages are sent into send-message queue', i + self.batch_size)
+
     def push_super_batch(self, *, message_and_chat_id: List[Tuple[Reply, int]], workflow: Workflow):
         for i in range(0, len(message_and_chat_id), self.super_batch_size):
             self.put_super_batch_into_queue(
@@ -62,6 +63,7 @@ class BaseMessageQueue:
                     for msg, chat_id in message_and_chat_id[i:i+self.super_batch_size]
                 ]
             )
+            logger.info('%s messages are sent into super-queue', i+self.super_batch_size)
 
 
 class AwsMessageQueue(BaseMessageQueue):
