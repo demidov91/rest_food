@@ -24,6 +24,11 @@ provider:
     Resource:
       - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state-staging
       - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message-staging
+  - Effect: Allow
+    Action:
+      - sqs:*
+    Resource:
+      - arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_${env:STAGE}.fifo
 
 
 package:

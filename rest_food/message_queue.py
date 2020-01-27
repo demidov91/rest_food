@@ -68,7 +68,7 @@ class AwsMessageQueue(BaseMessageQueue):
         logger.info('After connecting to sqs.')
 
     def put_batch_into_queue(self, data: List[str]):
-        self._queue.send_messages([{
+        self._queue.send_messages(Entries=[{
             'Id': i,
             'MessageBody': x,
         } for i, x in enumerate(data)])
