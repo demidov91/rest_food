@@ -29,7 +29,7 @@ def get_bot(workflow: Workflow):
 
 def publish_supply_event(supply_user: User):
     message = build_demand_side_short_message(supply_user, supply_user.editing_message_id)
-    message_queue.push_many(
+    message_queue.push_super_batch(
         message_and_chat_id=[(message, x.chat_id) for x in get_demand_users()],
         workflow=Workflow.DEMAND
     )

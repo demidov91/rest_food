@@ -37,3 +37,12 @@ def send_message(event, context):
             message_queue.process(record['body'])
         except Exception:
             logger.exception('Send message event was processed with unexpected exception.')
+
+
+def super_send(event, context):
+    logger.info(event)
+    for record in event['Records']:
+        try:
+            message_queue.redestrib_super_batch(json.loads(record['body']))
+        except Exception:
+            logger.exception('Send message event was processed with unexpected exception.')

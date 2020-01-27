@@ -22,13 +22,14 @@ provider:
       - dynamodb:DeleteItem
       - dynamodb:BatchWriteItem
     Resource:
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state
-      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-state-staging
+      - arn:aws:dynamodb:eu-central-1:${env:AWS_USER_ID}:table/food-message-staging
   - Effect: Allow
     Action:
       - sqs:*
     Resource:
       - arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_${env:STAGE}.fifo
+      - arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:super_send_${env:STAGE}.fifo
 
 
 package:
@@ -60,6 +61,11 @@ functions:
     handler: rest_food.serverless.send_message
     events:
       - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_${env:STAGE}.fifo
+
+  super_send:
+    handler: rest_food.serverless.super_send
+    events:
+      - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:super_send_${env:STAGE}.fifo
 
 
 plugins:
