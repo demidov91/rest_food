@@ -53,6 +53,9 @@ class FakeBot:
         else:
             self._sleep()
 
+    def set_webhook(self, *args, **kwargs):
+        return self._bot.set_webhook(*args, **kwargs)
+
 
 def get_bot(workflow: Workflow):
     if workflow == Workflow.SUPPLY:
