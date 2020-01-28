@@ -35,8 +35,13 @@ provider:
 
 
 package:
+  exclude:
+    - local_data/**
+    - node_modules/**
+    - requirements/**
   include:
     - rest_food
+
 
 custom:
   pythonRequirements:

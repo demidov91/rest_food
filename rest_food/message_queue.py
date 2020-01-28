@@ -70,9 +70,9 @@ class AwsMessageQueue(BaseMessageQueue):
         logger.info('Before creating sqs service.')
         sqs = boto3.resource('sqs', region_name='eu-central-1')
         logger.info('Before connecting to sqs.')
-        self._queue = sqs.get_queue_by_name(QueueName=f'send_message_{stage}.fifo')
+        self._queue = sqs.get_queue_by_name(QueueName=f'send_message_{STAGE}.fifo')
         logger.info('After connecting to send_message.')
-        self._super_queue = sqs.get_queue_by_name(QueueName=f'super_send_{stage}.fifo')
+        self._super_queue = sqs.get_queue_by_name(QueueName=f'super_send_{STAGE}.fifo')
         logger.info('After connecting to super_send.')
 
     def put_super_batch_into_queue(self, items: List[str]):
