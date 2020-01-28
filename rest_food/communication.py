@@ -1,13 +1,14 @@
 import logging
+import time
 from typing import Iterable
 
 from telegram import Bot, Message
-from telegram.error import BadRequest
+from telegram.error import BadRequest, Unauthorized
 
 from rest_food.db import get_demand_users, get_message_demanded_user
 from rest_food.entities import Reply, User, Workflow
 from rest_food.message_queue import message_queue
-from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND
+from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND, STAGE, TEST_TG_CHAT_ID
 from rest_food.states.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
 from rest_food.states.supply_reply import build_supply_side_booked_message
@@ -18,13 +19,53 @@ from rest_food.translation import translate_lazy as _
 logger = logging.getLogger(__name__)
 
 
+class FakeBot:
+    sleep_time = 0.2
+
+    def __init__(self, bot: Bot):
+        self._bot = bot
+
+    def _sleep(self):
+        logger.warning('Sleep for %s s', self.sleep_time)
+        time.sleep(0.2)
+
+    def send_location(self, chat_id, *args, **kwargs):
+        if chat_id in TEST_TG_CHAT_ID:
+            self._bot.send_location(chat_id, *args, **kwargs)
+        else:
+            self._sleep()
+
+    def edit_message_text(self, text, chat_id, *args, **kwargs):
+        if chat_id in TEST_TG_CHAT_ID:
+            self._bot.edit_message_text(text, chat_id, *args, **kwargs)
+        else:
+            self._sleep()
+
+    def send_message(self, chat_id, *args, **kwargs):
+        if chat_id in TEST_TG_CHAT_ID:
+            self._bot.send_message(chat_id, *args, **kwargs)
+        else:
+            self._sleep()
+
+    def delete_message(self, chat_id, *args, **kwargs):
+        if chat_id in TEST_TG_CHAT_ID:
+            self._bot.delete_message(chat_id, *args, **kwargs)
+        else:
+            self._sleep()
+
+
 def get_bot(workflow: Workflow):
     if workflow == Workflow.SUPPLY:
         token = TELEGRAM_TOKEN_SUPPLY
     else:
         token = TELEGRAM_TOKEN_DEMAND
 
-    return Bot(token)
+    bot = Bot(token)
+
+    if STAGE != 'live':
+        return FakeBot(bot)
+
+    return bot
 
 
 def publish_supply_event(supply_user: User):
@@ -124,6 +165,13 @@ def send_messages(
                     reply_markup=markup,
                     message_id=original_message and original_message.message_id
                 )
+            except Unauthorized:
+                logger.warning(
+                    '%s is blocked for the bot. '
+                    'TODO: set is_active=False for the user with this chat_id.',
+                    tg_chat_id
+                )
+
             except BadRequest as e:
                 if 'the same' in e.message:
                     pass
