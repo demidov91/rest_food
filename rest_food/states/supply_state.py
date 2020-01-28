@@ -15,6 +15,7 @@ from rest_food.db import (
     get_supply_message_record,
 )
 from rest_food.communication import publish_supply_event, notify_demand_for_cancel
+from rest_food.settings import TEST_TG_CHAT_ID
 from rest_food.states.formatters import build_active_food_message
 from rest_food.states.utils import (
     get_coordinates,
@@ -140,10 +141,7 @@ class SetMessageTimeState(State):
             )
 
         if text:
-            if self.db_user.user_id not in (
-                '1020027359', '793014155', '274229718', '524816100',
-                1020027359, 793014155, 274229718, 524816100,
-            ):
+            if self.db_user.user_id not in TEST_TG_CHAT_ID:
                 logger.warning(
                     'There is an attempt to post a message by user %s', self.db_user.user_id
                 )
