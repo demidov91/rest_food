@@ -153,7 +153,7 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
     )
 
     is_successfully_booked = mark_message_as_booked(
-        demand_user=user, supply_user=supply_user, message_id=message_id
+        demand_user=user, message_id=message_id
     )
 
     if not is_successfully_booked:

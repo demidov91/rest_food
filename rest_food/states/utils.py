@@ -8,6 +8,7 @@ from enum import Enum
 from typing import Optional, List
 
 from requests import Session
+from requests.exceptions import ConnectionError
 
 from rest_food.entities import (
     Command,
@@ -76,7 +77,12 @@ def _call_yandex_geocoder(address: str, bbox: YandexBBox) -> Optional[GeoCoderRe
         f'format=json'
     )
     logger.debug(url)
-    response = _http_session.get(url)
+
+    try:
+        response = _http_session.get(url, timeout=5)
+    except ConnectionError:
+        logger.exception('Connection error while geocode.')
+        return None
 
     if response.status_code != 200:
         logger.warning(

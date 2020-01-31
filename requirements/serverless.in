@@ -3,3 +3,5 @@ flask
 boto3
 requests
 speaklater
+pymongo[tls]
+dnspython
