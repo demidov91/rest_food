@@ -5,7 +5,7 @@ provider:
   runtime: python3.7
   region: eu-central-1
   stage: ${env:STAGE}
-  timeout: 60
+  timeout: 30
   environment:
     STAGE: ${env:STAGE}
     TELEGRAM_TOKEN_SUPPLY: ${env:TELEGRAM_TOKEN_SUPPLY}
