@@ -101,7 +101,7 @@ def _introduce_new_user(user: User):
 
 
 def build_new_supplier_notification_text(supply_user: User):
-    return _('%s wants to join as a supplier. %s Provided description is:\n\n%s') % (
+    return _('%s wants to join as a supplier. Provided description is:\n\n%s') % (
         _introduce_new_user(supply_user),
         build_supply_user_description(supply_user)
     )

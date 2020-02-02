@@ -4,7 +4,7 @@ from decimal import Decimal
 from telegram import Update
 
 from rest_food.db import get_or_create_user
-from rest_food.entities import Workflow, Provider, Reply, SupplyState
+from rest_food.entities import Workflow, Provider, Reply, SupplyState, UserInfoField
 from rest_food.state_machine import (
     get_supply_state,
     set_supply_state,
@@ -26,6 +26,10 @@ hack_telegram_json_dumps()
 
 def tg_supply(data):
     update = Update.de_json(data, None)
+
+    if not update.effective_user:
+        return
+
     chat_id = update.effective_chat.id
     user_id = update.effective_user.id
     tg_user = update.effective_user
@@ -96,8 +100,8 @@ def tg_demand(data):
             provider=Provider.TG,
             workflow=Workflow.DEMAND,
             info={
-                'name': tg_user.first_name,
-                'username': tg_user.username,
+                UserInfoField.NAME.value: tg_user.first_name,
+                UserInfoField.USERNAME.value: tg_user.username,
             },
         )
 

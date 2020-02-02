@@ -156,6 +156,9 @@ class User:
             self.info.get(UserInfoField.COORDINATES.value)
         )
 
+    def is_approved_supply_is_set(self):
+        return UserInfoField.IS_APPROVED_SUPPLY.value in self.info
+
     @classmethod
     def from_dict(cls, record: dict):
         record['state'] = record.pop('bot_state', None)

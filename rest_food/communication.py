@@ -7,15 +7,16 @@ from telegram import Bot, Message
 from telegram.error import BadRequest, Unauthorized
 
 from rest_food.db import (
-    get_demand_users, get_message_demanded_user, set_inactive, get_admin_users,
+    get_demand_users, get_message_demanded_user, set_inactive, get_admin_users, set_info,
 )
-from rest_food.entities import Reply, User, Workflow, Provider
+from rest_food.entities import Reply, User, Workflow, Provider, UserInfoField
 from rest_food.message_queue import get_queue
 from rest_food.settings import (
     TELEGRAM_TOKEN_SUPPLY,
     TELEGRAM_TOKEN_DEMAND,
     STAGE,
     TEST_TG_CHAT_ID,
+    FEEDBACK_TG_BOT,
 )
 from rest_food.states.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
@@ -141,7 +142,11 @@ def notify_demand_for_approved(*, supply_user: User, message_id: str):
     )
 
 
-def notify_admin_about_new_supply_user(supply_user: User):
+def notify_admin_about_new_supply_user_if_necessary(supply_user: User):
+    if supply_user.is_approved_supply_is_set():
+        logger.debug('Admins are already notified.')
+        return
+
     admin_users = get_admin_users()
     message = build_new_supplier_notification(supply_user)
     if not admin_users:
@@ -160,6 +165,31 @@ def notify_admin_about_new_supply_user(supply_user: User):
                 replies=[message],
                 workflow=Workflow.SUPPLY
             )
+
+    set_info(supply_user, UserInfoField.IS_APPROVED_SUPPLY, None)
+
+
+def notify_supplier_is_approved(user: User):
+    send_messages(
+        tg_chat_id=user.chat_id,
+        workflow=Workflow.SUPPLY,
+        replies=[Reply(text=_('Your account is approved!'))],
+    )
+
+
+def notify_supplier_is_declined(user: User):
+    send_messages(
+        tg_chat_id=user.chat_id,
+        workflow=Workflow.SUPPLY,
+        replies=[
+            Reply(
+                text=(
+                    _('Your account was declined. Please, contact %s for any clarifications.') %
+                    FEEDBACK_TG_BOT
+                )
+            )
+        ],
+    )
 
 
 def send_messages(

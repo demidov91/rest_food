@@ -1,7 +1,11 @@
 import logging
 from typing import List
 
-from rest_food.communication import notify_demand_for_approved
+from rest_food.communication import (
+    notify_demand_for_approved,
+    notify_supplier_is_approved,
+    notify_supplier_is_declined,
+)
 from rest_food.translation import translate_lazy as _
 from rest_food.decorators import admin_only
 from rest_food.db import (
@@ -115,6 +119,7 @@ def show_non_demanded_message(user, message_id: str):
 def approve_supplier(user: User, supplier_id: str):
     supply_user = get_user_by_id(supplier_id)
     set_info(supply_user, UserInfoField.IS_APPROVED_SUPPLY, True)
+    notify_supplier_is_approved(supply_user)
 
     return Reply(text=build_supplier_approved_text(supply_user))
 
@@ -123,5 +128,6 @@ def approve_supplier(user: User, supplier_id: str):
 def decline_supplier(user: User, supplier_id: str):
     supply_user = get_user_by_id(supplier_id)
     set_info(supply_user, UserInfoField.IS_APPROVED_SUPPLY, False)
+    notify_supplier_is_declined(supply_user)
 
     return Reply(text=build_supplier_declined_text(supply_user))
