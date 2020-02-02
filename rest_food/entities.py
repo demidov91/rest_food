@@ -45,14 +45,24 @@ class Workflow(Enum):
 
 
 class UserInfoField(Enum):
+    # tg/viber username
     USERNAME = 'username'
+    # supply place name
     NAME = 'name'
+    # supply address
     ADDRESS = 'address'
+    # supply coordinates
     COORDINATES = 'coordinates'
+    # contact phone
     PHONE = 'phone'
+    # username to display
     DISPLAY_USERNAME = 'display_username'
+    # True for approved coordinates (rather then proposed by system)
     IS_APPROVED_COORDINATES = 'is_approved_coordinates'
+    # demand-side-chosen social status
     SOCIAL_STATUS = 'social_status'
+    # True for supply users who are allowed to post messages
+    IS_APPROVED_SUPPLY = 'is_approved_supply'
 
 
 class SocialStatus(Enum):
@@ -131,6 +141,7 @@ class User:
     tg_user: Optional[TgUser]=None
     provider: Optional[Provider]=None
     workflow: Optional[Workflow]=None
+    is_active: Optional[bool]=None
 
     @property
     def id(self) -> Optional[str]:
@@ -144,36 +155,25 @@ class User:
 
     @classmethod
     def from_dict(cls, record: dict):
-        return cls(
-            _id=str(record.get('_id')),
-            user_id=record['user_id'],
-            chat_id=record.get('chat_id'),
-            state=record.get('bot_state'),
-            info=record.get('info'),
-            context=record.get('context'),
-            editing_message_id=record.get('editing_message_id'),
-            workflow=Workflow(record.get('workflow')),
-            provider=Provider(record.get('provider')),
-        )
+        record['state'] = record.pop('bot_state', None)
+        record['workflow'] = Workflow(record.get('workflow'))
+        record['provider'] = Provider(record.get('provider'))
+        return cls(**record)
 
 
 @dataclass
 class Message:
     message_id: str
+    owner_id: str
     products: List[str]
-    take_time: Optional[str]
-    demand_user_id: Optional[Union[str, int]]
-    dt_created: Optional[str]
+    take_time: Optional[str] = None
+    demand_user_id: Optional[Union[str, int]] = None
+    dt_published: Optional[str] = None
 
     @classmethod
     def from_db(cls, record: dict):
-        return Message(
-            message_id=str(record['_id']),
-            demand_user_id=record.get('demand_user_id'),
-            products=record.get('products'),
-            take_time=record.get('take_time'),
-            dt_created=record.get('dt_created')
-        )
+        record['message_id'] = record.pop('_id')
+        return Message(**record)
 
 
 @dataclass

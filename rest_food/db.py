@@ -81,7 +81,7 @@ def get_or_create_user(
     if user is None:
         info = info or {}
         info[UserInfoField.DISPLAY_USERNAME.value] = True
-        user = User(user_id=user_id, chat_id=chat_id, info=info)
+        user = User(user_id=user_id, chat_id=chat_id, info=info, is_active=True)
         _create_user(user, provider, workflow)
 
     return user
@@ -93,15 +93,26 @@ def _create_user(user: User, provider: Provider, workflow: Workflow):
         'chat_id': user.chat_id,
         'provider': provider.value,
         'workflow': workflow.value,
+        'is_active': user.is_active,
         'info': user.info,
         'context': {},
     })
 
 
 def get_demand_users():
+    """
+
+    Returns
+    -------
+    All active demand users.
+
+    """
     return [
         User.from_dict(x)
-        for x in db.users.find({'workflow': Workflow.DEMAND.value})
+        for x in db.users.find({
+            'workflow': Workflow.DEMAND.value,
+            'is_active': {'$ne': False},
+        })
     ]
 
 
@@ -139,12 +150,10 @@ def set_booking_to_cancel(user: User, message_id: str):
 
 def create_supply_message(user: User, message: str, *, provider: Provider):
     message_id = ObjectId()
-    dt_created = datetime.datetime.now().strftime(DT_FORMAT)
     db.messages.insert_one({
         '_id': message_id,
         'owner_id': user.id,
         'products': [message],
-        'dt_created': dt_created,
     })
 
     _update_user(
@@ -172,6 +181,7 @@ def set_supply_message_time(user: User, time_message: str):
 
 def cancel_supply_message(user: User, *, provider: Provider):
     _update_user(user.user_id, provider, Workflow.SUPPLY, update={'editing_message_id': None})
+    db.messages.remove({'_id': ObjectId(user.editing_message_id)})
     user.editing_message_id = None
 
 
@@ -180,7 +190,7 @@ def list_messages(supply_user: User, interval: datetime.timedelta=datetime.timed
 
     records = db.messages.find({
         'owner_id': supply_user.id,
-        'dt_created': {'$gt': dt_from},
+        'dt_published': {'$gt': dt_from},
     })
 
     return [Message.from_db(x) for x in records]
@@ -224,3 +234,18 @@ def mark_message_as_booked(demand_user: User, message_id: str):
 
 def cancel_booking(supply_user: User, message_id: str):
     _update_message(message_id, owner_id=supply_user.id, update={'demand_user_id': None})
+
+
+def set_inactive(chat_id: int, provider: Provider, workflow: Workflow):
+    db.users.update_one({
+        {
+            'chat_id': chat_id,
+            'provider': provider.value,
+            'workflow': workflow.value,
+        },
+        {
+            '$set': {
+                'is_active': False,
+            },
+        }
+    })

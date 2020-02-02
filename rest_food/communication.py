@@ -1,14 +1,20 @@
 import logging
+import random
 import time
 from typing import Iterable
 
 from telegram import Bot, Message
 from telegram.error import BadRequest, Unauthorized
 
-from rest_food.db import get_demand_users, get_message_demanded_user
-from rest_food.entities import Reply, User, Workflow
-from rest_food.message_queue import message_queue
-from rest_food.settings import TELEGRAM_TOKEN_SUPPLY, TELEGRAM_TOKEN_DEMAND, STAGE, TEST_TG_CHAT_ID
+from rest_food.db import get_demand_users, get_message_demanded_user, set_inactive
+from rest_food.entities import Reply, User, Workflow, Provider
+from rest_food.message_queue import get_queue
+from rest_food.settings import (
+    TELEGRAM_TOKEN_SUPPLY,
+    TELEGRAM_TOKEN_DEMAND,
+    STAGE,
+    TEST_TG_CHAT_ID,
+)
 from rest_food.states.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
 from rest_food.states.supply_reply import build_supply_side_booked_message
@@ -73,8 +79,10 @@ def get_bot(workflow: Workflow):
 
 def publish_supply_event(supply_user: User):
     message = build_demand_side_short_message(supply_user, supply_user.editing_message_id)
-    message_queue.push_super_batch(
-        message_and_chat_id=[(message, x.chat_id) for x in get_demand_users()],
+    users = get_demand_users()
+    random.shuffle(users)
+    get_queue().push_super_batch(
+        message_and_chat_id=[(message, x.chat_id) for x in users],
         workflow=Workflow.DEMAND
     )
 
@@ -170,10 +178,10 @@ def send_messages(
                 )
             except Unauthorized:
                 logger.warning(
-                    '%s is blocked for the bot. '
-                    'TODO: set is_active=False for the user with this chat_id.',
+                    '%s is blocked for the bot. ',
                     tg_chat_id
                 )
+                set_inactive(chat_id=tg_chat_id, provider=Provider.TG, workflow=workflow)
 
             except BadRequest as e:
                 if 'the same' in e.message:
