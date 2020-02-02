@@ -81,7 +81,7 @@ def build_supply_user_description(user: User):
 
 
 def build_demand_side_full_message_text(supply_user: User, message: Message) -> str:
-    return _("{}\n\n\n{}").format(
+    return "{}\n\n\n{}".format(
         build_supply_user_description(supply_user),
         message_to_text(message),
     )
@@ -101,23 +101,33 @@ def _introduce_new_user(user: User):
 
 
 def build_new_supplier_notification_text(supply_user: User):
-    return _('%s wants to join as a supplier. Provided description is:\n\n%s') % (
-        _introduce_new_user(supply_user),
-        build_supply_user_description(supply_user)
+    return (
+        _('{user_name} wants to join as a supplier. Provided description is:\n\n{description}').format(
+            user_name=_introduce_new_user(supply_user),
+            description=build_supply_user_description(supply_user),
+        )
     )
 
 
 def build_supplier_approved_text(user: User):
-    return _('%s was APPROVED as a supplier. Provided description was:\n\n%s\n\nDB id: %s') % (
-        _introduce_new_user(user),
-        build_supply_user_description(user),
-        user.id,
+    return _(
+        '{user_name} was APPROVED as a supplier. '
+        'Provided description was:\n\n{description}\n\n'
+        'DB id: {id}'
+    ).format(
+        user_name=_introduce_new_user(user),
+        description=build_supply_user_description(user),
+        id=user.id,
     )
 
 
 def build_supplier_declined_text(user: User):
-    return _('%s was DECLINED as a supplier. Provided description was:\n\n%s\n\nDB id: %s') % (
-        _introduce_new_user(user),
-        build_supply_user_description(user),
-        user.id,
+    return _(
+        '{user_name} was DECLINED as a supplier. '
+        'Provided description was:\n\n{description}\n\n'
+        'DB id: {id}'
+    ).format(
+        user_name=_introduce_new_user(user),
+        description=build_supply_user_description(user),
+        id=user.id,
     )
