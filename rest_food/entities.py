@@ -55,7 +55,7 @@ class UserInfoField(Enum):
     COORDINATES = 'coordinates'
     # contact phone
     PHONE = 'phone'
-    # username to display
+    # True if the user has shared their username
     DISPLAY_USERNAME = 'display_username'
     # True for approved coordinates (rather then proposed by system)
     IS_APPROVED_COORDINATES = 'is_approved_coordinates'
@@ -121,6 +121,8 @@ class SupplyCommand:
     LIST_MESSAGES = 'list_messages'
     SHOW_DEMANDED_MESSAGE = 'sdm'
     SHOW_NON_DEMANDED_MESSAGE = 'show_ndm'
+    APPROVE_SUPPLIER = 'approve_supplier'
+    DECLINE_SUPPLIER = 'decline_supplier'
 
 
 @dataclass
@@ -142,6 +144,7 @@ class User:
     provider: Optional[Provider]=None
     workflow: Optional[Workflow]=None
     is_active: Optional[bool]=None
+    is_admin: Optional[bool]=False
 
     @property
     def id(self) -> Optional[str]:

@@ -6,7 +6,9 @@ from typing import Iterable
 from telegram import Bot, Message
 from telegram.error import BadRequest, Unauthorized
 
-from rest_food.db import get_demand_users, get_message_demanded_user, set_inactive
+from rest_food.db import (
+    get_demand_users, get_message_demanded_user, set_inactive, get_admin_users,
+)
 from rest_food.entities import Reply, User, Workflow, Provider
 from rest_food.message_queue import get_queue
 from rest_food.settings import (
@@ -17,7 +19,9 @@ from rest_food.settings import (
 )
 from rest_food.states.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
-from rest_food.states.supply_reply import build_supply_side_booked_message
+from rest_food.states.supply_reply import (
+    build_supply_side_booked_message, build_new_supplier_notification,
+)
 from rest_food.states.formatters import build_demand_side_full_message_text_by_id
 from rest_food.translation import translate_lazy as _
 
@@ -135,6 +139,27 @@ def notify_demand_for_approved(*, supply_user: User, message_id: str):
         ],
         workflow=Workflow.DEMAND,
     )
+
+
+def notify_admin_about_new_supply_user(supply_user: User):
+    admin_users = get_admin_users()
+    message = build_new_supplier_notification(supply_user)
+    if not admin_users:
+        logger.error("There are no admin users in db.")
+        return 
+
+    for admin_user in admin_users:
+        if admin_user.workflow == Workflow.DEMAND:
+            logger.warning(
+                "Notification won't be sent user %s as admin should be supplier.",
+                admin_user.id
+            )
+        else:
+            send_messages(
+                tg_chat_id=admin_user.chat_id,
+                replies=[message],
+                workflow=Workflow.SUPPLY
+            )
 
 
 def send_messages(

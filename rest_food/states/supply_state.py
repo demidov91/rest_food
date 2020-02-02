@@ -329,7 +329,6 @@ class SetCoordinatesState(BaseEditInfoState):
 
         return reply
 
-
     def handle_text(self, text):
         return
 

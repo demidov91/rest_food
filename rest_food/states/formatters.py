@@ -1,3 +1,7 @@
+"""
+This module methods are supposed to return strings.
+"""
+
 from rest_food.db import get_supply_editing_message, get_supply_message_record
 from rest_food.entities import Message, User, UserInfoField, translate_social_status_string
 from rest_food.translation import translate_lazy as _
@@ -64,22 +68,56 @@ def build_demanded_message_text(*, demand_user: User, supply_user: User, message
     )
 
 
-def build_demand_side_full_message_text(supply_user: User, message: Message) -> str:
+def build_supply_user_description(user: User):
     return _(
         "Restaurant name: {name}\n"
         "Address: {address}\n"
-        "Phone: {phone}\n"
-        "\n\n"
-        "{products}"
+        "Phone: {phone}"
     ).format(
-        name=supply_user.info[UserInfoField.NAME.value],
-        address=supply_user.info[UserInfoField.ADDRESS.value],
-        phone=supply_user.info[UserInfoField.PHONE.value],
-        products=message_to_text(message),
+        name=user.info[UserInfoField.NAME.value],
+        address=user.info[UserInfoField.ADDRESS.value],
+        phone=user.info[UserInfoField.PHONE.value],
+    )
+
+
+def build_demand_side_full_message_text(supply_user: User, message: Message) -> str:
+    return _("{}\n\n\n{}").format(
+        build_supply_user_description(supply_user),
+        message_to_text(message),
     )
 
 
 def build_demand_side_full_message_text_by_id(supply_user: User, message_id: str) -> str:
     return build_demand_side_full_message_text(
         supply_user, get_supply_message_record(user=supply_user, message_id=message_id)
+    )
+
+
+def _introduce_new_user(user: User):
+    if user.info.get(UserInfoField.USERNAME.value):
+        return _('User @%s') % user.info[UserInfoField.value]
+
+    return _('New user')
+
+
+def build_new_supplier_notification_text(supply_user: User):
+    return _('%s wants to join as a supplier. %s Provided description is:\n\n%s') % (
+        _introduce_new_user(supply_user),
+        build_supply_user_description(supply_user)
+    )
+
+
+def build_supplier_approved_text(user: User):
+    return _('%s was APPROVED as a supplier. Provided description was:\n\n%s\n\nDB id: %s') % (
+        _introduce_new_user(user),
+        build_supply_user_description(user),
+        user.id,
+    )
+
+
+def build_supplier_declined_text(user: User):
+    return _('%s was DECLINED as a supplier. Provided description was:\n\n%s\n\nDB id: %s') % (
+        _introduce_new_user(user),
+        build_supply_user_description(user),
+        user.id,
     )

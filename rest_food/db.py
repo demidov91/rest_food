@@ -50,6 +50,13 @@ def _build_extended_id(user: User) -> str:
     return f'{user.provider.value}|{user.user_id}'
 
 
+def get_user_by_id(db_id: str) -> User:
+    record = db.users.find_one({
+        '_id': ObjectId(db_id),
+    })
+    return record and User.from_dict(record)
+
+
 def get_user(user_id, provider: Provider, workflow: Workflow) -> Optional[User]:
     record = db.users.find_one({
         'user_id': str(user_id),
@@ -125,6 +132,16 @@ def get_demand_users():
         User.from_dict(x)
         for x in db.users.find({
             'workflow': Workflow.DEMAND.value,
+            'is_active': {'$ne': False},
+        })
+    ]
+
+
+def get_admin_users():
+    return [
+        User.from_dict(x)
+        for x in db.users.find({
+            'is_admin': True,
             'is_active': {'$ne': False},
         })
     ]

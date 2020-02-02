@@ -1,5 +1,8 @@
-from rest_food.entities import User, SupplyCommand, Reply
-from rest_food.states.formatters import build_demanded_message_text
+from rest_food.entities import User, SupplyCommand, Reply, UserInfoField
+from rest_food.states.formatters import (
+    build_demanded_message_text,
+    build_new_supplier_notification_text,
+)
 from rest_food.translation import translate_lazy as _
 
 
@@ -23,3 +26,16 @@ def build_supply_side_booked_message(*, demand_user: User, supply_user: User, me
     ]
 
     return Reply(text=message, buttons=buttons)
+
+
+def build_new_supplier_notification(supply_user: User) -> Reply:
+    return Reply(
+        text=build_new_supplier_notification_text(supply_user),
+        buttons=[[{
+            'text': _('Approve'),
+            'data': f'c|{SupplyCommand.APPROVE_SUPPLIER}|{supply_user.id}',
+        }, {
+            'text': _('Decline'),
+            'data': f'c|{SupplyCommand.DECLINE_SUPPLIER}|{supply_user.id}',
+        }]]
+    )
