@@ -3,6 +3,7 @@ import logging
 import multiprocessing
 from dataclasses import asdict
 from typing import Tuple, List
+from threading import Thread
 from hashlib import sha256
 
 import boto3
@@ -113,7 +114,7 @@ class LocalMessageQueue(BaseMessageQueue):
 
     def __init__(self):
         self._queue = multiprocessing.Queue()
-        multiprocessing.Process(target=self.read_queue).start()
+        multiprocessing.Process(target=self._launch_threads).start()
 
     def put_super_batch_into_queue(self, items: List[str]):
         self.put_batch_into_queue(items)
@@ -122,14 +123,21 @@ class LocalMessageQueue(BaseMessageQueue):
         for x in items:
             self._queue.put(x)
 
+    def _launch_threads(self):
+        ts = [Thread(target=self.read_queue) for _ in range(10)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join()
+
     def read_queue(self):
         while True:
             try:
                 msg = self._queue.get()
             except KeyboardInterrupt:
+                logger.info('Stop sending messages.')
                 break
 
-            print('Got message')
             self.process(msg)
 
 

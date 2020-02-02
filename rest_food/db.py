@@ -76,27 +76,41 @@ def get_or_create_user(
         workflow: Workflow,
         info: dict=None,
 ) -> User:
+    """
+    Queries db for a user record with user_id, provider and workflow specified.
+        Marks it as active if found but not active. Creates a new active one if no record found.
+    """
     user = get_user(user_id, provider, workflow)
 
     if user is None:
         info = info or {}
         info[UserInfoField.DISPLAY_USERNAME.value] = True
-        user = User(user_id=user_id, chat_id=chat_id, info=info, is_active=True)
-        _create_user(user, provider, workflow)
+        user = User(
+            user_id=user_id,
+            chat_id=chat_id,
+            info=info,
+            is_active=True,
+            provider=provider,
+            workflow=workflow,
+        )
+        user._id = str(_create_user(user))
+    elif not user.is_active:
+        _update_user_entity(user, {'is_active': True})
 
     return user
 
 
-def _create_user(user: User, provider: Provider, workflow: Workflow):
-    db.users.insert_one({
+def _create_user(user: User) -> ObjectId:
+    result = db.users.insert_one({
         'user_id': str(user.user_id),
         'chat_id': user.chat_id,
-        'provider': provider.value,
-        'workflow': workflow.value,
+        'provider': user.provider.value,
+        'workflow': user.workflow.value,
         'is_active': user.is_active,
         'info': user.info,
         'context': {},
     })
+    return result.inserted_id
 
 
 def get_demand_users():
@@ -237,7 +251,7 @@ def cancel_booking(supply_user: User, message_id: str):
 
 
 def set_inactive(chat_id: int, provider: Provider, workflow: Workflow):
-    db.users.update_one({
+    db.users.update_one(
         {
             'chat_id': chat_id,
             'provider': provider.value,
@@ -248,4 +262,4 @@ def set_inactive(chat_id: int, provider: Provider, workflow: Workflow):
                 'is_active': False,
             },
         }
-    })
+    )

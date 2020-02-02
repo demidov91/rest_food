@@ -186,7 +186,11 @@ def send_messages(
             except BadRequest as e:
                 if 'the same' in e.message:
                     pass
+                elif 'Chat not found' in e.message:
+                    logger.warning('Tg chat %s not found', tg_chat_id)
+                    set_inactive(chat_id=tg_chat_id, provider=Provider.TG, workflow=workflow)
                 else:
+                    logger.warning('Failed to send to tg_chat_id=%s', tg_chat_id)
                     raise e
 
         if original_message_should_be_replaced:
