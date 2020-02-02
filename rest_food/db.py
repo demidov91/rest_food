@@ -36,7 +36,7 @@ def _update_user_entity(user: User, update: dict):
     _update_user(user.user_id, user.provider, user.workflow, update=update)
 
 
-def _update_message(message_id: str, *, owner_id: Optional[str], update: dict):
+def _update_message(message_id: str, *, owner_id: Optional[str]=None, update: dict):
     find = {
         '_id': ObjectId(message_id),
     }
@@ -187,9 +187,18 @@ def extend_supply_message(user: User, message: str):
     })
 
 
-def set_supply_message_time(user: User, time_message: str):
+def set_message_time(message_id: str, time_message: str):
     _update_message(
-        message_id=user.editing_message_id, owner_id=user.id, update={'take_time': time_message}
+        message_id=message_id, update={'take_time': time_message}
+    )
+
+
+def set_message_publication_time(message_id: str):
+    _update_message(
+        message_id,
+        update={
+            'dt_published': datetime.datetime.now().strftime(DT_FORMAT)
+        }
     )
 
 

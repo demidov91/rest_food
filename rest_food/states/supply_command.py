@@ -50,14 +50,14 @@ def back_to_posting(user):
 
 def _get_demanded_message_button(message: Message):
     return [{
-        'text': _('%s (booked)') % db_time_to_user(message.dt_created, '%d-%m %H:%M'),
+        'text': _('%s (booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
         'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|{message.message_id}|{message.demand_user_id}'
     }]
 
 
 def _get_non_demanded_message_button(message: Message):
     return [{
-        'text': _('%s (not booked)') % db_time_to_user(message.dt_created, '%d-%m %H:%M'),
+        'text': _('%s (not booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
         'data': f'c|{SupplyCommand.SHOW_NON_DEMANDED_MESSAGE}|{message.message_id}'
     }]
 

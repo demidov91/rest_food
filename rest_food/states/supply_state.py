@@ -8,12 +8,12 @@ from rest_food.db import (
     extend_supply_message,
     create_supply_message,
     cancel_supply_message,
-    set_supply_message_time,
+    set_message_time,
     set_info,
     cancel_booking,
     list_messages,
     get_supply_message_record,
-)
+    set_message_publication_time)
 from rest_food.communication import publish_supply_event, notify_demand_for_cancel
 from rest_food.settings import TEST_TG_CHAT_ID
 from rest_food.states.formatters import build_active_food_message
@@ -153,8 +153,10 @@ class SetMessageTimeState(State):
                     next_state=SupplyState.READY_TO_POST,
                 )
 
-            set_supply_message_time(self.db_user, text)
+            message_id = self.db_user.editing_message_id
+            set_message_time(message_id, text)
             publish_supply_event(self.db_user)
+            set_message_publication_time(message_id)
             return Reply(
                 text=_(
                     "Information is sent. "

@@ -79,7 +79,7 @@ def _convert_messages(in_filename: str, out_filename: str):
         converted = {}
 
         for key in item:
-            if key in ('user_id', 'demand_user_id', 'dt_created', 'take_time'):
+            if key in ('user_id', 'demand_user_id', 'dt_published', 'take_time'):
                 converted[key] = item[key]
             elif key == 'products':
                 converted[key] = eval(item[key])

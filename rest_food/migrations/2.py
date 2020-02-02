@@ -2,7 +2,7 @@ from rest_food.db import db
 
 
 def forward():
-    res = db.messages.update(
+    db.messages.update(
         {},
         {'$rename': {'dt_created': 'dt_published'}},
         multi=True
