@@ -20,7 +20,7 @@ def build_demand_side_short_message(supply_user: User, message_id: str):
         buttons=[[{
             'text': _('Take it'),
             'data': DemandCommandName.TAKE.build(
-                supply_user.provider.value, supply_user.user_id, supply_user.editing_message_id
+                supply_user.provider.value, supply_user.user_id, message_id
             ),
         }, {
             'text': _('Info'),

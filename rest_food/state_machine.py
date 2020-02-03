@@ -1,8 +1,7 @@
 from rest_food.states.base import State
 from rest_food.states import demand_state, supply_state
 from rest_food.db import get_or_create_user, set_state
-from rest_food.entities import Provider, Workflow, SupplyState, DemandState, User
-
+from rest_food.entities import Provider, Workflow, SupplyState, DemandState, User, UserInfoField
 
 SUPPLY = {
     None: supply_state.DefaultState,
@@ -34,7 +33,11 @@ def get_supply_state(*, tg_user_id: int, tg_user: dict, tg_chat_id: int) -> Stat
         user_id=tg_user_id,
         chat_id=tg_chat_id,
         provider=Provider.TG,
-        workflow=Workflow.SUPPLY
+        workflow=Workflow.SUPPLY,
+        info={
+            UserInfoField.USERNAME.value: tg_user['username'],
+            UserInfoField.DISPLAY_USERNAME.value: False,
+        },
     )
     user.tg_user = tg_user
     return SUPPLY[user.state and SupplyState(user.state)](user)

@@ -1,12 +1,27 @@
 import logging
 from typing import List
 
-from rest_food.communication import notify_demand_for_approved
+from rest_food.communication import (
+    notify_demand_for_approved,
+    notify_supplier_is_approved,
+    notify_supplier_is_declined,
+)
 from rest_food.translation import translate_lazy as _
-from rest_food.db import set_booking_to_cancel, list_messages, get_user
-from rest_food.entities import Reply, SupplyState, User, Provider, Workflow, Message, SupplyCommand
+from rest_food.decorators import admin_only
+from rest_food.db import (
+    set_booking_to_cancel,
+    list_messages,
+    get_user,
+    set_info,
+    get_user_by_id)
+from rest_food.entities import Reply, SupplyState, User, Provider, Workflow, Message, SupplyCommand, \
+    UserInfoField
 from rest_food.states.supply_reply import build_supply_side_booked_message
-from rest_food.states.formatters import build_short_message_text_by_id
+from rest_food.states.formatters import (
+    build_short_message_text_by_id,
+    build_supplier_approved_text,
+    build_supplier_declined_text,
+)
 from rest_food.states.utils import db_time_to_user
 
 
@@ -31,6 +46,8 @@ def handle_supply_command(user: User, command_name: str, args: List[str]):
         SupplyCommand.LIST_MESSAGES: view_messages,
         SupplyCommand.SHOW_DEMANDED_MESSAGE: show_demanded_message,
         SupplyCommand.SHOW_NON_DEMANDED_MESSAGE: show_non_demanded_message,
+        SupplyCommand.APPROVE_SUPPLIER: approve_supplier,
+        SupplyCommand.DECLINE_SUPPLIER: decline_supplier,
     }[command_name](user, *args)
 
 
@@ -50,14 +67,14 @@ def back_to_posting(user):
 
 def _get_demanded_message_button(message: Message):
     return [{
-        'text': _('%s (booked)') % db_time_to_user(message.dt_created, '%d-%m %H:%M'),
+        'text': _('%s (booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
         'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|{message.message_id}|{message.demand_user_id}'
     }]
 
 
 def _get_non_demanded_message_button(message: Message):
     return [{
-        'text': _('%s (not booked)') % db_time_to_user(message.dt_created, '%d-%m %H:%M'),
+        'text': _('%s (not booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
         'data': f'c|{SupplyCommand.SHOW_NON_DEMANDED_MESSAGE}|{message.message_id}'
     }]
 
@@ -97,3 +114,32 @@ def show_non_demanded_message(user, message_id: str):
         }]]
     )
 
+
+@admin_only
+def approve_supplier(user: User, supplier_id: str):
+    supply_user = get_user_by_id(supplier_id)
+    set_info(supply_user, UserInfoField.IS_APPROVED_SUPPLY, True)
+    notify_supplier_is_approved(supply_user)
+
+    return Reply(
+        text=build_supplier_approved_text(supply_user),
+        buttons=[[{
+            'text': _('Nope, decline it'),
+            'data': f'c|{SupplyCommand.DECLINE_SUPPLIER}|{supplier_id}'
+        }]]
+    )
+
+
+@admin_only
+def decline_supplier(user: User, supplier_id: str):
+    supply_user = get_user_by_id(supplier_id)
+    set_info(supply_user, UserInfoField.IS_APPROVED_SUPPLY, False)
+    notify_supplier_is_declined(supply_user)
+
+    return Reply(
+        text=build_supplier_declined_text(supply_user),
+        buttons=[[{
+            'text': _('Sorry, approve it'),
+            'data': f'c|{SupplyCommand.APPROVE_SUPPLIER}|{supplier_id}'
+        }]]
+    )

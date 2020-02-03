@@ -1,7 +1,9 @@
 import json
 import logging
+import multiprocessing
 from dataclasses import asdict
 from typing import Tuple, List
+from threading import Thread
 from hashlib import sha256
 
 import boto3
@@ -16,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class BaseMessageQueue:
-    batch_size = None   # type: int
     super_batch_size = None     # type: int
 
     def put_batch_into_queue(self, items: List[str]):
@@ -45,11 +46,6 @@ class BaseMessageQueue:
     def put_super_batch_into_queue(self, items: List[str]):
         raise NotImplementedError()
 
-    def redestrib_super_batch(self, items: List[str]):
-        for i in range(0, len(items), self.batch_size):
-            self.put_batch_into_queue(items[i:i + self.batch_size])
-
-            logger.info('%s messages are sent into send-message queue', i + self.batch_size)
 
     def push_super_batch(self, *, message_and_chat_id: List[Tuple[Reply, int]], workflow: Workflow):
         for i in range(0, len(message_and_chat_id), self.super_batch_size):
@@ -91,6 +87,12 @@ class AwsMessageQueue(BaseMessageQueue):
             MessageGroupId='CommonGroup',
         )
 
+    def redestrib_super_batch(self, items: List[str]):
+        for i in range(0, len(items), self.batch_size):
+            self.put_batch_into_queue(items[i:i + self.batch_size])
+
+            logger.info('%s messages are sent into send-message queue', i + self.batch_size)
+
     def put_batch_into_queue(self, items: List[str]):
         """
 
@@ -108,18 +110,35 @@ class AwsMessageQueue(BaseMessageQueue):
 
 
 class LocalMessageQueue(BaseMessageQueue):
-    """
-    This is to be implemented with process queue for the flask mode.
-    """
-    batch_size = 1
-    super_batch_size = 1
+    super_batch_size = 100
+
+    def __init__(self):
+        self._queue = multiprocessing.Queue()
+        multiprocessing.Process(target=self._launch_threads).start()
 
     def put_super_batch_into_queue(self, items: List[str]):
         self.put_batch_into_queue(items)
 
     def put_batch_into_queue(self, items: List[str]):
         for x in items:
-            self.process(x)
+            self._queue.put(x)
+
+    def _launch_threads(self):
+        ts = [Thread(target=self.read_queue) for _ in range(10)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join()
+
+    def read_queue(self):
+        while True:
+            try:
+                msg = self._queue.get()
+            except KeyboardInterrupt:
+                logger.info('Stop sending messages.')
+                break
+
+            self.process(msg)
 
 
 def _get_queue() -> BaseMessageQueue:
@@ -129,4 +148,11 @@ def _get_queue() -> BaseMessageQueue:
     return LocalMessageQueue()
 
 
-message_queue = _get_queue()
+_the_queue = None
+
+
+def get_queue():
+    global _the_queue
+    if _the_queue is None:
+        _the_queue = _get_queue()
+    return _the_queue

@@ -36,7 +36,7 @@ def _update_user_entity(user: User, update: dict):
     _update_user(user.user_id, user.provider, user.workflow, update=update)
 
 
-def _update_message(message_id: str, *, owner_id: Optional[str], update: dict):
+def _update_message(message_id: str, *, owner_id: Optional[str]=None, update: dict):
     find = {
         '_id': ObjectId(message_id),
     }
@@ -48,6 +48,13 @@ def _update_message(message_id: str, *, owner_id: Optional[str], update: dict):
 
 def _build_extended_id(user: User) -> str:
     return f'{user.provider.value}|{user.user_id}'
+
+
+def get_user_by_id(db_id: str) -> User:
+    record = db.users.find_one({
+        '_id': ObjectId(db_id),
+    })
+    return record and User.from_dict(record)
 
 
 def get_user(user_id, provider: Provider, workflow: Workflow) -> Optional[User]:
@@ -76,32 +83,67 @@ def get_or_create_user(
         workflow: Workflow,
         info: dict=None,
 ) -> User:
+    """
+    Queries db for a user record with user_id, provider and workflow specified.
+        Marks it as active if found but not active. Creates a new active one if no record found.
+    """
     user = get_user(user_id, provider, workflow)
 
     if user is None:
         info = info or {}
         info[UserInfoField.DISPLAY_USERNAME.value] = True
-        user = User(user_id=user_id, chat_id=chat_id, info=info)
-        _create_user(user, provider, workflow)
+        user = User(
+            user_id=user_id,
+            chat_id=chat_id,
+            info=info,
+            is_active=True,
+            provider=provider,
+            workflow=workflow,
+        )
+        user._id = str(_create_user(user))
+    elif not user.is_active:
+        _update_user_entity(user, {'is_active': True})
 
     return user
 
 
-def _create_user(user: User, provider: Provider, workflow: Workflow):
-    db.users.insert_one({
+def _create_user(user: User) -> ObjectId:
+    result = db.users.insert_one({
         'user_id': str(user.user_id),
         'chat_id': user.chat_id,
-        'provider': provider.value,
-        'workflow': workflow.value,
+        'provider': user.provider.value,
+        'workflow': user.workflow.value,
+        'is_active': user.is_active,
         'info': user.info,
         'context': {},
     })
+    return result.inserted_id
 
 
 def get_demand_users():
+    """
+
+    Returns
+    -------
+    All active demand users.
+
+    """
     return [
         User.from_dict(x)
-        for x in db.users.find({'workflow': Workflow.DEMAND.value})
+        for x in db.users.find({
+            'workflow': Workflow.DEMAND.value,
+            'is_active': {'$ne': False},
+        })
+    ]
+
+
+def get_admin_users():
+    return [
+        User.from_dict(x)
+        for x in db.users.find({
+            'is_admin': True,
+            'is_active': {'$ne': False},
+        })
     ]
 
 
@@ -139,12 +181,10 @@ def set_booking_to_cancel(user: User, message_id: str):
 
 def create_supply_message(user: User, message: str, *, provider: Provider):
     message_id = ObjectId()
-    dt_created = datetime.datetime.now().strftime(DT_FORMAT)
     db.messages.insert_one({
         '_id': message_id,
         'owner_id': user.id,
         'products': [message],
-        'dt_created': dt_created,
     })
 
     _update_user(
@@ -164,14 +204,24 @@ def extend_supply_message(user: User, message: str):
     })
 
 
-def set_supply_message_time(user: User, time_message: str):
+def set_message_time(message_id: str, time_message: str):
     _update_message(
-        message_id=user.editing_message_id, owner_id=user.id, update={'take_time': time_message}
+        message_id=message_id, update={'take_time': time_message}
+    )
+
+
+def set_message_publication_time(message_id: str):
+    _update_message(
+        message_id,
+        update={
+            'dt_published': datetime.datetime.now().strftime(DT_FORMAT)
+        }
     )
 
 
 def cancel_supply_message(user: User, *, provider: Provider):
     _update_user(user.user_id, provider, Workflow.SUPPLY, update={'editing_message_id': None})
+    db.messages.remove({'_id': ObjectId(user.editing_message_id)})
     user.editing_message_id = None
 
 
@@ -180,7 +230,7 @@ def list_messages(supply_user: User, interval: datetime.timedelta=datetime.timed
 
     records = db.messages.find({
         'owner_id': supply_user.id,
-        'dt_created': {'$gt': dt_from},
+        'dt_published': {'$gt': dt_from},
     })
 
     return [Message.from_db(x) for x in records]
@@ -224,3 +274,18 @@ def mark_message_as_booked(demand_user: User, message_id: str):
 
 def cancel_booking(supply_user: User, message_id: str):
     _update_message(message_id, owner_id=supply_user.id, update={'demand_user_id': None})
+
+
+def set_inactive(chat_id: int, provider: Provider, workflow: Workflow):
+    db.users.update_one(
+        {
+            'chat_id': chat_id,
+            'provider': provider.value,
+            'workflow': workflow.value,
+        },
+        {
+            '$set': {
+                'is_active': False,
+            },
+        }
+    )

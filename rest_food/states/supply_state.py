@@ -8,14 +8,18 @@ from rest_food.db import (
     extend_supply_message,
     create_supply_message,
     cancel_supply_message,
-    set_supply_message_time,
+    set_message_time,
     set_info,
     cancel_booking,
     list_messages,
     get_supply_message_record,
+    set_message_publication_time)
+from rest_food.communication import (
+    publish_supply_event,
+    notify_demand_for_cancel,
+    notify_admin_about_new_supply_user_if_necessary,
 )
-from rest_food.communication import publish_supply_event, notify_demand_for_cancel
-from rest_food.settings import TEST_TG_CHAT_ID
+from rest_food.settings import FEEDBACK_TG_BOT
 from rest_food.states.formatters import build_active_food_message
 from rest_food.states.utils import (
     get_coordinates,
@@ -42,6 +46,7 @@ class ForceInfoMixin:
             if not self.db_user.info.get(field.value):
                 return state
 
+        notify_admin_about_new_supply_user_if_necessary(supply_user=self.db_user)
         return SupplyState.READY_TO_POST
 
 
@@ -61,11 +66,28 @@ class ReadyToPostState(State):
                 'data': 'view-info',
             }],
         ],
-        text=_('Enter food you can share and click "send"'),
     )
+
+    def _get_intro_text(self):
+        if self.db_user.info.get(UserInfoField.IS_APPROVED_SUPPLY.value):
+            return _('Enter food you can share and click "send"')
+
+        if self.db_user.info.get(UserInfoField.IS_APPROVED_SUPPLY.value) is False:
+            return (
+                _('Your account was declined. Please, contact %s for any clarifications.') %
+                FEEDBACK_TG_BOT
+            )
+
+        notify_admin_about_new_supply_user_if_necessary(self.db_user)
+
+        return (
+            _("We'll notify you when your account is approved. Also, you can contact us with %s") %
+            FEEDBACK_TG_BOT
+        )
 
     def get_intro(self) -> Reply:
         reply = super().get_intro()
+        reply.text = self._get_intro_text()
 
         messages = list_messages(self.db_user)
         if messages:
@@ -81,6 +103,9 @@ class ReadyToPostState(State):
             return Reply(next_state=SupplyState.VIEW_INFO)
 
         if not text:
+            return
+
+        if not self.db_user.info.get(UserInfoField.IS_APPROVED_SUPPLY.value):
             return
 
         create_supply_message(self.db_user, text, provider=self.provider)
@@ -141,20 +166,17 @@ class SetMessageTimeState(State):
             )
 
         if text:
-            if self.db_user.user_id not in TEST_TG_CHAT_ID:
+            if not self.db_user.info.get(UserInfoField.IS_APPROVED_SUPPLY.value):
                 logger.warning(
                     'There is an attempt to post a message by user %s', self.db_user.user_id
                 )
                 cancel_supply_message(self.db_user, provider=self.provider)
-                return Reply(
-                    text=_(
-                        "Please, contact @foodsharingsupportbot to use this bot."
-                    ),
-                    next_state=SupplyState.READY_TO_POST,
-                )
+                return Reply(next_state=SupplyState.READY_TO_POST)
 
-            set_supply_message_time(self.db_user, text)
+            message_id = self.db_user.editing_message_id
+            set_message_time(message_id, text)
             publish_supply_event(self.db_user)
+            set_message_publication_time(message_id)
             return Reply(
                 text=_(
                     "Information is sent. "
