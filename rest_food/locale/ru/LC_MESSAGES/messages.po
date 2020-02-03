@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-03 02:45+0300\n"
+"POT-Creation-Date: 2020-02-03 02:58+0300\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -336,6 +336,14 @@ msgstr ""
 #: rest_food/states/supply_command.py:112 rest_food/states/supply_reply.py:23
 msgid "View all messages"
 msgstr "Просмотреть все объявления"
+
+#: rest_food/states/supply_command.py:127
+msgid "Nope, decline it"
+msgstr "Нет, отклонить"
+
+#: rest_food/states/supply_command.py:142
+msgid "Sorry, approve it"
+msgstr "Ой, подтвердить"
 
 #: rest_food/states/demand_state.py:29
 msgid "Enter your name:"

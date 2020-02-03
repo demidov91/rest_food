@@ -121,7 +121,13 @@ def approve_supplier(user: User, supplier_id: str):
     set_info(supply_user, UserInfoField.IS_APPROVED_SUPPLY, True)
     notify_supplier_is_approved(supply_user)
 
-    return Reply(text=build_supplier_approved_text(supply_user))
+    return Reply(
+        text=build_supplier_approved_text(supply_user),
+        buttons=[[{
+            'text': _('Nope, decline it'),
+            'data': f'c|{SupplyCommand.DECLINE_SUPPLIER}|{supplier_id}'
+        }]]
+    )
 
 
 @admin_only
@@ -130,4 +136,10 @@ def decline_supplier(user: User, supplier_id: str):
     set_info(supply_user, UserInfoField.IS_APPROVED_SUPPLY, False)
     notify_supplier_is_declined(supply_user)
 
-    return Reply(text=build_supplier_declined_text(supply_user))
+    return Reply(
+        text=build_supplier_declined_text(supply_user),
+        buttons=[[{
+            'text': _('Sorry, approve it'),
+            'data': f'c|{SupplyCommand.APPROVE_SUPPLIER}|{supplier_id}'
+        }]]
+    )
