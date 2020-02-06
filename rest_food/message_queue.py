@@ -153,11 +153,12 @@ class AwsSingleMessageQueue(BaseSingleMessageQueue):
         )
 
     def _put_serialized(self, data: str):
-        self._queue.send_message(
+        send_result = self._queue.send_message(
             MessageBody=data,
             MessageDeduplicationId=sha256(data.encode()).hexdigest(),
             MessageGroupId='CommonGroup',
         )
+        logger.info('Sent into AWS queue. Send result: %s', send_result)
 
 
 class LocalQueue:

@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Iterable
 
-from telegram import Bot
+from telegram import Bot, Message as TgMessage
 from telegram.error import Unauthorized, BadRequest
 
 from rest_food.db import set_inactive
@@ -28,25 +28,25 @@ class FakeBot:
 
     def send_location(self, chat_id, *args, **kwargs):
         if chat_id in TEST_TG_CHAT_ID:
-            self._bot.send_location(chat_id, *args, **kwargs)
+            return self._bot.send_location(chat_id, *args, **kwargs)
         else:
             self._sleep()
 
     def edit_message_text(self, text, chat_id, *args, **kwargs):
         if chat_id in TEST_TG_CHAT_ID:
-            self._bot.edit_message_text(text, chat_id, *args, **kwargs)
+            return self._bot.edit_message_text(text, chat_id, *args, **kwargs)
         else:
             self._sleep()
 
     def send_message(self, chat_id, *args, **kwargs):
         if chat_id in TEST_TG_CHAT_ID:
-            self._bot.send_message(chat_id, *args, **kwargs)
+            return self._bot.send_message(chat_id, *args, **kwargs)
         else:
             self._sleep()
 
     def delete_message(self, chat_id, *args, **kwargs):
         if chat_id in TEST_TG_CHAT_ID:
-            self._bot.delete_message(chat_id, *args, **kwargs)
+            return self._bot.delete_message(chat_id, *args, **kwargs)
         else:
             self._sleep()
 
@@ -71,7 +71,7 @@ def get_bot(workflow: Workflow):
 def send_messages(
     *,
     tg_chat_id: int,
-    original_message: Message = None,
+    original_message: TgMessage = None,
     replies: Iterable[Reply],
     workflow: Workflow
 ):
@@ -105,7 +105,7 @@ def send_messages(
             logging.info('Sending a text message to %s', tg_chat_id)
 
             try:
-                method(
+                send_result = method(
                     chat_id=tg_chat_id,
                     text=reply.text,
                     reply_markup=markup,
@@ -129,7 +129,10 @@ def send_messages(
                     raise e
 
             else:
-                logger.info('Text message was successfully sent to %s', tg_chat_id)
+                logger.info(
+                    'Text message was successfully sent to %s. Send result is %s',
+                    tg_chat_id, send_result
+                )
 
         if original_message_should_be_replaced:
             bot.delete_message(chat_id=tg_chat_id, message_id=original_message.message_id)
