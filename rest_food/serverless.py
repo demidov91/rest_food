@@ -1,7 +1,7 @@
 import json
 import logging
 
-from rest_food.message_queue import get_queue
+from rest_food.message_queue import get_mass_queue
 from rest_food.handlers import tg_supply, tg_demand
 
 
@@ -34,7 +34,7 @@ def send_message(event, context):
     logger.info(event)
     for record in event['Records']:
         try:
-            get_queue().process(record['body'])
+            get_mass_queue().process(record['body'])
         except Exception:
             logger.exception('Send message event was processed with unexpected exception.')
 
@@ -43,6 +43,6 @@ def super_send(event, context):
     logger.info(event)
     for record in event['Records']:
         try:
-            get_queue().redestrib_super_batch(json.loads(record['body']))
+            get_mass_queue().redestrib_super_batch(json.loads(record['body']))
         except Exception:
             logger.exception('Send message event was processed with unexpected exception.')

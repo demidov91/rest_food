@@ -2,14 +2,13 @@ import json
 import logging
 import multiprocessing
 from dataclasses import asdict
-from typing import Tuple, List
+from typing import Tuple, List, Iterable
 from threading import Thread
 from hashlib import sha256
 
 import boto3
 
-
-from rest_food.entities import Workflow, Reply
+from rest_food.entities import Workflow, Reply, Message
 from rest_food.translation import LazyAwareJsonEncoder
 from rest_food.settings import STAGE
 
@@ -17,10 +16,10 @@ from rest_food.settings import STAGE
 logger = logging.getLogger(__name__)
 
 
-class BaseMessageQueue:
+class BaseMassMessageQueue:
     super_batch_size = None     # type: int
 
-    def put_batch_into_queue(self, items: List[str]):
+    def put_mass_messages_into_queue(self, items: List[str]):
         raise NotImplementedError()
 
     def serialize(self, message: Reply, chat_id: int, workflow: Workflow) -> str:
@@ -46,7 +45,6 @@ class BaseMessageQueue:
     def put_super_batch_into_queue(self, items: List[str]):
         raise NotImplementedError()
 
-
     def push_super_batch(self, *, message_and_chat_id: List[Tuple[Reply, int]], workflow: Workflow):
         for i in range(0, len(message_and_chat_id), self.super_batch_size):
             self.put_super_batch_into_queue(
@@ -58,18 +56,43 @@ class BaseMessageQueue:
             logger.info('%s messages are sent into super-queue', i+self.super_batch_size)
 
 
-class AwsMessageQueue(BaseMessageQueue):
+class BaseSingleMessageQueue:
+    def put(self,
+        tg_chat_id: int,
+        original_message: Message,
+        replies: Iterable[Reply],
+        workflow: Workflow
+    ):
+        self._put_serialized(json.loads({
+            'tg_chat_id': tg_chat_id,
+            'original_message': original_message and asdict(original_message),
+            'replies': [asdict(r) for r in replies if r is not None],
+            'workflow': workflow.value,
+        }))
+
+    def _put_serialized(self, data: str):
+        raise NotImplementedError()
+
+    def process(self, data: str):
+        from rest_food.communication import send_messages
+
+        data = json.loads(data)
+        send_messages(
+            tg_chat_id=data['tg_chat_id'],
+            original_message=data['original_message'] and Message.from_db(data['original_message']),
+            replies=[Reply(**x) for x in data['replies']],
+            workflow=Workflow(data['workflow']),
+        )
+
+
+class AwsMassMessageQueue(BaseMassMessageQueue):
     batch_size = 10
     super_batch_size = 100
 
     def __init__(self):
-        logger.info('Before creating sqs service.')
         sqs = boto3.resource('sqs', region_name='eu-central-1')
-        logger.info('Before connecting to sqs.')
         self._queue = sqs.get_queue_by_name(QueueName=f'send_message_{STAGE}.fifo')
-        logger.info('After connecting to send_message.')
         self._super_queue = sqs.get_queue_by_name(QueueName=f'super_send_{STAGE}.fifo')
-        logger.info('After connecting to super_send.')
 
     def put_super_batch_into_queue(self, items: List[str]):
         """
@@ -89,11 +112,11 @@ class AwsMessageQueue(BaseMessageQueue):
 
     def redestrib_super_batch(self, items: List[str]):
         for i in range(0, len(items), self.batch_size):
-            self.put_batch_into_queue(items[i:i + self.batch_size])
+            self.put_mass_messages_into_queue(items[i:i + self.batch_size])
 
             logger.info('%s messages are sent into send-message queue', i + self.batch_size)
 
-    def put_batch_into_queue(self, items: List[str]):
+    def put_mass_messages_into_queue(self, items: List[str]):
         """
 
         Parameters
@@ -109,19 +132,26 @@ class AwsMessageQueue(BaseMessageQueue):
         } for i, x in enumerate(items)])
 
 
-class LocalMessageQueue(BaseMessageQueue):
-    super_batch_size = 100
-
+class AwsSingleMessageQueue(BaseSingleMessageQueue):
     def __init__(self):
+        sqs = boto3.resource('sqs', region_name='eu-central-1')
+        self._queue = sqs.get_queue_by_name(
+            QueueName=f'single_message_{STAGE}.fifo'
+        )
+
+    def _put_serialized(self, data: str):
+        self._queue.send_message(
+            MessageBody=data,
+            MessageDeduplicationId=sha256(data.encode()).hexdigest(),
+            MessageGroupId='CommonGroup',
+        )
+
+
+class LocalQueue:
+    def __init__(self, handler):
         self._queue = multiprocessing.Queue()
+        self._handler = handler
         multiprocessing.Process(target=self._launch_threads).start()
-
-    def put_super_batch_into_queue(self, items: List[str]):
-        self.put_batch_into_queue(items)
-
-    def put_batch_into_queue(self, items: List[str]):
-        for x in items:
-            self._queue.put(x)
 
     def _launch_threads(self):
         ts = [Thread(target=self.read_queue) for _ in range(10)]
@@ -138,21 +168,61 @@ class LocalMessageQueue(BaseMessageQueue):
                 logger.info('Stop sending messages.')
                 break
 
-            self.process(msg)
+            self._handler(msg)
+
+    def put(self, msg: str):
+        self._queue.put(msg)
 
 
-def _get_queue() -> BaseMessageQueue:
-    if STAGE in ('LIVE', 'live', 'staging'):
-        return AwsMessageQueue()
+class LocalMassMessageQueue(BaseMassMessageQueue):
+    super_batch_size = 100
 
-    return LocalMessageQueue()
+    def __init__(self):
+        self._mass_message_queue = LocalQueue(self.process)
+
+    def put_super_batch_into_queue(self, items: List[str]):
+        self.put_mass_messages_into_queue(items)
+
+    def put_mass_messages_into_queue(self, items: List[str]):
+        for x in items:
+            self._mass_message_queue.put(x)
 
 
-_the_queue = None
+class LocalSingleMessageQueue(BaseSingleMessageQueue):
+    def __init__(self):
+        self._queue = LocalQueue(self.process)
+
+    def _put_serialized(self, data: str):
+        self._queue.put(data)
 
 
-def get_queue():
-    global _the_queue
-    if _the_queue is None:
-        _the_queue = _get_queue()
-    return _the_queue
+def _get_mass_queue() -> BaseMassMessageQueue:
+    if STAGE in ('live', 'staging'):
+        return AwsMassMessageQueue()
+
+    return LocalMassMessageQueue()
+
+
+def _get_single_queue() -> BaseSingleMessageQueue:
+    if STAGE in ('live', 'staging'):
+        return AwsSingleMessageQueue()
+
+    return LocalSingleMessageQueue()
+
+
+_mass_queue = None
+_single_queue = None
+
+
+def get_mass_queue() -> BaseMassMessageQueue:
+    global _mass_queue
+    if _mass_queue is None:
+        _mass_queue = _get_mass_queue()
+    return _mass_queue
+
+
+def get_single_queue() -> BaseSingleMessageQueue:
+    global _single_queue
+    if _single_queue is None:
+        _single_queue = _get_single_queue()
+    return _single_queue

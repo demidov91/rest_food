@@ -10,7 +10,7 @@ from rest_food.db import (
     get_demand_users, get_message_demanded_user, set_inactive, get_admin_users, set_info,
 )
 from rest_food.entities import Reply, User, Workflow, Provider, UserInfoField
-from rest_food.message_queue import get_queue
+from rest_food.message_queue import get_mass_queue
 from rest_food.settings import (
     TELEGRAM_TOKEN_SUPPLY,
     TELEGRAM_TOKEN_DEMAND,
@@ -86,7 +86,7 @@ def publish_supply_event(supply_user: User):
     message = build_demand_side_short_message(supply_user, supply_user.editing_message_id)
     users = get_demand_users()
     random.shuffle(users)
-    get_queue().push_super_batch(
+    get_mass_queue().push_super_batch(
         message_and_chat_id=[(message, x.chat_id) for x in users],
         workflow=Workflow.DEMAND
     )
