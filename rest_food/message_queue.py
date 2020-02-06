@@ -7,10 +7,12 @@ from threading import Thread
 from hashlib import sha256
 
 import boto3
+from telegram import Message as TgMessage
 
 from rest_food.entities import Workflow, Reply, Message
 from rest_food.translation import LazyAwareJsonEncoder
 from rest_food.settings import STAGE
+from rest_food._sync_communication import send_messages
 
 
 logger = logging.getLogger(__name__)
@@ -30,8 +32,6 @@ class BaseMassMessageQueue:
         }, cls=LazyAwareJsonEncoder)
 
     def process(self, serialized_data: str):
-        from rest_food.communication import send_messages
-
         data = json.loads(serialized_data)
         try:
             send_messages(
@@ -57,32 +57,41 @@ class BaseMassMessageQueue:
 
 
 class BaseSingleMessageQueue:
-    def put(self,
+    def put(
+        self,
+        *,
         tg_chat_id: int,
-        original_message: Message,
+        original_message: TgMessage = None,
         replies: Iterable[Reply],
         workflow: Workflow
     ):
-        self._put_serialized(json.loads({
+        replies_data = [asdict(r) for r in replies if r is not None]
+        for r in replies_data:
+            r.pop('next_state')
+
+        self._put_serialized(json.dumps({
             'tg_chat_id': tg_chat_id,
-            'original_message': original_message and asdict(original_message),
-            'replies': [asdict(r) for r in replies if r is not None],
+            'original_message': original_message and original_message.to_dict(),
+            'replies': replies_data,
             'workflow': workflow.value,
-        }))
+        }, cls=LazyAwareJsonEncoder))
 
     def _put_serialized(self, data: str):
         raise NotImplementedError()
 
     def process(self, data: str):
-        from rest_food.communication import send_messages
-
-        data = json.loads(data)
-        send_messages(
-            tg_chat_id=data['tg_chat_id'],
-            original_message=data['original_message'] and Message.from_db(data['original_message']),
-            replies=[Reply(**x) for x in data['replies']],
-            workflow=Workflow(data['workflow']),
-        )
+        try:
+            data = json.loads(data)
+            send_messages(
+                tg_chat_id=data['tg_chat_id'],
+                original_message=(
+                    data['original_message'] and TgMessage.de_json(data['original_message'], None)
+                ),
+                replies=[Reply(**x) for x in data['replies']],
+                workflow=Workflow(data['workflow']),
+            )
+        except Exception:
+            logger.exception('Message was not sent. Data:\n%s', data)
 
 
 class AwsMassMessageQueue(BaseMassMessageQueue):

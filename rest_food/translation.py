@@ -53,7 +53,7 @@ class LazyAwareJsonEncoder(JSONEncoder):
         if is_lazy_string(o):
             return str(o)
 
-        return super().encode(o)
+        return super().default(o)
 
 
 def hack_telegram_json_dumps():

@@ -11,7 +11,8 @@ from rest_food.state_machine import (
     get_demand_state,
     set_demand_state,
 )
-from rest_food.communication import send_messages, get_bot, build_tg_response
+from rest_food._sync_communication import get_bot, build_tg_response
+from rest_food.communication import queue_messages
 from rest_food.states.demand_command import handle_demand_data
 from rest_food.states.supply_state import DefaultState
 from rest_food.states.supply_command import handle_supply_command
@@ -70,7 +71,7 @@ def tg_supply(data):
         if isinstance(state, DefaultState):
             return build_tg_response(chat_id=chat_id, reply=next_state.get_intro())
 
-        send_messages(
+        queue_messages(
             tg_chat_id=chat_id,
             original_message=update.callback_query and update.callback_query.message,
             replies=[reply, next_state.get_intro()],
@@ -121,7 +122,7 @@ def tg_demand(data):
                 next_state = set_demand_state(user=user, state=reply.next_state)
                 replies.append(next_state.get_intro())
 
-            send_messages(
+            queue_messages(
                 tg_chat_id=chat_id,
                 original_message=update.callback_query and update.callback_query.message,
                 replies=replies,
