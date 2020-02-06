@@ -69,12 +69,16 @@ class BaseSingleMessageQueue:
         for r in replies_data:
             r.pop('next_state')
 
+        logger.info('Going to put %s replies into SingleMessageQueue.', len(replies_data))
+
         self._put_serialized(json.dumps({
             'tg_chat_id': tg_chat_id,
             'original_message': original_message and original_message.to_dict(),
             'replies': replies_data,
             'workflow': workflow.value,
         }, cls=LazyAwareJsonEncoder))
+
+        logger.info('%s replies are put into a queue.', len(replies_data))
 
     def _put_serialized(self, data: str):
         raise NotImplementedError()
