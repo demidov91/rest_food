@@ -47,22 +47,29 @@ functions:
           method: post
   demand:
     handler: rest_food.serverless.demand
+    reservedConcurrency: 300
     events:
       - http:
           path: demand/${env:BOT_PATH_KEY}/
           method: post
 
-  send_message:
-    handler: rest_food.serverless.send_message
+  send_mass_messages:
+    handler: rest_food.serverless.send_mass_messages
     events:
       - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:send_message_${env:STAGE}.fifo
 
-  super_send:
-    handler: rest_food.serverless.super_send
+  super_send_mass_messages:
+    handler: rest_food.serverless.super_send_mass_messages
     events:
       - sqs:
           arn: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:super_send_${env:STAGE}.fifo
           batchSize: 1
+
+  send_single_message:
+    handler: rest_food.serverless.send_single_message
+    reservedConcurrency: 100
+    events:
+      - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:single_message_${env:STAGE}.fifo
 
 
 plugins:
