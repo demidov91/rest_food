@@ -72,7 +72,7 @@ functions:
     events:
       - sqs:
           arn: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:single_message_${env:STAGE}.fifo
-          batchSize: 6
+          batchSize: 1
 
 
 plugins:
