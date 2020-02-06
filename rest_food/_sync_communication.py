@@ -87,6 +87,8 @@ def send_messages(
         markup = _build_tg_keyboard(reply.buttons)
 
         if reply.coordinates:
+            logger.info('Sending location to %s', tg_chat_id)
+
             bot.send_location(
                 tg_chat_id,
                 *(float(x) for x in reply.coordinates),
@@ -99,6 +101,8 @@ def send_messages(
                 original_message_should_be_replaced = False
             else:
                 method = bot.send_message
+
+            logging.info('Sending a text message to %s', tg_chat_id)
 
             try:
                 method(
@@ -123,6 +127,9 @@ def send_messages(
                 else:
                     logger.warning('Failed to send to tg_chat_id=%s', tg_chat_id)
                     raise e
+
+            else:
+                logger.info('Text message was successfully sent to %s', tg_chat_id)
 
         if original_message_should_be_replaced:
             bot.delete_message(chat_id=tg_chat_id, message_id=original_message.message_id)
