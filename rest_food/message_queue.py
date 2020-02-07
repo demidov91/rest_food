@@ -4,12 +4,12 @@ import multiprocessing
 from dataclasses import asdict
 from typing import Tuple, List, Iterable
 from threading import Thread
-from hashlib import sha256
+from uuid import uuid4
 
 import boto3
 from telegram import Message as TgMessage
 
-from rest_food.entities import Workflow, Reply, Message
+from rest_food.entities import Workflow, Reply
 from rest_food.translation import LazyAwareJsonEncoder
 from rest_food.settings import STAGE
 from rest_food._sync_communication import send_messages
@@ -69,16 +69,12 @@ class BaseSingleMessageQueue:
         for r in replies_data:
             r.pop('next_state')
 
-        logger.info('Going to put %s replies into SingleMessageQueue.', len(replies_data))
-
         self._put_serialized(json.dumps({
             'tg_chat_id': tg_chat_id,
             'original_message': original_message and original_message.to_dict(),
             'replies': replies_data,
             'workflow': workflow.value,
         }, cls=LazyAwareJsonEncoder))
-
-        logger.info('%s replies are put into a queue.', len(replies_data))
 
     def _put_serialized(self, data: str):
         raise NotImplementedError()
@@ -119,7 +115,7 @@ class AwsMassMessageQueue(BaseMassMessageQueue):
         payload = json.dumps(items)
         self._super_queue.send_message(
             MessageBody=payload,
-            MessageDeduplicationId=sha256(payload.encode()).hexdigest(),
+            MessageDeduplicationId=str(uuid4()),
             MessageGroupId='CommonGroup',
         )
 
@@ -141,24 +137,27 @@ class AwsMassMessageQueue(BaseMassMessageQueue):
             'Id': str(i),
             'MessageBody': x,
             'MessageGroupId': str(i),
-            'MessageDeduplicationId': sha256(x.encode()).hexdigest(),
+            'MessageDeduplicationId': str(uuid4()),
         } for i, x in enumerate(items)])
 
 
 class AwsSingleMessageQueue(BaseSingleMessageQueue):
+    queue_name = f'single_message_{STAGE}.fifo'
+
     def __init__(self):
         sqs = boto3.resource('sqs', region_name='eu-central-1')
-        self._queue = sqs.get_queue_by_name(
-            QueueName=f'single_message_{STAGE}.fifo'
-        )
+        self._queue = sqs.get_queue_by_name(QueueName=self.queue_name)
 
     def _put_serialized(self, data: str):
         send_result = self._queue.send_message(
             MessageBody=data,
-            MessageDeduplicationId=sha256(data.encode()).hexdigest(),
+            MessageDeduplicationId=str(uuid4()),
             MessageGroupId='CommonGroup',
         )
-        logger.info('Sent into AWS queue. Send result: %s', send_result)
+        logger.info(
+            'Message is put into %s with MessageId %s',
+            self.queue_name, send_result.get('MessageId')
+        )
 
 
 class LocalQueue:

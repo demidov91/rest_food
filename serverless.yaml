@@ -70,9 +70,7 @@ functions:
     handler: rest_food.serverless.send_single_message
     reservedConcurrency: 100
     events:
-      - sqs:
-          arn: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:single_message_${env:STAGE}.fifo
-          batchSize: 1
+      - sqs: arn:aws:sqs:eu-central-1:${env:AWS_USER_ID}:single_message_${env:STAGE}.fifo
 
 
 plugins:
