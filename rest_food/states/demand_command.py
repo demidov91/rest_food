@@ -7,7 +7,9 @@ from rest_food.db import (
     get_supply_message_record,
     set_info,
     set_next_command,
-    get_supply_user)
+    get_supply_user,
+    get_supply_message_record_by_id,
+)
 from rest_food.entities import (
     User,
     Reply,
@@ -26,11 +28,10 @@ from rest_food.states.demand_reply import (
     build_demand_side_short_message,
     MapInfoHandler,
     MapTakeHandler,
-    build_demand_side_message_by_id, MapBookedHandler)
-from rest_food.states.formatters import (
-    build_demand_side_full_message_text,
-    build_demand_side_full_message_text_by_id,
+    build_demand_side_message_by_id, MapBookedHandler,
+    build_food_taken_message,
 )
+from rest_food.states.formatters import build_demand_side_full_message_text
 from rest_food.states.utils import (
     get_next_command,
     get_demand_back_button,
@@ -56,6 +57,17 @@ def handle(user: User, command: Command):
 
 
 def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id: str):
+    message_record = get_supply_message_record_by_id(message_id=message_id)
+    supply_user = get_supply_user(supply_user_id, Provider(provider_str))
+
+    if message_record is None or supply_user is None:
+        return Reply(_('Information was not found.'))
+
+    info = build_demand_side_full_message_text(supply_user, message_record)
+
+    if message_record.demand_user_id:
+        return build_food_taken_message(user, message_record.demand_user_id, info)
+
     set_next_command(
         user,
         Command(
@@ -63,7 +75,7 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
             arguments=[provider_str, supply_user_id, message_id],
         )
     )
-    supply_user = get_supply_user(supply_user_id, Provider(provider_str))
+
     coordinates = supply_user.approved_coordinates()
 
     buttons = _get_review_buttons(user)
@@ -86,11 +98,6 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
                     f'{provider_str}|{supply_user_id}|{message_id}',
         }
     ])
-
-    info = build_demand_side_full_message_text(
-        supply_user,
-        get_supply_message_record(user=supply_user, message_id=message_id)
-    )
 
     return Reply(
         text=_('%(info)s\n-----------\n%(ask_for_approve)s') % {
@@ -176,9 +183,15 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
         provider=Provider(provider_str),
         workflow=Workflow.SUPPLY
     )
+    message_record = get_supply_message_record_by_id(message_id=message_id)
 
-    if supply_user is None:
+    if supply_user is None or message_record is None:
         return Reply(_('Information was not found.'))
+
+    info = build_demand_side_full_message_text(supply_user, message_record)
+
+    if message_record.demand_user_id is not None:
+        return build_food_taken_message(user, message_record.demand_user_id, info)
 
     set_next_command(
         user,
@@ -187,16 +200,6 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
             arguments=[provider_str, supply_user_id, message_id],
         )
     )
-
-    message_record = get_supply_message_record(user=supply_user, message_id=message_id)
-    info = build_demand_side_full_message_text(supply_user, message_record)
-
-    if message_record.demand_user_id is not None:
-        if message_record.demand_user_id.endswith(user.user_id):
-            logger.warning('Viewing taken food info.')
-            return Reply(text=_("You've already taken it.\n\n{}".format(info)))
-
-        return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT!\n\n{}").format(info))
 
     coordinates = supply_user.approved_coordinates()
 

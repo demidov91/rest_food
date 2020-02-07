@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_demand_side_short_message(supply_user: User, message_id: str):
-    text_message = build_short_message_text_by_id(user=supply_user, message_id=message_id)
+    text_message = build_short_message_text_by_id(message_id=message_id)
     return Reply(
         text=_('{} can share the following:\n{}').format(
             supply_user.info[UserInfoField.NAME.value], text_message
@@ -43,6 +43,14 @@ def build_demand_side_message_by_id(supply_user: User, message_id: str, *, intro
             supply_user.provider.value, supply_user.user_id, message_id
         ),
     }]])
+
+
+def build_food_taken_message(user: User, demand_user_id: str, info: str):
+    if demand_user_id.endswith(user.user_id):
+        logger.warning('Viewing taken food info.')
+        return Reply(text=_("You've already taken it.\n\n{}".format(info)))
+
+    return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT!\n\n{}").format(info))
 
 
 class MapHandler:

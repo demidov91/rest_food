@@ -13,7 +13,9 @@ from rest_food.db import (
     list_messages,
     get_user,
     set_info,
-    get_user_by_id)
+    get_user_by_id,
+    get_message_demanded_user,
+)
 from rest_food.entities import Reply, SupplyState, User, Provider, Workflow, Message, SupplyCommand, \
     UserInfoField
 from rest_food.states.supply_reply import build_supply_side_booked_message
@@ -68,7 +70,7 @@ def back_to_posting(user):
 def _get_demanded_message_button(message: Message):
     return [{
         'text': _('%s (booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
-        'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|{message.message_id}|{message.demand_user_id}'
+        'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|{message.message_id}'
     }]
 
 
@@ -92,10 +94,19 @@ def view_messages(user):
     return Reply(text=_('Last messages'), buttons=buttons)
 
 
-def show_demanded_message(user, message_id: str, demand_provider: str, demand_user_id: str):
-    demand_user = get_user(
-        demand_user_id, provider=Provider(demand_provider), workflow=Workflow.DEMAND
-    )
+def show_demanded_message(user, message_id: str, demand_provider: str=None, demand_user_id: str=None):
+    """
+
+    Parameters
+    ----------
+    user
+    message_id
+    demand_provider: deprecated
+    demand_user_id: deprecated
+    """
+
+    demand_user = get_message_demanded_user(supply_user=user, message_id=message_id)
+
     return build_supply_side_booked_message(
         demand_user=demand_user, supply_user=user, message_id=message_id
     )
@@ -103,7 +114,7 @@ def show_demanded_message(user, message_id: str, demand_provider: str, demand_us
 
 def show_non_demanded_message(user, message_id: str):
     message = _('Not yet booked.\n\n%s') % build_short_message_text_by_id(
-        user=user, message_id=message_id
+        message_id=message_id
     )
 
     return Reply(

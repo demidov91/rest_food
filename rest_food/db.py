@@ -243,16 +243,23 @@ def get_supply_editing_message(user: User) -> Optional[Message]:
     return get_supply_message_record(user=user, message_id=user.editing_message_id)
 
 
-def get_supply_message_record(*, user, message_id: str) -> Message:
+def get_supply_message_record(*, user, message_id: str) -> Optional[Message]:
+    message = get_supply_message_record_by_id(message_id)
+    if message.owner_id != user.id:
+        return None
+
+    return message
+
+
+def get_supply_message_record_by_id(message_id: str) -> Message:
     return Message.from_db(db.messages.find_one({
         '_id': ObjectId(message_id),
-        'owner_id': user.id,
     }))
 
 
 def get_message_demanded_user(*, supply_user, message_id: str) -> Optional[User]:
     message_record = get_supply_message_record(user=supply_user, message_id=message_id)
-    if message_record.demand_user_id is None:
+    if message_record is None or message_record.demand_user_id is None:
         return None
 
     provider, user_id = message_record.demand_user_id.split('|')

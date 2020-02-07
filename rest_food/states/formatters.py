@@ -2,7 +2,7 @@
 This module methods are supposed to return strings.
 """
 
-from rest_food.db import get_supply_editing_message, get_supply_message_record
+from rest_food.db import get_supply_editing_message, get_supply_message_record_by_id
 from rest_food.entities import Message, User, UserInfoField, translate_social_status_string
 from rest_food.translation import translate_lazy as _
 
@@ -17,15 +17,15 @@ def message_to_text(message: Message) -> str:
 
 
 def build_active_food_message(user: User) -> str:
-    if not user.editing_message_id:
+    message = get_supply_editing_message(user)
+    if message is None:
         raise ValueError("Active message wasn't defined.")
 
-    message = get_supply_editing_message(user)
     return message_to_text(message)
 
 
-def build_short_message_text_by_id(*, user: User, message_id: str) -> str:
-    return message_to_text(get_supply_message_record(user=user, message_id=message_id))
+def build_short_message_text_by_id(message_id: str) -> str:
+    return message_to_text(get_supply_message_record_by_id(message_id=message_id))
 
 
 def build_demand_description(user: User) -> str:
@@ -60,7 +60,7 @@ def build_demand_description(user: User) -> str:
 
 def build_demanded_message_text(*, demand_user: User, supply_user: User, message_id: str) -> str:
     demand_description = build_demand_description(demand_user)
-    food_description = build_short_message_text_by_id(user=supply_user, message_id=message_id)
+    food_description = build_short_message_text_by_id(message_id=message_id)
 
     return _("{}\n\nYour message was:\n\n{}").format(
         demand_description,
@@ -89,7 +89,7 @@ def build_demand_side_full_message_text(supply_user: User, message: Message) -> 
 
 def build_demand_side_full_message_text_by_id(supply_user: User, message_id: str) -> str:
     return build_demand_side_full_message_text(
-        supply_user, get_supply_message_record(user=supply_user, message_id=message_id)
+        supply_user, get_supply_message_record_by_id(message_id=message_id)
     )
 
 
