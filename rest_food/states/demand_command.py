@@ -173,7 +173,8 @@ def _handle_finish_take(user: User, provider_str: str, supply_user_db_id: str, m
     )
 
     return Reply(
-        text=_("Restaurant is notified that you'll take the food. Please, wait for approval.")
+        text=_("%s is notified that you'll take the food. Please, wait for approval.") %
+             supply_user.info[UserInfoField.NAME.value]
     )
 
 
