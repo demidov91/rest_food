@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-08 13:24+0300\n"
+"POT-Creation-Date: 2020-02-08 13:54+0300\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -24,11 +24,15 @@ msgstr ""
 msgid "Your request was approved"
 msgstr "Получено подтверждение. Пожалуйста, позвоните перед выходом."
 
-#: rest_food/communication.py:117
+#: rest_food/communication.py:119
 msgid "Your account is approved!"
 msgstr "Ваш аккаунт подтверждён!"
 
-#: rest_food/communication.py:128 rest_food/states/supply_state.py:77
+#: rest_food/communication.py:122
+msgid "OK ✅"
+msgstr "OK ✅"
+
+#: rest_food/communication.py:136 rest_food/states/supply_state.py:77
 #, python-format
 msgid "Your account was declined. Please, contact %s for any clarifications."
 msgstr ""
