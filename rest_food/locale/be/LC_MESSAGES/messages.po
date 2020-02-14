@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-08 13:54+0300\n"
+"POT-Creation-Date: 2020-02-14 10:33+0300\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -58,9 +58,13 @@ msgstr "Цяжкае саыяльнае становішча"
 msgid "other"
 msgstr "Іншае"
 
-#: rest_food/handlers.py:85 rest_food/handlers.py:136
+#: rest_food/handlers.py:86 rest_food/handlers.py:142
 msgid "Something went wrong. Try something different, please."
 msgstr "Штосьці пайшло не так. Паспрабуйце па-іншаму."
+
+#: rest_food/handlers.py:89
+msgid "Start from the beginning"
+msgstr "Пачаць усё занава"
 
 #: rest_food/states/utils.py:52
 msgid "Please, provide only pone number."

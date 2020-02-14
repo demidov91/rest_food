@@ -3,6 +3,7 @@ from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass
 from decimal import Decimal
 
+from bson import ObjectId
 from telegram.user import User as TgUser
 
 from rest_food.translation import translate_lazy as _
@@ -133,7 +134,7 @@ class Command:
 
 @dataclass
 class User:
-    _id: Optional[str]=None
+    _id: Optional[ObjectId]=None
     user_id: Optional[Union[str, int]]=None
     chat_id: Optional[Union[str, int]]=None
     state: Optional[str] = None
@@ -147,7 +148,7 @@ class User:
     is_admin: Optional[bool]=False
 
     @property
-    def id(self) -> Optional[str]:
+    def id(self) -> Optional[ObjectId]:
         return self._id
 
     def approved_coordinates(self):
@@ -169,7 +170,7 @@ class User:
 
 @dataclass
 class Message:
-    message_id: str
+    message_id: ObjectId
     owner_id: str
     products: List[str]
     take_time: Optional[str] = None

@@ -15,7 +15,7 @@ from rest_food._sync_communication import get_bot, build_tg_response
 from rest_food.communication import queue_messages
 from rest_food.states.demand_command import handle_demand_data
 from rest_food.states.supply_state import DefaultState
-from rest_food.states.supply_command import handle_supply_command
+from rest_food.states.supply_command import handle_supply_command, SupplyCommand
 from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _
 
 
@@ -82,7 +82,13 @@ def tg_supply(data):
         logger.exception('Something went wrong for a supply user.')
         return build_tg_response(
             chat_id=chat_id,
-            reply=Reply(text=_('Something went wrong. Try something different, please.'))
+            reply=Reply(
+                text=_('Something went wrong. Try something different, please.'),
+                buttons=[[{
+                    'data': f'c|{SupplyCommand.BACK_TO_POSTING}',
+                    'text': _('Start from the beginning'),
+                }]]
+            )
         )
 
 

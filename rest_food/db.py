@@ -245,7 +245,10 @@ def get_supply_editing_message(user: User) -> Optional[Message]:
 
 def get_supply_message_record(*, user, message_id: str) -> Optional[Message]:
     message = get_supply_message_record_by_id(message_id)
-    if message.owner_id != user.id:
+
+    # There is some inconsistency in db which is not investigated yet.
+    # Some records had owner_id as str, other had it as ObjectId
+    if ObjectId(message.owner_id) != user.id:
         return None
 
     return message
