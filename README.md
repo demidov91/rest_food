@@ -12,6 +12,13 @@ python -m rest_food.flask
 Bot server will run on port 5000
 
 
-## Local .env file
-
-TBD
+## Environment variables to be declared
+```
+TELEGRAM_TOKEN_SUPPLY
+TELEGRAM_TOKEN_DEMAND
+YANDEX_API_KEY
+BOT_PATH_KEY -- key to be added into webhook url
+DB_CONNECTION_STRING 
+DB_NAME 
+STAGE -- dev, staging,live
+```
