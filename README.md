@@ -2,12 +2,12 @@
 
 ## How to install python dependencies for local development
 
-pip install -r requirements/dev.txt
+`pip install -r requirements/dev.txt`
 
 
 ## How to run it locally
 
-python -m rest_food.flask
+`python -m rest_food.flask`
 
 Bot server will run on port 5000
 
@@ -27,11 +27,11 @@ STAGE -- dev, staging,live
 
 Local development (flask):
 
-python -m rest_food.command.set_webhook -f
+`python -m rest_food.command.set_webhook -f`
 
 Staging/live (lambda):
 
-python -m rest_food.command.set_webhook -l
+`python -m rest_food.command.set_webhook -l`
 
 
 ## How to deploy on staging/live
