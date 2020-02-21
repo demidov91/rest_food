@@ -1,6 +1,7 @@
 import json
 import logging
 import multiprocessing
+import random
 from dataclasses import asdict
 from typing import Tuple, List, Iterable
 from threading import Thread
@@ -143,20 +144,17 @@ class AwsMassMessageQueue(BaseMassMessageQueue):
 
 class AwsSingleMessageQueue(BaseSingleMessageQueue):
     queue_name = f'single_message_{STAGE}.fifo'
+    number_of_groups = 100
 
     def __init__(self):
         sqs = boto3.resource('sqs', region_name='eu-central-1')
         self._queue = sqs.get_queue_by_name(QueueName=self.queue_name)
 
     def _put_serialized(self, data: str):
-        send_result = self._queue.send_message(
+        self._queue.send_message(
             MessageBody=data,
             MessageDeduplicationId=str(uuid4()),
-            MessageGroupId='CommonGroup',
-        )
-        logger.info(
-            'Message is put into %s with MessageId %s',
-            self.queue_name, send_result.get('MessageId')
+            MessageGroupId=str(random.randint(1, self.number_of_groups)),
         )
 
 
