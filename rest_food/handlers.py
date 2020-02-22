@@ -81,7 +81,7 @@ def tg_supply(data):
 
         if update.callback_query:
             return {
-                'action': 'answerCallbackQuery',
+                'method': 'answerCallbackQuery',
                 'callback_query_id': update.callback_query.id,
             }
 
@@ -144,7 +144,7 @@ def tg_demand(data):
 
         if update.callback_query:
             return {
-                'action': 'answerCallbackQuery',
+                'method': 'answerCallbackQuery',
                 'callback_query_id': update.callback_query.id,
             }
 
