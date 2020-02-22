@@ -1,5 +1,6 @@
 import logging
 from decimal import Decimal
+from typing import Optional
 
 from telegram import Update
 
@@ -34,7 +35,7 @@ def tg_supply(data):
     chat_id = update.effective_chat.id
     user_id = update.effective_user.id
     tg_user = update.effective_user
-    data = update.callback_query and update.callback_query.data # type: str
+    data = update.callback_query and update.callback_query.data     # type: Optional[str]
 
     try:
         state = get_supply_state(tg_user_id=user_id, tg_user=tg_user, tg_chat_id=chat_id)
@@ -77,6 +78,12 @@ def tg_supply(data):
             replies=[reply, next_state.get_intro()],
             workflow=Workflow.SUPPLY
         )
+
+        if update.callback_query:
+            return {
+                'method': 'answerCallbackQuery',
+                'callback_query_id': update.callback_query.id,
+            }
 
     except Exception:
         logger.exception('Something went wrong for a supply user.')
@@ -134,6 +141,12 @@ def tg_demand(data):
                 replies=replies,
                 workflow=Workflow.DEMAND
             )
+
+        if update.callback_query:
+            return {
+                'method': 'answerCallbackQuery',
+                'callback_query_id': update.callback_query.id,
+            }
 
     except Exception:
         logger.exception('Something went wrong for a demand user.')
