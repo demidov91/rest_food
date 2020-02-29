@@ -1,3 +1,4 @@
+import datetime
 from enum import Enum
 from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass
@@ -58,11 +59,15 @@ class UserInfoField(Enum):
     PHONE = 'phone'
     # True if the user has shared their username
     DISPLAY_USERNAME = 'display_username'
-    # True for approved coordinates (rather then proposed by system)
+    # Bot language for this user.
+    LANGUAGE = 'language'
+    # True for approved coordinates (rather than proposed by system)
     IS_APPROVED_COORDINATES = 'is_approved_coordinates'
+    # If the user has explicitly approved specified `LANGUAGE` (rather than set by messeger client language)
+    IS_APPROVED_LANGUAGE = 'is_approved_language'
     # demand-side-chosen social status
     SOCIAL_STATUS = 'social_status'
-    # True for supply users who are allowed to post messages
+    # True for supply users who are allowed to post messages. Actually it makes sense to move it into the User level...
     IS_APPROVED_SUPPLY = 'is_approved_supply'
 
 
@@ -135,17 +140,65 @@ class Command:
 @dataclass
 class User:
     _id: Optional[ObjectId]=None
+    """ db level id.
+    """
+
     user_id: Optional[Union[str, int]]=None
+    """ External provider id of the user.
+    """
+
     chat_id: Optional[Union[str, int]]=None
+    """ External provider defined user-to-bot chat id.
+    """
+
     state: Optional[str] = None
+    """ Current bot state for this user.
+    """
+
     info: Optional[Dict] = None
+    """ User defined information.
+    """
+
     context: Optional[Dict] = None
+    """ Any key-value information to make bot interaction stateful. 
+    """
+
     editing_message_id: Optional[str]=None
+    """ Id of the message which is edited at the moment.
+    """
+
     tg_user: Optional[TgUser]=None
+    """ TgUser object which can be assigned for convenience. It's not stored in db.
+    """
+
     provider: Optional[Provider]=None
+    """ Provider, like telegram or viber.
+    """
+
     workflow: Optional[Workflow]=None
+    """ Is it a supply or demand bot user. 
+    """
+
     is_active: Optional[bool]=None
+    """ Messages won't be sent for users with this field set to False.
+    """
+
     is_admin: Optional[bool]=False
+    """ Users with extended permissions. Like supply users approval. 
+    """
+
+    created_at: Optional[datetime.datetime]=None
+    """ Moment when user was first created.
+    """
+
+    inactive_from: Optional[datetime.datetime]=None
+    """ Moment when user was marked as inactive (it could happen much later then they really blocked the bot).
+    """
+
+    active_from: Optional[datetime.datetime]=None
+    """ Moment when user with undefined or inactive state sent a message, so that their `is_active` field became True.
+    """
+
 
     @property
     def id(self) -> Optional[ObjectId]:
