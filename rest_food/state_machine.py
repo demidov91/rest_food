@@ -38,7 +38,6 @@ def get_supply_state(*, tg_user_id: int, tg_user: TgUser, tg_chat_id: int) -> St
         workflow=Workflow.SUPPLY,
         info={
             UserInfoField.USERNAME.value: tg_user.username,
-            UserInfoField.NAME.value: tg_user.first_name,
             UserInfoField.LANGUAGE.value: tg_user.language_code,
         },
     )

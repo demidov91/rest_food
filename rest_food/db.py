@@ -115,17 +115,18 @@ def get_or_create_user(
 
         update_statement = {}
 
-        # Ignore current language if it was approved.
-        if UserInfoField.IS_APPROVED_LANGUAGE.value in user.info:
-            if user.info[UserInfoField.IS_APPROVED_LANGUAGE.value]:
-                info.pop(UserInfoField.LANGUAGE.value, None)
-        else:
-            info[UserInfoField.IS_APPROVED_LANGUAGE.value] = False
+        # username if changed.
+        if info.get(UserInfoField.USERNAME.value) != user.info.get(UserInfoField.USERNAME.value):
+            update_statement[f'info.{UserInfoField.USERNAME.value}'] = info.get(UserInfoField.USERNAME.value)
 
-        for current_info_field in info:
-            if user.info.get(current_info_field) != info[current_info_field]:
-                update_statement[f'info.{current_info_field}'] = info[current_info_field]
+        # `language` if changed and allowed.
+        if info.get(UserInfoField.LANGUAGE.value) != user.info.get(UserInfoField.LANGUAGE.value):
+            if not user.info.get(UserInfoField.IS_APPROVED_LANGUAGE.value):
+                update_statement[f'info.{UserInfoField.LANGUAGE.value}'] = info[UserInfoField.LANGUAGE.value]
+                if UserInfoField.IS_APPROVED_LANGUAGE.value not in user.info:
+                    update_statement[f'info.{UserInfoField.IS_APPROVED_LANGUAGE.value}'] = False
 
+        # `is_active` if it was not active before.
         if not user.is_active:
             update_statement.update({'is_active': True, 'active_from': datetime.datetime.utcnow()})
 
