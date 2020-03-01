@@ -96,6 +96,8 @@ def get_or_create_user(
     user = get_user(user_id, provider, workflow)
 
     if user is None:
+        # Create user.
+
         info = info or {}
         info[UserInfoField.DISPLAY_USERNAME.value] = True
         user = User(
@@ -107,8 +109,21 @@ def get_or_create_user(
             workflow=workflow,
         )
         user._id = str(_create_user(user))
-    elif not user.is_active:
-        _update_user_entity(user, {'is_active': True, 'active_from': datetime.datetime.utcnow()})
+
+    else:
+        # Update user.
+
+        update_statement = {}
+
+        for current_info_field in info:
+            if user.info.get(current_info_field) != info[current_info_field]:
+                update_statement[f'info.{current_info_field}'] = info[current_info_field]
+
+        if not user.is_active:
+            update_statement.update({'is_active': True, 'active_from': datetime.datetime.utcnow()})
+
+        if update_statement:
+            _update_user_entity(user, update_statement)
 
     return user
 
