@@ -10,6 +10,7 @@ from uuid import uuid4
 import boto3
 from telegram import Message as TgMessage
 
+from rest_food import db as db_module
 from rest_food.entities import Workflow, Reply
 from rest_food.translation import LazyAwareJsonEncoder
 from rest_food.settings import STAGE
@@ -165,6 +166,9 @@ class LocalQueue:
         multiprocessing.Process(target=self._launch_threads).start()
 
     def _launch_threads(self):
+        # Mongo client can not into multiprocessing (but can into multithreading)
+        db_module.db = db_module.create_mongo_connector()
+
         ts = [Thread(target=self.read_queue) for _ in range(10)]
         for t in ts:
             t.start()

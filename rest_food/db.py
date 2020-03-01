@@ -10,7 +10,13 @@ from rest_food.settings import DB_CONNECTION_STRING, DB_NAME
 
 
 logger = logging.getLogger(__name__)
-db = MongoClient(DB_CONNECTION_STRING)[DB_NAME]
+
+
+def create_mongo_connector():
+    return MongoClient(DB_CONNECTION_STRING)[DB_NAME]
+
+
+db = create_mongo_connector()
 
 
 def import_users(data: List[dict]):
@@ -102,12 +108,14 @@ def get_or_create_user(
         )
         user._id = str(_create_user(user))
     elif not user.is_active:
-        _update_user_entity(user, {'is_active': True})
+        _update_user_entity(user, {'is_active': True, 'active_from': datetime.datetime.utcnow()})
 
     return user
 
 
 def _create_user(user: User) -> ObjectId:
+    create_time = datetime.datetime.utcnow()
+
     result = db.users.insert_one({
         'user_id': str(user.user_id),
         'chat_id': user.chat_id,
@@ -116,6 +124,8 @@ def _create_user(user: User) -> ObjectId:
         'is_active': user.is_active,
         'info': user.info,
         'context': {},
+        'active_from' if user.is_active else 'inactive_from': create_time,
+        'created_at': create_time,
     })
     return result.inserted_id
 
@@ -296,6 +306,7 @@ def set_inactive(chat_id: int, provider: Provider, workflow: Workflow):
         {
             '$set': {
                 'is_active': False,
+                'inactive_from': datetime.datetime.utcnow(),
             },
         }
     )
