@@ -11,6 +11,8 @@ from rest_food.translation import translate_lazy as _
 
 
 DT_FORMAT = '%Y%m%d%H%M%S'
+""" Message.dt_published stored datetime as string rather than mongo time. 
+"""
 
 
 class SupplyState(Enum):
