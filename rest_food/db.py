@@ -139,7 +139,7 @@ def _create_user(user: User) -> ObjectId:
     create_time = datetime.datetime.utcnow()
 
     if UserInfoField.LANGUAGE.value in user.info:
-        user.info[UserInfoField.IS_APPROVED_LANGUAGE] = False
+        user.info[UserInfoField.IS_APPROVED_LANGUAGE.value] = False
 
     result = db.users.insert_one({
         'user_id': str(user.user_id),
