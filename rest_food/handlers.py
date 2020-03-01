@@ -116,6 +116,7 @@ def tg_demand(data):
             info={
                 UserInfoField.NAME.value: tg_user.first_name,
                 UserInfoField.USERNAME.value: tg_user.username,
+                UserInfoField.LANGUAGE.value: tg_user.language_code,
             },
         )
 
