@@ -115,6 +115,13 @@ def get_or_create_user(
 
         update_statement = {}
 
+        # Ignore current language if it was approved.
+        if UserInfoField.IS_APPROVED_LANGUAGE.value in user.info:
+            if user.info[UserInfoField.IS_APPROVED_LANGUAGE.value]:
+                info.pop(UserInfoField.LANGUAGE.value, None)
+        else:
+            info[UserInfoField.IS_APPROVED_LANGUAGE.value] = False
+
         for current_info_field in info:
             if user.info.get(current_info_field) != info[current_info_field]:
                 update_statement[f'info.{current_info_field}'] = info[current_info_field]
@@ -130,6 +137,9 @@ def get_or_create_user(
 
 def _create_user(user: User) -> ObjectId:
     create_time = datetime.datetime.utcnow()
+
+    if UserInfoField.LANGUAGE.value in user.info:
+        user.info[UserInfoField.IS_APPROVED_LANGUAGE] = False
 
     result = db.users.insert_one({
         'user_id': str(user.user_id),
