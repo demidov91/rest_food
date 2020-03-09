@@ -1,5 +1,4 @@
 import logging
-from decimal import Decimal
 from typing import Optional
 
 from telegram import Update
@@ -17,6 +16,7 @@ from rest_food.communication import queue_messages
 from rest_food.states.demand_command import handle_demand_data
 from rest_food.states.supply_state import DefaultState
 from rest_food.states.supply_command import handle_supply_command, SupplyCommand
+from rest_food.tg_helpers import update_to_text, update_to_coordinates
 from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _
 
 
@@ -52,16 +52,9 @@ def tg_supply(data):
                 state = set_supply_state(db_user, None)
 
             reply = state.handle(
-                update.message and update.message.text,
+                update_to_text(update),
                 data,
-                (
-                        update.message and
-                        update.message.location and
-                        (
-                            Decimal(str(update.message.location.latitude)),
-                            Decimal(str(update.message.location.longitude))
-                        )
-                )
+                update_to_coordinates(update),
             )
 
         if reply is not None and reply.next_state is not None:
@@ -127,7 +120,11 @@ def tg_demand(data):
                 set_demand_state(user, None)
 
             state = get_demand_state(user)
-            reply = state.handle(update.message.text, data=None)
+            reply = state.handle(
+                update_to_text(update),
+                data=None,
+                coordinates=update_to_coordinates(update),
+            )
 
         replies = [reply]
 
