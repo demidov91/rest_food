@@ -309,17 +309,19 @@ class SetPhoneState(BaseEditInfoState):
         text = text or ''
         if text.startswith('❌'):
             unset_info(self.db_user, self._info_to_edit)
-            return Reply(next_state=self.get_next_state())
+            return Reply(text=_('OK ✅'), next_state=self.get_next_state())
 
         if text.startswith('←'):
-            return Reply(next_state=self.get_next_state())
+            return Reply(text=_('OK ✅'), next_state=self.get_next_state())
 
         try:
             validate_phone_number(text)
         except ValidationError as e:
             return Reply(text=e.message)
 
-        return super().handle_text(text)
+        reply = super().handle_text(text)
+        reply.text = _('OK ✅')  # Text response is required to clear telegram text keyboard.
+        return reply
 
 
 class InitialSetPhoneState(SetPhoneState):

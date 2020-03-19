@@ -69,7 +69,7 @@ def build_demanded_message_text(*, demand_user: User, supply_user: User, message
 
 
 def build_supply_user_description(user: User):
-    msg =  _(
+    msg = _(
         "Restaurant name: {name}\n"
         "Address: {address}"
     ).format(

@@ -1,5 +1,6 @@
+from rest_food.communication import queue_messages
 from rest_food.db import set_info, unset_info
-from rest_food.entities import Reply, UserInfoField
+from rest_food.entities import Reply, UserInfoField, Workflow
 from rest_food.exceptions import ValidationError
 from rest_food.states.base import State
 from rest_food.states.demand_command import handle
@@ -49,6 +50,9 @@ class SetPhoneState(BaseSetInfoState):
         )
 
     def handle(self, text: str, *args, **kwargs):
+        # Text response is required to clear telegram text keyboard.
+        queue_messages(tg_chat_id=self.db_user.chat_id, replies=[Reply(text=_('OK ✅'))], workflow=Workflow.DEMAND)
+
         text = text or ''
         if text.startswith('❌'):
             unset_info(self.db_user, self._info_field)
