@@ -1,5 +1,6 @@
-from rest_food.db import set_info
-from rest_food.entities import Reply, UserInfoField
+from rest_food.communication import queue_messages
+from rest_food.db import set_info, unset_info
+from rest_food.entities import Reply, UserInfoField, Workflow
 from rest_food.exceptions import ValidationError
 from rest_food.states.base import State
 from rest_food.states.demand_command import handle
@@ -20,9 +21,12 @@ class BaseSetInfoState(State):
     def get_intro(self):
         return self._build_cancellable_message(self._intro_text)
 
+    def handle_pending_command(self):
+        return handle(self.db_user, get_next_command(self.db_user))
+
     def handle(self, text: str, *args, **kwargs):
         set_info(self.db_user, self._info_field, text)
-        return handle(self.db_user, get_next_command(self.db_user))
+        return self.handle_pending_command()
 
 
 class SetNameState(BaseSetInfoState):
@@ -31,10 +35,32 @@ class SetNameState(BaseSetInfoState):
 
 
 class SetPhoneState(BaseSetInfoState):
-    _intro_text = _('Enter your phone number:')
     _info_field = UserInfoField.PHONE
 
+    def get_intro(self) -> Reply:
+        buttons = [[{'text': _('← Back')}, {'text': _('Send phone'), 'request_contact': True }]]
+
+        if self._info_field.value in self.db_user.info:
+            buttons[0].insert(1, {'text': _('❌ Delete')})
+
+        return Reply(
+            text=_('Send your phone number'),
+            buttons=buttons,
+            is_text_buttons=True,
+        )
+
     def handle(self, text: str, *args, **kwargs):
+        # Text response is required to clear telegram text keyboard.
+        queue_messages(tg_chat_id=self.db_user.chat_id, replies=[Reply(text=_('OK ✅'))], workflow=Workflow.DEMAND)
+
+        text = text or ''
+        if text.startswith('❌'):
+            unset_info(self.db_user, self._info_field)
+            return self.handle_pending_command()
+
+        if text.startswith('←'):
+            return self.handle_pending_command()
+
         try:
             validate_phone_number(text)
         except ValidationError as e:

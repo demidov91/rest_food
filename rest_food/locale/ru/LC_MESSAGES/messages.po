@@ -1,9 +1,29 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-14 10:33+0300\n"
+"POT-Creation-Date: 2020-03-19 20:08+0300\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+
+#: rest_food/entities.py:97
+msgid "big family"
+msgstr "Многодетная семья"
+
+#: rest_food/entities.py:98
+msgid "disability"
+msgstr "Группа инвалидности"
+
+#: rest_food/entities.py:99
+msgid "homeless"
+msgstr "Бездомный/ая"
+
+#: rest_food/entities.py:100
+msgid "hard times"
+msgstr "Затруднительное соц положение"
+
+#: rest_food/entities.py:101
+msgid "other"
+msgstr "Другое"
 
 #: rest_food/communication.py:57
 #, python-format
@@ -32,54 +52,12 @@ msgstr "Ваш аккаунт подтверждён!"
 msgid "OK ✅"
 msgstr "OK ✅"
 
-#: rest_food/communication.py:136 rest_food/states/supply_state.py:77
+#: rest_food/communication.py:136 rest_food/states/supply_state.py:76
 #, python-format
 msgid "Your account was declined. Please, contact %s for any clarifications."
 msgstr ""
 "Ваш аккаунт был отклонён. Пожалуйста, обратитесь к %s за дополнительными "
 "объяснениями."
-
-#: rest_food/entities.py:89
-msgid "big family"
-msgstr "Многодетная семья"
-
-#: rest_food/entities.py:90
-msgid "disability"
-msgstr "Группа инвалидности"
-
-#: rest_food/entities.py:91
-msgid "homeless"
-msgstr "Бездомный/ая"
-
-#: rest_food/entities.py:92
-msgid "hard times"
-msgstr "Затруднительное соц положение"
-
-#: rest_food/entities.py:93
-msgid "other"
-msgstr "Другое"
-
-#: rest_food/handlers.py:86 rest_food/handlers.py:142
-msgid "Something went wrong. Try something different, please."
-msgstr "Что-то пошло не так. Попробуйте что-нибудь другое."
-
-#: rest_food/handlers.py:89
-msgid "Start from the beginning"
-msgstr "Начать заново"
-
-#: rest_food/states/utils.py:52
-msgid "Please, provide only pone number."
-msgstr "Пожалуйста, введите только контактный номер."
-
-#: rest_food/states/utils.py:56
-msgid "This is not a valid phone number."
-msgstr "Это невалидный телефонный номер."
-
-#: rest_food/states/utils.py:178 rest_food/states/demand_command.py:223
-#: rest_food/states/demand_reply.py:90 rest_food/states/demand_reply.py:105
-#: rest_food/states/demand_reply.py:115 rest_food/states/supply_state.py:215
-msgid "Back"
-msgstr "Назад"
 
 #: rest_food/states/demand_command.py:64 rest_food/states/demand_command.py:190
 msgid "Information was not found."
@@ -138,7 +116,7 @@ msgstr "Социальный статус: %s ✅"
 msgid "not set ❓"
 msgstr "не предоставлен ❓"
 
-#: rest_food/states/demand_command.py:147 rest_food/states/supply_state.py:212
+#: rest_food/states/demand_command.py:147 rest_food/states/supply_state.py:211
 #, python-format
 msgid "Phone: %s"
 msgstr "Телефон: %s"
@@ -158,6 +136,12 @@ msgstr ""
 #: rest_food/states/demand_reply.py:95
 msgid "Take it"
 msgstr "Забрать"
+
+#: rest_food/states/demand_command.py:223 rest_food/states/demand_reply.py:90
+#: rest_food/states/demand_reply.py:105 rest_food/states/demand_reply.py:115
+#: rest_food/states/utils.py:178 rest_food/states/supply_state.py:214
+msgid "Back"
+msgstr "Назад"
 
 #: rest_food/states/demand_command.py:243
 msgid "You've booked this"
@@ -207,6 +191,73 @@ msgstr "Нету координат :("
 msgid "Open in app"
 msgstr "Открыть в приложении"
 
+#: rest_food/states/supply_command.py:72
+#, python-format
+msgid "%s (booked)"
+msgstr "%s (забронировано)"
+
+#: rest_food/states/supply_command.py:79
+#, python-format
+msgid "%s (not booked)"
+msgstr "%s (не забронировано)"
+
+#: rest_food/states/supply_command.py:91
+msgid "Go to product posting"
+msgstr "К публикации продуктов"
+
+#: rest_food/states/supply_command.py:94
+msgid "Last messages"
+msgstr "Последние объявления"
+
+#: rest_food/states/supply_command.py:116
+#, python-format
+msgid ""
+"Not yet booked.\n"
+"\n"
+"%s"
+msgstr ""
+"Ещё не забронировано.\n"
+"\n"
+"%s"
+
+#: rest_food/states/supply_command.py:123 rest_food/states/supply_reply.py:23
+msgid "View all messages"
+msgstr "Просмотреть все объявления"
+
+#: rest_food/states/supply_command.py:138
+msgid "Nope, decline it"
+msgstr "Нет, отклонить"
+
+#: rest_food/states/supply_command.py:153
+msgid "Sorry, approve it"
+msgstr "Ой, подтвердить"
+
+#: rest_food/states/demand_state.py:32
+msgid "Enter your name:"
+msgstr "Введите имя:"
+
+#: rest_food/states/demand_state.py:40 rest_food/states/supply_state.py:297
+msgid "← Back"
+msgstr "← Назад"
+
+#: rest_food/states/demand_state.py:40 rest_food/states/supply_state.py:297
+#: rest_food/states/supply_state.py:327
+msgid "Send phone"
+msgstr "Выслать телефон"
+
+#: rest_food/states/demand_state.py:43 rest_food/states/supply_state.py:300
+msgid "❌ Delete"
+msgstr "❌ Удалить"
+
+#: rest_food/states/demand_state.py:46
+msgid "Send your phone number"
+msgstr "Пожалуйста, вышлите свой контактный номер"
+
+#: rest_food/states/demand_state.py:70
+msgid "Hello. Here you will see notifications about available food."
+msgstr ""
+"Приветствую. Здесь будут публиковаться объявления о доступных продуктах."
+
 #: rest_food/states/formatters.py:14
 msgid ""
 "\n"
@@ -254,23 +305,30 @@ msgstr ""
 #, python-brace-format
 msgid ""
 "Restaurant name: {name}\n"
-"Address: {address}\n"
-"Phone: {phone}"
+"Address: {address}"
 msgstr ""
 "Заведение: {name}\n"
-"Адрес: {address}\n"
-"Телефон: {phone}"
+"Адрес: {address}"
 
-#: rest_food/states/formatters.py:98
+#: rest_food/states/formatters.py:80
+#, python-format
+msgid ""
+"\n"
+"Phone: %s"
+msgstr ""
+"\n"
+"Телефон: %s"
+
+#: rest_food/states/formatters.py:100
 #, python-format
 msgid "User @%s"
 msgstr "Пользователь @%s"
 
-#: rest_food/states/formatters.py:100
+#: rest_food/states/formatters.py:102
 msgid "New user"
 msgstr "Новый пользователь"
 
-#: rest_food/states/formatters.py:105
+#: rest_food/states/formatters.py:107
 #, python-brace-format
 msgid ""
 "{user_name} wants to join as a supplier. Provided description is:\n"
@@ -282,7 +340,7 @@ msgstr ""
 "\n"
 "{description}"
 
-#: rest_food/states/formatters.py:114
+#: rest_food/states/formatters.py:116
 #, python-brace-format
 msgid ""
 "{user_name} was APPROVED as a supplier. Provided description was:\n"
@@ -297,7 +355,7 @@ msgstr ""
 "\n"
 "id в БД: {id}"
 
-#: rest_food/states/formatters.py:126
+#: rest_food/states/formatters.py:128
 #, python-brace-format
 msgid ""
 "{user_name} was DECLINED as a supplier. Provided description was:\n"
@@ -312,59 +370,138 @@ msgstr ""
 "\n"
 "id в БД: {id}"
 
-#: rest_food/states/supply_command.py:72
-#, python-format
-msgid "%s (booked)"
-msgstr "%s (забронировано)"
+#: rest_food/states/utils.py:52
+msgid "Please, provide only pone number."
+msgstr "Пожалуйста, введите только контактный номер."
 
-#: rest_food/states/supply_command.py:79
-#, python-format
-msgid "%s (not booked)"
-msgstr "%s (не забронировано)"
+#: rest_food/states/utils.py:56
+msgid "This is not a valid phone number."
+msgstr "Это невалидный телефонный номер."
 
-#: rest_food/states/supply_command.py:91
-msgid "Go to product posting"
-msgstr "К публикации продуктов"
+#: rest_food/states/supply_state.py:55
+msgid "Please, provide information about yourself before getting started"
+msgstr "Пожалуйста, введите коонтакную информацию прежде чем продолжить"
 
-#: rest_food/states/supply_command.py:94
-msgid "Last messages"
-msgstr "Последние объявления"
+#: rest_food/states/supply_state.py:64
+msgid "Edit restaurant info"
+msgstr "Редактировать информацию о заведении"
 
-#: rest_food/states/supply_command.py:116
+#: rest_food/states/supply_state.py:72
+msgid "Enter food you can share and click \"send\""
+msgstr "Введите продукты, которые можете передать и нажмите \"отправить\""
+
+#: rest_food/states/supply_state.py:83
 #, python-format
 msgid ""
-"Not yet booked.\n"
-"\n"
-"%s"
+"We'll notify you when your account is approved. Also, you can contact us "
+"with %s"
 msgstr ""
-"Ещё не забронировано.\n"
-"\n"
-"%s"
+"Мы вам напишем, когда аккаунт будет подтверждён. Можете обратиться к %s за "
+"дополнительной информацией"
 
-#: rest_food/states/supply_command.py:123 rest_food/states/supply_reply.py:23
-msgid "View all messages"
-msgstr "Просмотреть все объявления"
+#: rest_food/states/supply_state.py:94
+msgid "View posted products"
+msgstr "Просмотреть объявления"
 
-#: rest_food/states/supply_command.py:138
-msgid "Nope, decline it"
-msgstr "Нет, отклонить"
+#: rest_food/states/supply_state.py:118
+msgid "Set time and send"
+msgstr "Ввести время и выслать"
 
-#: rest_food/states/supply_command.py:153
-msgid "Sorry, approve it"
-msgstr "Ой, подтвердить"
+#: rest_food/states/supply_state.py:122 rest_food/states/supply_state.py:153
+#: rest_food/states/supply_state.py:248 rest_food/states/supply_state.py:364
+#: rest_food/states/supply_state.py:373
+msgid "Cancel"
+msgstr "Отмена"
 
-#: rest_food/states/demand_state.py:29
-msgid "Enter your name:"
-msgstr "Введите имя:"
-
-#: rest_food/states/demand_state.py:34
-msgid "Enter your phone number:"
-msgstr "Пожалуйста, введите свой контактный номер:"
-
-#: rest_food/states/demand_state.py:48
-msgid "Hello. Here you will see notifications about available food."
+#: rest_food/states/supply_state.py:130
+msgid ""
+"Food you can share:\n"
+"{}"
 msgstr ""
-"Приветствую. Здесь будут публиковаться объявления о доступных продуктах."
+"Продукты для передачи:\n"
+"{}"
+
+#: rest_food/states/supply_state.py:140 rest_food/states/supply_state.py:163
+msgid "Product list is cleared."
+msgstr "Отменено"
+
+#: rest_food/states/supply_state.py:150
+msgid "Specify the time"
+msgstr "Указать время"
+
+#: rest_food/states/supply_state.py:181
+msgid ""
+"Information is sent. I'll notify you when there is someone to take this food."
+msgstr ""
+"Информация выслана. Вы получите уведомление, когда кто-то захочет забрать "
+"эти продукты."
+
+#: rest_food/states/supply_state.py:194
+msgid "You can edit your contact info here"
+msgstr "Редактировать контакную информацию"
+
+#: rest_food/states/supply_state.py:197
+#, python-format
+msgid "Name: %s"
+msgstr "Имя: %s"
+
+#: rest_food/states/supply_state.py:201
+#, python-format
+msgid "Address: %s"
+msgstr "Адрес: %s"
+
+#: rest_food/states/supply_state.py:205
+#, python-format
+msgid "Coordinates: %s"
+msgstr "Координаты: %s"
+
+#: rest_food/states/supply_state.py:269
+msgid "Please, enter name of the restaurant."
+msgstr "Пожалуйста, введите название заведение."
+
+#: rest_food/states/supply_state.py:274
+msgid "Please, provide restaurant address."
+msgstr "Пожалуста, введите адрес заведения."
+
+#: rest_food/states/supply_state.py:303 rest_food/states/supply_state.py:330
+msgid "Please, send your contact number."
+msgstr "Пожалуйста, вышлите контактный телефон."
+
+#: rest_food/states/supply_state.py:327
+msgid "❌ Dismiss"
+msgstr "❌ Пропустить"
+
+#: rest_food/states/supply_state.py:356
+msgid "No! Edit! 🌍"
+msgstr "Не то. Изменить 🌍"
+
+#: rest_food/states/supply_state.py:360
+msgid "Yes! Approve ✅"
+msgstr "Да ✅"
+
+#: rest_food/states/supply_state.py:370
+msgid "Please, send me your coordinates. (Attach -> Location)"
+msgstr "Пожалуйста, вышлите координаты: Прикрепить -> Геопозиция"
+
+#: rest_food/states/supply_state.py:378
+msgid "Provide later"
+msgstr "Позже"
+
+#: rest_food/states/supply_state.py:423
+msgid "What to tell the foodsaver?"
+msgstr "Что сказать забронировавшему еду?"
+
+#: rest_food/states/supply_state.py:425
+msgid "Back to the message"
+msgstr "Назад к сообщению"
+
+#: rest_food/states/supply_state.py:440
+msgid "Cancelled"
+msgstr "Отменено"
+
+#: rest_food/states/supply_state.py:453
+msgid "Sorry, something went wrong."
+msgstr "Прошу прощения, что-то пошло не так :("
 
 #: rest_food/states/supply_reply.py:16
 msgid "Reject"
@@ -378,126 +515,13 @@ msgstr "Подтвердить"
 msgid "Decline"
 msgstr "Отклонить"
 
-#: rest_food/states/supply_state.py:56
-msgid "Please, provide information about yourself before getting started"
-msgstr "Пожалуйста, введите коонтакную информацию прежде чем продолжить"
+#: rest_food/handlers.py:86 rest_food/handlers.py:153
+msgid "Something went wrong. Try something different, please."
+msgstr "Что-то пошло не так. Попробуйте что-нибудь другое."
 
-#: rest_food/states/supply_state.py:65
-msgid "Edit restaurant info"
-msgstr "Редактировать информацию о заведении"
-
-#: rest_food/states/supply_state.py:73
-msgid "Enter food you can share and click \"send\""
-msgstr "Введите продукты, которые можете передать и нажмите \"отправить\""
-
-#: rest_food/states/supply_state.py:84
-#, python-format
-msgid ""
-"We'll notify you when your account is approved. Also, you can contact us "
-"with %s"
-msgstr ""
-"Мы вам напишем, когда аккаунт будет подтверждён. Можете обратиться к %s за "
-"дополнительной информацией"
-
-#: rest_food/states/supply_state.py:95
-msgid "View posted products"
-msgstr "Просмотреть объявления"
-
-#: rest_food/states/supply_state.py:119
-msgid "Set time and send"
-msgstr "Ввести время и выслать"
-
-#: rest_food/states/supply_state.py:123 rest_food/states/supply_state.py:154
-#: rest_food/states/supply_state.py:249 rest_food/states/supply_state.py:332
-#: rest_food/states/supply_state.py:341
-msgid "Cancel"
-msgstr "Отмена"
-
-#: rest_food/states/supply_state.py:131
-msgid ""
-"Food you can share:\n"
-"{}"
-msgstr ""
-"Продукты для передачи:\n"
-"{}"
-
-#: rest_food/states/supply_state.py:141 rest_food/states/supply_state.py:164
-msgid "Product list is cleared."
-msgstr "Отменено"
-
-#: rest_food/states/supply_state.py:151
-msgid "Specify the time"
-msgstr "Указать время"
-
-#: rest_food/states/supply_state.py:182
-msgid ""
-"Information is sent. I'll notify you when there is someone to take this food."
-msgstr ""
-"Информация выслана. Вы получите уведомление, когда кто-то захочет забрать "
-"эти продукты."
-
-#: rest_food/states/supply_state.py:195
-msgid "You can edit your contact info here"
-msgstr "Редактировать контакную информацию"
-
-#: rest_food/states/supply_state.py:198
-#, python-format
-msgid "Name: %s"
-msgstr "Имя: %s"
-
-#: rest_food/states/supply_state.py:202
-#, python-format
-msgid "Address: %s"
-msgstr "Адрес: %s"
-
-#: rest_food/states/supply_state.py:206
-#, python-format
-msgid "Coordinates: %s"
-msgstr "Координаты: %s"
-
-#: rest_food/states/supply_state.py:270
-msgid "Please, enter name of the restaurant."
-msgstr "Пожалуйста, введите название заведение."
-
-#: rest_food/states/supply_state.py:275
-msgid "Please, provide restaurant address."
-msgstr "Пожалуста, введите адрес заведения."
-
-#: rest_food/states/supply_state.py:295
-msgid "Please, enter contact phone number."
-msgstr "Пожалуйста, введите контактный номер."
-
-#: rest_food/states/supply_state.py:324
-msgid "No! Edit! 🌍"
-msgstr "Не то. Изменить 🌍"
-
-#: rest_food/states/supply_state.py:328
-msgid "Yes! Approve ✅"
-msgstr "Да ✅"
-
-#: rest_food/states/supply_state.py:338
-msgid "Please, send me your coordinates. (Attach -> Location)"
-msgstr "Пожалуйста, вышлите координаты: Прикрепить -> Геопозиция"
-
-#: rest_food/states/supply_state.py:346
-msgid "Provide later"
-msgstr "Позже"
-
-#: rest_food/states/supply_state.py:396
-msgid "What to tell the foodsaver?"
-msgstr "Что сказать забронировавшему еду?"
-
-#: rest_food/states/supply_state.py:398
-msgid "Back to the message"
-msgstr "Назад к сообщению"
-
-#: rest_food/states/supply_state.py:413
-msgid "Cancelled"
-msgstr "Отменено"
-
-#: rest_food/states/supply_state.py:426
-msgid "Sorry, something went wrong."
-msgstr "Прошу прощения, что-то пошло не так :("
+#: rest_food/handlers.py:89
+msgid "Start from the beginning"
+msgstr "Начать заново"
 
 #~ msgid "Please, contact @foodsharingsupportbot to use this bot."
 #~ msgstr ""

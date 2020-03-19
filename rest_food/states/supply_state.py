@@ -13,6 +13,7 @@ from rest_food.db import (
     cancel_booking,
     list_messages,
     set_message_publication_time,
+    unset_info,
 )
 from rest_food.communication import (
     publish_supply_event,
@@ -38,7 +39,6 @@ class ForceInfoMixin:
             (UserInfoField.NAME, SupplyState.FORCE_NAME),
             (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
             (UserInfoField.IS_APPROVED_COORDINATES, SupplyState.FORCE_COORDINATES),
-            (UserInfoField.PHONE, SupplyState.FORCE_PHONE),
         ))
 
     def get_next_state(self):
@@ -46,8 +46,7 @@ class ForceInfoMixin:
             if not self.db_user.info.get(field.value):
                 return state
 
-        notify_admin_about_new_supply_user_if_necessary(supply_user=self.db_user)
-        return SupplyState.READY_TO_POST
+        return SupplyState.INITIAL_EDIT_PHONE
 
 
 class DefaultState(ForceInfoMixin, State):
@@ -209,7 +208,7 @@ class ViewInfoState(State):
                     'data': 'edit-coordinates',
                 }],
                 [{
-                    'text': _('Phone: %s') % self.db_user.info['phone'],
+                    'text': _('Phone: %s') % (self.db_user.info['phone'] if 'phone' in self.db_user.info else '❌'),
                     'data': 'edit-phone',
                 },{
                     'text': _('Back'),
@@ -242,7 +241,7 @@ class BaseEditInfoState(State):
     def info_field_is_set(self) -> bool:
         return bool(self.db_user.info.get(self._info_to_edit.value))
 
-    def get_intro(self):
+    def get_intro(self) -> Reply:
         reply = Reply(text=self._message)
         if self.info_field_is_set():
             reply.buttons = [[{
@@ -292,16 +291,51 @@ class SetAddressState(BaseEditInfoState):
 
 
 class SetPhoneState(BaseEditInfoState):
-    _message = _('Please, enter contact phone number.')
     _info_to_edit = UserInfoField.PHONE
 
+    def get_intro(self) -> Reply:
+        buttons = [[{'text': _('← Back')}, {'text': _('Send phone'), 'request_contact': True}]]
+
+        if self.info_field_is_set():
+            buttons[0].insert(1, {'text': _('❌ Delete')})
+
+        return Reply(
+            text=_('Please, send your contact number.'),
+            buttons=buttons,
+            is_text_buttons=True,
+        )
+
     def handle_text(self, text):
+        text = text or ''
+        if text.startswith('❌'):
+            unset_info(self.db_user, self._info_to_edit)
+            return Reply(text=_('OK ✅'), next_state=self.get_next_state())
+
+        if text.startswith('←'):
+            return Reply(text=_('OK ✅'), next_state=self.get_next_state())
+
         try:
             validate_phone_number(text)
         except ValidationError as e:
             return Reply(text=e.message)
 
-        return super().handle_text(text)
+        reply = super().handle_text(text)
+        reply.text = _('OK ✅')  # Text response is required to clear telegram text keyboard.
+        return reply
+
+
+class InitialSetPhoneState(SetPhoneState):
+    def get_intro(self) -> Reply:
+        buttons = [[{'text': _('❌ Dismiss')}, {'text': _('Send phone'), 'request_contact': True}]]
+
+        return Reply(
+            text=_('Please, send your contact number.'),
+            buttons=buttons,
+            is_text_buttons=True,
+        )
+
+    def get_next_state(self):
+        return SupplyState.READY_TO_POST
 
 
 class SetCoordinatesState(BaseEditInfoState):
@@ -349,7 +383,6 @@ class SetCoordinatesState(BaseEditInfoState):
 
         return reply
 
-
     def handle_text(self, text):
         return
 
@@ -383,10 +416,6 @@ class ForceSetAddressState(ForceInfoMixin, SetAddressState):
 
 
 class ForceSetCoordinatesState(ForceInfoMixin, SetCoordinatesState):
-    pass
-
-
-class ForceSetPhoneState(ForceInfoMixin, SetPhoneState):
     pass
 
 

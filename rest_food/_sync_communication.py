@@ -79,12 +79,12 @@ def send_messages(
     It's intended to be async (vs `build_tg_response`).
     """
     bot = get_bot(workflow)
-    original_message_should_be_replaced = (
+    original_message_can_be_replaced = (
         (original_message and original_message.message_id) is not None
     )
 
     for reply in filter(lambda x: x is not None and (x.text or x.coordinates) is not None, replies):
-        markup = _build_tg_keyboard(reply.buttons)
+        markup = _build_tg_reply_markup(reply)
 
         if reply.coordinates:
             bot.send_location(
@@ -93,12 +93,19 @@ def send_messages(
                 reply_markup=None if reply.text else markup,
             )
 
+        original_message_should_be_removed = original_message_can_be_replaced
+
         if reply.text:
-            if original_message_should_be_replaced and original_message.text is not None:
+            if original_message_can_be_replaced and original_message.text is not None and not reply.is_text_buttons:
                 method = bot.edit_message_text
-                original_message_should_be_replaced = False
+                original_message_should_be_removed = False
             else:
                 method = bot.send_message
+
+                # Actually we can keep track of sent `keyboard` messages and remove them on the next
+                #   interaction with the user.
+                # On the other hand this is not likely to happen as this method is designed to to query db.
+                markup = markup or {'remove_keyboard': True}
 
             try:
                 method(
@@ -124,7 +131,7 @@ def send_messages(
                     logger.warning('Failed to send to tg_chat_id=%s', tg_chat_id)
                     raise e
 
-        if original_message_should_be_replaced:
+        if original_message_should_be_removed:
             bot.delete_message(chat_id=tg_chat_id, message_id=original_message.message_id)
 
 
@@ -138,13 +145,35 @@ def build_tg_response(*, chat_id: int, reply: Reply):
         'text': reply.text,
     }
 
-    if reply.buttons:
-        response['reply_markup'] = _build_tg_keyboard(reply.buttons)
+    reply_markup = _build_tg_reply_markup(reply)
+    if reply_markup is not None:
+        response['reply_markup'] = reply_markup
 
     return response
 
 
-def _build_tg_keyboard(keyboard):
+def _build_tg_reply_markup(reply: Reply) -> dict:
+    if not reply.buttons:
+        return None
+
+    if reply.is_text_buttons:
+        return _build_tg_text_keyboard(reply.buttons)
+
+    return _build_tg_inline_keyboard(reply.buttons)
+
+
+def _build_tg_text_keyboard(keyboard):
+    if not keyboard:
+        return None
+
+    return {
+        'keyboard': keyboard,
+        'one_time_keyboard': True,
+        'resize_keyboard': True,
+    }
+
+
+def _build_tg_inline_keyboard(keyboard):
     if not keyboard:
         return None
 

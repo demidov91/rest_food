@@ -69,15 +69,17 @@ def build_demanded_message_text(*, demand_user: User, supply_user: User, message
 
 
 def build_supply_user_description(user: User):
-    return _(
+    msg = _(
         "Restaurant name: {name}\n"
-        "Address: {address}\n"
-        "Phone: {phone}"
+        "Address: {address}"
     ).format(
         name=user.info[UserInfoField.NAME.value],
-        address=user.info[UserInfoField.ADDRESS.value],
-        phone=user.info[UserInfoField.PHONE.value],
+        address=user.info[UserInfoField.ADDRESS.value]
     )
+    if user.info.get(UserInfoField.PHONE.value):
+        msg += _('\nPhone: %s') % user.info[UserInfoField.PHONE.value]
+
+    return msg
 
 
 def build_demand_side_full_message_text(supply_user: User, message: Message) -> str:
@@ -95,7 +97,7 @@ def build_demand_side_full_message_text_by_id(supply_user: User, message_id: str
 
 def _introduce_new_user(user: User):
     if user.info.get(UserInfoField.USERNAME.value):
-        return _('User @%s') % user.info[UserInfoField.value]
+        return _('User @%s') % user.info[UserInfoField.USERNAME.value]
 
     return _('New user')
 

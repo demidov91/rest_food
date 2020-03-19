@@ -18,7 +18,7 @@ SUPPLY = {
     SupplyState.FORCE_NAME: supply_state.ForceSetNameState,
     SupplyState.FORCE_ADDRESS: supply_state.ForceSetAddressState,
     SupplyState.FORCE_COORDINATES: supply_state.ForceSetCoordinatesState,
-    SupplyState.FORCE_PHONE: supply_state.ForceSetPhoneState,
+    SupplyState.INITIAL_EDIT_PHONE: supply_state.InitialSetPhoneState,
     SupplyState.BOOKING_CANCEL_REASON: supply_state.BookingCancelReason,
     SupplyState.NO_STATE: supply_state.NoState,
 }
