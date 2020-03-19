@@ -27,6 +27,7 @@ class SupplyState(Enum):
     FORCE_NAME = 'force_name'
     FORCE_ADDRESS = 'force_address'
     FORCE_COORDINATES = 'force_coordinates'
+    INITIAL_EDIT_PHONE = 'initial_edit_phone'
     BOOKING_CANCEL_REASON = 'booking_cancel_reason'
     NO_STATE = 'no_state'
 

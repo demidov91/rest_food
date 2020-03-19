@@ -39,7 +39,6 @@ class ForceInfoMixin:
             (UserInfoField.NAME, SupplyState.FORCE_NAME),
             (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
             (UserInfoField.IS_APPROVED_COORDINATES, SupplyState.FORCE_COORDINATES),
-            (UserInfoField.PHONE, SupplyState.EDIT_PHONE),
         ))
 
     def get_next_state(self):
@@ -47,8 +46,7 @@ class ForceInfoMixin:
             if not self.db_user.info.get(field.value):
                 return state
 
-        notify_admin_about_new_supply_user_if_necessary(supply_user=self.db_user)
-        return SupplyState.READY_TO_POST
+        return SupplyState.INITIAL_EDIT_PHONE
 
 
 class DefaultState(ForceInfoMixin, State):
@@ -296,11 +294,10 @@ class SetPhoneState(BaseEditInfoState):
     _info_to_edit = UserInfoField.PHONE
 
     def get_intro(self) -> Reply:
-        buttons = [[{'text': _('Send phone'), 'request_contact': True}]]
+        buttons = [[{'text': _('← Back')}, {'text': _('Send phone'), 'request_contact': True}]]
 
         if self.info_field_is_set():
-            buttons[0].insert(0, {'text': _('❌ Delete')})
-            buttons[0].insert(0, {'text': _('← Back')})
+            buttons[0].insert(1, {'text': _('❌ Delete')})
 
         return Reply(
             text=_('Please, send your contact number.'),
@@ -323,6 +320,20 @@ class SetPhoneState(BaseEditInfoState):
             return Reply(text=e.message)
 
         return super().handle_text(text)
+
+
+class InitialSetPhoneState(SetPhoneState):
+    def get_intro(self) -> Reply:
+        buttons = [[{'text': _('❌ Dismiss')}, {'text': _('Send phone'), 'request_contact': True}]]
+
+        return Reply(
+            text=_('Please, send your contact number.'),
+            buttons=buttons,
+            is_text_buttons=True,
+        )
+
+    def get_next_state(self):
+        return SupplyState.READY_TO_POST
 
 
 class SetCoordinatesState(BaseEditInfoState):
