@@ -27,19 +27,19 @@ def import_messages(data: List[dict]):
     db.messages.insert(data)
 
 
-def _update_user(user_id: Union[str, int], provider: Provider, workflow: Workflow, *, update: dict):
+def _update_user(user_id: Union[str, int], provider: Provider, workflow: Workflow, *, method: str='$set', update: dict):
     db.users.update_one({
         'user_id': str(user_id),
         'provider': provider.value,
         'workflow': workflow.value,
 
     }, {
-        '$set': update,
+        method: update,
     })
 
 
-def _update_user_entity(user: User, update: dict):
-    _update_user(user.user_id, user.provider, user.workflow, update=update)
+def _update_user_entity(user: User, update: dict, *, method: str='$set'):
+    _update_user(user.user_id, user.provider, user.workflow, update=update, method=method)
 
 
 def _update_message(message_id: str, *, owner_id: Optional[str]=None, update: dict):
@@ -195,6 +195,13 @@ def set_info(user: User, info_field: UserInfoField, data):
     })
 
     user.info[info_field.value] = data
+
+
+def unset_info(user: User, info_field: UserInfoField):
+    _update_user_entity(user, {f'info.{info_field.value}': ''}, method='$unset')
+
+    if info_field.value in user.info:
+        del user.info[info_field.value]
 
 
 def set_next_command(user: User, command: Command):

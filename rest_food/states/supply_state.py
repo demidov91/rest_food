@@ -13,6 +13,7 @@ from rest_food.db import (
     cancel_booking,
     list_messages,
     set_message_publication_time,
+    unset_info,
 )
 from rest_food.communication import (
     publish_supply_event,
@@ -38,7 +39,7 @@ class ForceInfoMixin:
             (UserInfoField.NAME, SupplyState.FORCE_NAME),
             (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
             (UserInfoField.IS_APPROVED_COORDINATES, SupplyState.FORCE_COORDINATES),
-            (UserInfoField.PHONE, SupplyState.FORCE_PHONE),
+            (UserInfoField.PHONE, SupplyState.EDIT_PHONE),
         ))
 
     def get_next_state(self):
@@ -209,7 +210,7 @@ class ViewInfoState(State):
                     'data': 'edit-coordinates',
                 }],
                 [{
-                    'text': _('Phone: %s') % self.db_user.info['phone'],
+                    'text': _('Phone: %s') % (self.db_user.info['phone'] if 'phone' in self.db_user.info else '❌'),
                     'data': 'edit-phone',
                 },{
                     'text': _('Back'),
@@ -242,7 +243,7 @@ class BaseEditInfoState(State):
     def info_field_is_set(self) -> bool:
         return bool(self.db_user.info.get(self._info_to_edit.value))
 
-    def get_intro(self):
+    def get_intro(self) -> Reply:
         reply = Reply(text=self._message)
         if self.info_field_is_set():
             reply.buttons = [[{
@@ -292,10 +293,30 @@ class SetAddressState(BaseEditInfoState):
 
 
 class SetPhoneState(BaseEditInfoState):
-    _message = _('Please, enter contact phone number.')
     _info_to_edit = UserInfoField.PHONE
 
+    def get_intro(self) -> Reply:
+        buttons = [[{'text': _('Send phone'), 'request_contact': True}]]
+
+        if self.info_field_is_set():
+            buttons[0].insert(0, {'text': _('❌ Delete')})
+            buttons[0].insert(0, {'text': _('← Back')})
+
+        return Reply(
+            text=_('Please, send your contact number.'),
+            buttons=buttons,
+            is_text_buttons=True,
+        )
+
     def handle_text(self, text):
+        text = text or ''
+        if text.startswith('❌'):
+            unset_info(self.db_user, self._info_to_edit)
+            return Reply(next_state=self.get_next_state())
+
+        if text.startswith('←'):
+            return Reply(next_state=self.get_next_state())
+
         try:
             validate_phone_number(text)
         except ValidationError as e:
@@ -349,7 +370,6 @@ class SetCoordinatesState(BaseEditInfoState):
 
         return reply
 
-
     def handle_text(self, text):
         return
 
@@ -383,10 +403,6 @@ class ForceSetAddressState(ForceInfoMixin, SetAddressState):
 
 
 class ForceSetCoordinatesState(ForceInfoMixin, SetCoordinatesState):
-    pass
-
-
-class ForceSetPhoneState(ForceInfoMixin, SetPhoneState):
     pass
 
 

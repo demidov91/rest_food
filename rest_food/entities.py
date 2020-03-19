@@ -27,7 +27,6 @@ class SupplyState(Enum):
     FORCE_NAME = 'force_name'
     FORCE_ADDRESS = 'force_address'
     FORCE_COORDINATES = 'force_coordinates'
-    FORCE_PHONE = 'force_phone'
     BOOKING_CANCEL_REASON = 'booking_cancel_reason'
     NO_STATE = 'no_state'
 
@@ -240,9 +239,8 @@ class Message:
 
 @dataclass
 class Reply:
-    text: Optional[str]=None
-    buttons: Optional[List[List[Dict]]]=None
-    coordinates: Optional[Tuple[Decimal, Decimal]]=None
-    next_state: Optional[Union[DemandState, SupplyState]]=None
-
-
+    text: Optional[str] = None
+    buttons: Optional[List[List[Dict]]] = None
+    coordinates: Optional[Tuple[Decimal, Decimal]] = None
+    next_state: Optional[Union[DemandState, SupplyState]] = None
+    is_text_buttons: bool = False
