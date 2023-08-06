@@ -30,7 +30,7 @@ matplotlib==3.7.2
 more-itertools==7.2.0     # via pytest
 numpy==1.25.2             # via matplotlib
 packaging==23.1           # via pytest
-pip-tools==4.0.0
+pip-tools==7.2.0
 pluggy==0.12.0            # via pytest
 py==1.8.0                 # via pytest
 pycparser==2.19           # via cffi
@@ -47,6 +47,3 @@ urllib3==1.25.3           # via botocore, requests
 wcwidth==0.1.7            # via pytest
 werkzeug==2.3.6           # via flask
 zipp==0.5.2               # via importlib-metadata
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools==45.1.0        # via kiwisolver
