@@ -7,7 +7,7 @@
 
 ## How to run it locally
 
-`python -m rest_food.flask`
+`python -m rest_food.flask_start`
 
 Bot server will run on port 5000
 
@@ -20,8 +20,9 @@ YANDEX_API_KEY  -- required for geocoding when defining supplier's address
 BOT_PATH_KEY -- key to be added into webhook url
 DB_CONNECTION_STRING -- connection string including username and password if required
 DB_NAME -- mongodb database name 
-STAGE -- dev, staging,live
-AWS_USER_ID - required during amazon deployment only
+STAGE -- dev,staging,live
+AWS_USER_ID -- required during amazon deployment only
+TEST_TG_CHAT_ID -- comma-separated telegram ids to use on staging and dev. Other user messages will be silenced
 ```
 
 ## How to configure webhooks
