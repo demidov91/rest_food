@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask.json.provider import DefaultJSONProvider
 from rest_food.handlers import tg_supply, tg_demand
 from rest_food.translation import LazyAwareJsonEncoder
 from rest_food.settings import BOT_PATH_KEY
@@ -20,5 +21,5 @@ def flask_tg_demand():
 
 
 if __name__ == '__main__':
-    app.json_encoder = LazyAwareJsonEncoder
+    app.json.default = LazyAwareJsonEncoder().default
     app.run()

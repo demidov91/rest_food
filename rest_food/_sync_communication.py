@@ -96,24 +96,26 @@ def send_messages(
         original_message_should_be_removed = original_message_can_be_replaced
 
         if reply.text:
+            kwargs = {
+                'chat_id': tg_chat_id,
+                'text': reply.text,
+                'reply_markup': markup,
+            }
+
             if original_message_can_be_replaced and original_message.text is not None and not reply.is_text_buttons:
                 method = bot.edit_message_text
                 original_message_should_be_removed = False
+                kwargs['message_id'] = original_message.message_id
             else:
                 method = bot.send_message
 
                 # Actually we can keep track of sent `keyboard` messages and remove them on the next
                 #   interaction with the user.
-                # On the other hand this is not likely to happen as this method is designed to to query db.
-                markup = markup or {'remove_keyboard': True}
+                # On the other hand this is not likely to happen as this method is designed to query db.
+                kwargs['reply_markup'] = kwargs['reply_markup'] or {'remove_keyboard': True}
 
             try:
-                method(
-                    chat_id=tg_chat_id,
-                    text=reply.text,
-                    reply_markup=markup,
-                    message_id=original_message and original_message.message_id
-                )
+                method(**kwargs)
             except Unauthorized:
                 logger.warning(
                     '%s is blocked for the bot. ',

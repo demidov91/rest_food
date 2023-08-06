@@ -27,7 +27,7 @@ DB_NAME = env_var('DB_NAME')
 STAGE = env_var('STAGE')
 
 # Mon, Mon, Dz, G, I, Dz(add)
-TEST_TG_CHAT_ID = (1020027359, 793014155, 274229718, 524816100, 121866003, 1038927235)
-TEST_TG_CHAT_ID = TEST_TG_CHAT_ID + tuple(str(x) for x in TEST_TG_CHAT_ID)
+TEST_TG_CHAT_ID = env_var('TEST_TG_CHAT_ID').split(',')
+TEST_TG_CHAT_ID.extend([int(x) for x in TEST_TG_CHAT_ID])
 
 FEEDBACK_TG_BOT = '@foodsharingsupportbot'
