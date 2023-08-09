@@ -25,6 +25,7 @@ GOOGLE_API_KEY = env_var('GOOGLE_API_KEY', None)
 BOT_PATH_KEY = env_var('BOT_PATH_KEY')
 DB_CONNECTION_STRING = env_var('DB_CONNECTION_STRING')
 DB_NAME = env_var('DB_NAME')
+DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE')
 STAGE = env_var('STAGE')
 
 # Mon, Mon, Dz, G, I, Dz(add)

@@ -4,6 +4,9 @@ Module with generic wrappers for sending bot messages. They are usually sent via
 
 import logging
 import random
+from typing import Iterable
+
+from telegram import Message as TgMessage
 
 from rest_food.db import (
     get_message_demanded_user, get_admin_users, set_info,
@@ -141,8 +144,14 @@ def notify_supplier_is_declined(user: User):
     )
 
 
-def queue_messages(**kwargs):
+def queue_messages(
+        *,
+        tg_chat_id: int,
+        replies: Iterable[Reply],
+        original_message: TgMessage = None,
+        workflow: Workflow,
+):
     """
     Put messages into a single-message-queue
     """
-    get_single_queue().put(**kwargs)
+    get_single_queue().put(tg_chat_id=tg_chat_id, replies=replies, workflow=workflow, original_message=original_message)

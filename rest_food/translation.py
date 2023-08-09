@@ -9,14 +9,16 @@ from json import JSONEncoder
 from telegram.utils import request as tg_request
 
 from speaklater import make_lazy_gettext, is_lazy_string
-
+from rest_food.settings import DEFAULT_LANGUAGE
 from rest_food.settings import BASE_DIR
 
 
-_active_language = ContextVar('active_language', default='ru')
+_active_language = ContextVar('active_language', default=DEFAULT_LANGUAGE)
 _translations = {}
 LOCALE_DIR = os.path.join(BASE_DIR, 'locale')
 logger = logging.getLogger(__name__)
+
+LANGUAGES_SUPPORTED = ['be', 'ru']
 
 
 def set_language(lang_code: str):
@@ -24,24 +26,23 @@ def set_language(lang_code: str):
         return
 
     lang_code = lang_code[:-2]
-    if lang_code in ('be', 'ru'):
+    if lang_code in LANGUAGES_SUPPORTED:
         _active_language.set(lang_code)
 
 
 def get_translation(language_code: str):
     if language_code not in _translations:
-        if language_code == 'en':
-            _translations[language_code] = gettext.NullTranslations()
+        if language_code not in LANGUAGES_SUPPORTED:
+            raise RuntimeError('{} is not supported.'.format(language_code))
 
-        else:
-            _translations[language_code] = gettext.translation(
-                'messages', localedir=LOCALE_DIR, languages=[language_code]
-            )
+        _translations[language_code] = gettext.translation(
+            'messages', localedir=LOCALE_DIR, languages=[language_code]
+        )
 
     return _translations[language_code]
 
 
-def translate(text:str) -> str:
+def translate(text: str) -> str:
     return get_translation(_active_language.get()).gettext(text)
 
 
