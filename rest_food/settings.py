@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(__file__)
 
 def env_var(var_name: str, default=None):
     if var_name not in os.environ:
-        logger.warning('%s env variable was not found.', var_name)
+        logger.warning('%s env variable was not found. Using default %s', var_name, default)
         return default
 
     return os.environ[var_name]
@@ -25,7 +25,7 @@ GOOGLE_API_KEY = env_var('GOOGLE_API_KEY', None)
 BOT_PATH_KEY = env_var('BOT_PATH_KEY')
 DB_CONNECTION_STRING = env_var('DB_CONNECTION_STRING')
 DB_NAME = env_var('DB_NAME')
-DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE')
+DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE', 'be')
 STAGE = env_var('STAGE')
 
 # Mon, Mon, Dz, G, I, Dz(add)

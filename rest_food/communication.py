@@ -36,9 +36,7 @@ def publish_supply_event(supply_user: User):
 
 
 def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user: User):
-    reply = build_supply_side_booked_message(
-        demand_user=demand_user, supply_user=supply_user, message_id=message_id
-    )
+    reply = build_supply_side_booked_message(demand_user=demand_user, message_id=message_id)
 
     queue_messages(
         db_user=supply_user,

@@ -58,7 +58,7 @@ def build_demand_description(user: User) -> str:
     return message
 
 
-def build_demanded_message_text(*, demand_user: User, supply_user: User, message_id: str) -> str:
+def build_demanded_message_text(*, demand_user: User, message_id: str) -> str:
     demand_description = build_demand_description(demand_user)
     food_description = build_short_message_text_by_id(message_id=message_id)
 

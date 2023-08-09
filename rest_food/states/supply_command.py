@@ -94,22 +94,18 @@ def view_messages(user):
     return Reply(text=_('Last messages'), buttons=buttons)
 
 
-def show_demanded_message(user, message_id: str, demand_provider: str=None, demand_user_id: str=None):
+def show_demanded_message(user, message_id: str, **kwargs):
     """
 
     Parameters
     ----------
     user
     message_id
-    demand_provider: deprecated
-    demand_user_id: deprecated
+    kwargs -- deprecated kwargs
     """
 
     demand_user = get_message_demanded_user(supply_user=user, message_id=message_id)
-
-    return build_supply_side_booked_message(
-        demand_user=demand_user, supply_user=user, message_id=message_id
-    )
+    return build_supply_side_booked_message(demand_user=demand_user, message_id=message_id)
 
 
 def show_non_demanded_message(user, message_id: str):
