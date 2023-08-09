@@ -71,17 +71,9 @@ class MapHandler:
             logger.error('Map is requested while coordinates where not set.')
             return Reply(text=_('Coordinates where not provided.'))
 
-        buttons = [[{
-            'text': _('Open in app'),
-            'url': f'https://dzmitry.by/redirect?to=geo:{coordinates[0]},{coordinates[1]}?z=21',
-        }]]
+        buttons = [self._get_action_buttons(message_id)]
 
-        buttons.append(self._get_action_buttons(message_id))
-
-        return Reply(
-            coordinates=coordinates,
-            buttons=buttons
-        )
+        return Reply(coordinates=coordinates, buttons=buttons)
 
 
 class MapInfoHandler(MapHandler):

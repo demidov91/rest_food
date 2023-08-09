@@ -142,14 +142,14 @@ def _call_google_geocoder(address: str, bounds: GoogleBounds) -> Optional[GeoCod
         logger.warning('Non-json geocoder response. Content below:%s', response.content)
         return None
 
-    if 'results' not in data or len(data['results'] == 0):
+    if 'results' not in data or len(data['results']) == 0:
         logger.info('No data found.', extra={'bounds': bounds.name})
         return None
 
     location = data['results'][0]['geometry']['location']
 
     return GeoCoderResult(
-        latitude=Decimal(location['lat']), longitude=Decimal(location['long']), is_sure=len(data['results']) == 1,
+        latitude=Decimal(location['lat']), longitude=Decimal(location['lng']), is_sure=len(data['results']) == 1,
     )
 
 
