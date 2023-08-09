@@ -130,7 +130,7 @@ msgstr "Хтосьці ўжо забраў."
 #, python-format
 msgid "%s is notified that you'll take the food. Please, wait for approval."
 msgstr ""
-"%s абвешчаны, што Вы забярэце прадукты. Калі ласка, дачакайцеся пацверджання."
+"Мы напісалі '%s', што Вы забярэце прадукты. Калі ласка, дачакайцеся пацверджання."
 
 #: rest_food/states/demand_command.py:216 rest_food/states/demand_reply.py:21
 #: rest_food/states/demand_reply.py:87
@@ -378,7 +378,7 @@ msgstr "Калі ласка, увядзіце кантактную інфарм�
 
 #: rest_food/states/supply_state.py:62
 msgid "Edit restaurant info"
-msgstr "Рдагаваць кантактную інфармацыю"
+msgstr "Рэдагаваць кантактную інфармацыю"
 
 #: rest_food/states/supply_state.py:70
 msgid "Enter food you can share and click \"send\""

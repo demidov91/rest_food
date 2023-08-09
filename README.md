@@ -12,6 +12,12 @@
 Bot server will run on port 5000
 
 
+Update localization:
+* `./createmessages.sh`
+* Update messages in `rest_food/locale/`
+* `./compilemessages.sh`
+
+
 ## Environment variables to be declared
 ```
 TELEGRAM_TOKEN_SUPPLY
@@ -53,6 +59,8 @@ Staging/live (lambda):
   * single_message_live.fifo
 
 * Update env variables
+
+* Compile localization: `./compilemessages.sh`
 
 * Run `serverless deploy` (`sls deploy`). 
 
