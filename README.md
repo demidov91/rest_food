@@ -27,15 +27,15 @@ TEST_TG_CHAT_ID -- comma-separated telegram ids to use on staging and dev. Other
 
 ## How to configure webhooks
 
-* Update env variables
+Update env variables
 
 Local development (flask):
 
-* `python -m rest_food.command.set_webhook {public API address} -f`
+`python -m rest_food.command.set_webhook {public API (ngrok) address} -f`
 
 Staging/live (lambda):
 
-* `python -m rest_food.command.set_webhook -l {}`
+`python -m rest_food.command.set_webhook {lambda address} -l`
 
 
 ## How to deploy on staging/live
