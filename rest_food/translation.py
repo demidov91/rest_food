@@ -25,9 +25,12 @@ def set_language(lang_code: str):
     if not lang_code or len(lang_code) < 2:
         return
 
-    lang_code = lang_code[:-2]
+    lang_code = lang_code[:2]
     if lang_code in LANGUAGES_SUPPORTED:
         _active_language.set(lang_code)
+
+    else:
+        logger.info('Language is not supported', extra={'language': lang_code})
 
 
 def get_translation(language_code: str):

@@ -395,7 +395,7 @@ msgstr ""
 
 #: rest_food/states/supply_state.py:92
 msgid "View posted products"
-msgstr "Прашлядзець апублікованыя прадукты"
+msgstr "Праглядзець апублікаваныя прадукты"
 
 #: rest_food/states/supply_state.py:116
 msgid "Set time and send"
