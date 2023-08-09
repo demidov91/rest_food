@@ -11,6 +11,7 @@ from telegram.utils import request as tg_request
 from speaklater import make_lazy_gettext, is_lazy_string
 from rest_food.settings import DEFAULT_LANGUAGE
 from rest_food.settings import BASE_DIR
+from contextlib import contextmanager
 
 
 _active_language = ContextVar('active_language', default=DEFAULT_LANGUAGE)
@@ -46,11 +47,19 @@ def get_translation(language_code: str):
 
 
 def translate(text: str) -> str:
-    return translate_for_language(_active_language.get())
+    return get_translation(_active_language.get()).gettext(text)
 
 
-def translate_for_language(text: str, language: str) -> str:
-    return get_translation(language).gettext(text)
+@contextmanager
+def switch_language(language: str):
+    original_language = _active_language.get()
+    try:
+        set_language(language)
+        yield
+    except:
+        pass
+
+    set_language(original_language)
 
 
 translate_lazy = make_lazy_gettext(lambda: translate)

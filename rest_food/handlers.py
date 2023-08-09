@@ -67,7 +67,7 @@ def tg_supply(data):
             return build_tg_response(chat_id=chat_id, reply=next_state.get_intro())
 
         queue_messages(
-            tg_chat_id=chat_id,
+            db_user=db_user,
             original_message=update.callback_query and update.callback_query.message,
             replies=[reply, next_state.get_intro()],
             workflow=Workflow.SUPPLY
@@ -136,7 +136,7 @@ def tg_demand(data):
                 replies.append(next_state.get_intro())
 
             queue_messages(
-                tg_chat_id=chat_id,
+                db_user=user,
                 original_message=update.callback_query and update.callback_query.message,
                 replies=replies,
                 workflow=Workflow.DEMAND

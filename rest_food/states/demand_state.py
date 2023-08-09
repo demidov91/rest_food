@@ -51,7 +51,7 @@ class SetPhoneState(BaseSetInfoState):
 
     def handle(self, text: str, *args, **kwargs):
         # Text response is required to clear telegram text keyboard.
-        queue_messages(tg_chat_id=self.db_user.chat_id, replies=[Reply(text=_('OK ✅'))], workflow=Workflow.DEMAND)
+        queue_messages(db_user=self.db_user, replies=[Reply(text=_('OK ✅'))], workflow=Workflow.DEMAND)
 
         text = text or ''
         if text.startswith('❌'):

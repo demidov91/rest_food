@@ -20,7 +20,7 @@ from rest_food.states.supply_reply import (
     build_supply_side_booked_message, build_new_supplier_notification,
 )
 from rest_food.states.formatters import build_demand_side_full_message_text_by_id
-from rest_food.translation import translate_lazy as _, translate_for_language
+from rest_food.translation import translate_lazy as _, switch_language
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def publish_supply_event(supply_user: User):
     users = get_demand_users()
     random.shuffle(users)
     get_mass_queue().push_super_batch(
-        message_and_chat_id=[(message, x.chat_id) for x in users],
+        message_and_chat_id=[(message, x) for x in users],
         workflow=Workflow.DEMAND
     )
 
@@ -41,7 +41,7 @@ def notify_supply_for_booked(*, supply_user: User, message_id: str, demand_user:
     )
 
     queue_messages(
-        tg_chat_id=int(supply_user.chat_id),
+        db_user=supply_user,
         replies=[reply],
         workflow=Workflow.SUPPLY,
     )
@@ -63,7 +63,7 @@ def notify_demand_for_cancel(*, supply_user: User, message_id: str, message: str
     }
 
     queue_messages(
-        tg_chat_id=int(demand_user.chat_id),
+        db_user=demand_user,
         replies=[Reply(text=text_to_send)],
         workflow=Workflow.DEMAND,
     )
@@ -75,7 +75,7 @@ def notify_demand_for_approved(*, supply_user: User, message_id: str):
         raise ValueError('Demand user is not defined.')
 
     queue_messages(
-        tg_chat_id=int(demand_user.chat_id),
+        db_user=demand_user,
         replies=[
             build_demand_side_message_by_id(
                 supply_user, message_id, intro=_('Your request was approved')
@@ -104,7 +104,7 @@ def notify_admin_about_new_supply_user_if_necessary(supply_user: User):
             )
         else:
             queue_messages(
-                tg_chat_id=admin_user.chat_id,
+                db_user=admin_user,
                 replies=[message],
                 workflow=Workflow.SUPPLY
             )
@@ -114,7 +114,7 @@ def notify_admin_about_new_supply_user_if_necessary(supply_user: User):
 
 def notify_supplier_is_approved(user: User):
     queue_messages(
-        tg_chat_id=user.chat_id,
+        db_user=user,
         workflow=Workflow.SUPPLY,
         replies=[
             Reply(
@@ -130,7 +130,7 @@ def notify_supplier_is_approved(user: User):
 
 def notify_supplier_is_declined(user: User):
     queue_messages(
-        tg_chat_id=user.chat_id,
+        db_user=user,
         workflow=Workflow.SUPPLY,
         replies=[
             Reply(
@@ -144,17 +144,16 @@ def notify_supplier_is_declined(user: User):
 
 
 def queue_messages(
-        *,
-        tg_chat_id: int,
-        replies: Iterable[Reply],
-        original_message: TgMessage = None,
-        workflow: Workflow,
+    *,
+    db_user: User,
+    replies: Iterable[Reply],
+    original_message: TgMessage = None,
+    workflow: Workflow,
 ):
     """
     Put messages into a single-message-queue
     """
-    get_single_queue().put(tg_chat_id=tg_chat_id, replies=replies, workflow=workflow, original_message=original_message)
-
-
-def translate_for_user(text: str, user: User):
-    return translate_for_language(text, user.info[UserInfoField.LANGUAGE.value])
+    with switch_language(db_user.get_info_field(UserInfoField.LANGUAGE)):
+        get_single_queue().put(
+            tg_chat_id=db_user.chat_id, replies=replies, workflow=workflow, original_message=original_message,
+        )

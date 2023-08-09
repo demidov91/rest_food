@@ -11,8 +11,8 @@ import boto3
 from telegram import Message as TgMessage
 
 from rest_food import db as db_module
-from rest_food.entities import Workflow, Reply
-from rest_food.translation import LazyAwareJsonEncoder
+from rest_food.entities import Workflow, Reply, User, UserInfoField
+from rest_food.translation import LazyAwareJsonEncoder, switch_language
 from rest_food.settings import STAGE
 from rest_food._sync_communication import send_messages
 
@@ -26,12 +26,13 @@ class BaseMassMessageQueue:
     def put_mass_messages_into_queue(self, items: List[str]):
         raise NotImplementedError()
 
-    def serialize(self, message: Reply, chat_id: int, workflow: Workflow) -> str:
-        return json.dumps({
-            'reply': asdict(message),
-            'chat_id': int(chat_id),
-            'workflow': workflow.value,
-        }, cls=LazyAwareJsonEncoder)
+    def serialize(self, message: Reply, *, chat_id: int, workflow: Workflow, language: str) -> str:
+        with switch_language(language):
+            return json.dumps({
+                'reply': asdict(message),
+                'chat_id': int(chat_id),
+                'workflow': workflow.value,
+            }, cls=LazyAwareJsonEncoder)
 
     def process(self, serialized_data: str):
         data = json.loads(serialized_data)
@@ -47,12 +48,17 @@ class BaseMassMessageQueue:
     def put_super_batch_into_queue(self, items: List[str]):
         raise NotImplementedError()
 
-    def push_super_batch(self, *, message_and_chat_id: List[Tuple[Reply, int]], workflow: Workflow):
+    def push_super_batch(self, *, message_and_chat_id: List[Tuple[Reply, User]], workflow: Workflow):
         for i in range(0, len(message_and_chat_id), self.super_batch_size):
             self.put_super_batch_into_queue(
                 [
-                    self.serialize(msg, chat_id, workflow=workflow)
-                    for msg, chat_id in message_and_chat_id[i:i+self.super_batch_size]
+                    self.serialize(
+                        msg,
+                        chat_id=user.chat_id,
+                        workflow=workflow,
+                        language=user.get_info_field(UserInfoField.LANGUAGE),
+                    )
+                    for msg, user in message_and_chat_id[i:i+self.super_batch_size]
                 ]
             )
             logger.info('%s messages are sent into super-queue', i+self.super_batch_size)
