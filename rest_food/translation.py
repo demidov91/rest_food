@@ -46,7 +46,11 @@ def get_translation(language_code: str):
 
 
 def translate(text: str) -> str:
-    return get_translation(_active_language.get()).gettext(text)
+    return translate_for_language(_active_language.get())
+
+
+def translate_for_language(text: str, language: str) -> str:
+    return get_translation(language).gettext(text)
 
 
 translate_lazy = make_lazy_gettext(lambda: translate)

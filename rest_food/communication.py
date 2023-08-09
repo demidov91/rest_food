@@ -20,8 +20,7 @@ from rest_food.states.supply_reply import (
     build_supply_side_booked_message, build_new_supplier_notification,
 )
 from rest_food.states.formatters import build_demand_side_full_message_text_by_id
-from rest_food.translation import translate_lazy as _
-
+from rest_food.translation import translate_lazy as _, translate_for_language
 
 logger = logging.getLogger(__name__)
 
@@ -155,3 +154,7 @@ def queue_messages(
     Put messages into a single-message-queue
     """
     get_single_queue().put(tg_chat_id=tg_chat_id, replies=replies, workflow=workflow, original_message=original_message)
+
+
+def translate_for_user(text: str, user: User):
+    return translate_for_language(text, user.info[UserInfoField.LANGUAGE.value])
