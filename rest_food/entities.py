@@ -215,6 +215,9 @@ class User:
     def is_approved_supply_is_set(self):
         return UserInfoField.IS_APPROVED_SUPPLY.value in self.info
 
+    def get_info_field(self, field: UserInfoField):
+        return self.info.get(field.value)
+
     @classmethod
     def from_dict(cls, record: dict):
         record['state'] = record.pop('bot_state', None)

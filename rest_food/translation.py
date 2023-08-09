@@ -5,7 +5,7 @@ from contextvars import ContextVar
 from functools import partial
 from json import JSONEncoder
 
-
+from contextlib import contextmanager
 from telegram.utils import request as tg_request
 
 from speaklater import make_lazy_gettext, is_lazy_string
@@ -47,6 +47,19 @@ def get_translation(language_code: str):
 
 def translate(text: str) -> str:
     return get_translation(_active_language.get()).gettext(text)
+
+
+@contextmanager
+def switch_language(language: str):
+    original_lang = _active_language.get()
+
+    try:
+        set_language(language)
+        yield
+    except:
+        pass
+
+    set_language(original_lang)
 
 
 translate_lazy = make_lazy_gettext(lambda: translate)
