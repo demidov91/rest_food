@@ -16,7 +16,7 @@ Bot server will run on port 5000
 ```
 TELEGRAM_TOKEN_SUPPLY
 TELEGRAM_TOKEN_DEMAND
-YANDEX_API_KEY  -- required for geocoding when defining supplier's address
+GOOGLE_API_KEY  -- required for geocoding when defining supplier's address
 BOT_PATH_KEY -- key to be added into webhook url
 DB_CONNECTION_STRING -- connection string including username and password if required
 DB_NAME -- mongodb database name 
@@ -27,22 +27,33 @@ TEST_TG_CHAT_ID -- comma-separated telegram ids to use on staging and dev. Other
 
 ## How to configure webhooks
 
+Update env variables
+
 Local development (flask):
 
-`python -m rest_food.command.set_webhook -f`
+`python -m rest_food.command.set_webhook {public API (ngrok) address} -f`
 
 Staging/live (lambda):
 
-`python -m rest_food.command.set_webhook -l`
+`python -m rest_food.command.set_webhook {lambda address} -l`
 
 
 ## How to deploy on staging/live
 
-`npm` should be installed.
+* Install `npm`
+  * Install `serverless`
 
-Update env variables
+* Create sqs amazon queues (see `serverless.yaml`):
+  * send_message_staging.fifo
+  * super_send_staging.fifo
+  * single_message_staging.fifo
+  * send_message_live.fifo
+  * super_send_live.fifo
+  * single_message_live.fifo
 
-Run `serverless deploy` (`sls deploy`). 
+* Update env variables
+
+* Run `serverless deploy` (`sls deploy`). 
 
 
 
