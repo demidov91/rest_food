@@ -17,8 +17,7 @@ from rest_food.states.demand_command import handle_demand_data
 from rest_food.states.supply_state import DefaultState
 from rest_food.states.supply_command import handle_supply_command, SupplyCommand
 from rest_food.tg_helpers import update_to_text, update_to_coordinates
-from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _
-
+from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _, set_language
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +38,8 @@ def tg_supply(data):
 
     try:
         state = get_supply_state(tg_user_id=user_id, tg_user=tg_user, tg_chat_id=chat_id)
+        set_language(state.db_user.info[UserInfoField.LANGUAGE.value])
+
         db_user = state.db_user
 
         if data and data.startswith('c|'):
@@ -112,6 +113,7 @@ def tg_demand(data):
                 UserInfoField.LANGUAGE.value: tg_user.language_code,
             },
         )
+        set_language(user.info[UserInfoField.LANGUAGE.value])
 
         if update.callback_query is not None:
             reply = handle_demand_data(user=user, data=update.callback_query.data)

@@ -12,6 +12,12 @@
 Bot server will run on port 5000
 
 
+Update localization:
+* `./createmessages.sh`
+* Update messages in `rest_food/locale/`
+* `./compilemessages.sh`
+
+
 ## Environment variables to be declared
 ```
 TELEGRAM_TOKEN_SUPPLY
@@ -23,6 +29,7 @@ DB_NAME -- mongodb database name
 STAGE -- dev,staging,live
 AWS_USER_ID -- required during amazon deployment only
 TEST_TG_CHAT_ID -- comma-separated telegram ids to use on staging and dev. Other user messages will be silenced
+DEFAULT_LANGUAGE -- be (for Belarusian) or ru (for Russian)
 ```
 
 ## How to configure webhooks
@@ -52,6 +59,8 @@ Staging/live (lambda):
   * single_message_live.fifo
 
 * Update env variables
+
+* Compile localization: `./compilemessages.sh`
 
 * Run `serverless deploy` (`sls deploy`). 
 
