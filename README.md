@@ -28,6 +28,7 @@ DB_CONNECTION_STRING -- connection string including username and password if req
 DB_NAME -- mongodb database name 
 STAGE -- dev,staging,live
 AWS_USER_ID -- required during amazon deployment only
+ADMIN_USERNAMES -- telegram usernames for admins in this environment. You can also set it explicilty in db. Env variable has a higher priority
 TEST_TG_CHAT_ID -- comma-separated telegram ids to use on staging and dev. Other user messages will be silenced
 DEFAULT_LANGUAGE -- be (for Belarusian) or ru (for Russian)
 ```

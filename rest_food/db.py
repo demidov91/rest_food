@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 from pymongo import MongoClient
 
 from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command, DT_FORMAT
-from rest_food.settings import DB_CONNECTION_STRING, DB_NAME
+from rest_food.settings import DB_CONNECTION_STRING, DB_NAME, ADMIN_USERNAMES
 
 
 logger = logging.getLogger(__name__)
@@ -177,7 +177,7 @@ def get_admin_users():
     return [
         User.from_dict(x)
         for x in db.users.find({
-            'is_admin': True,
+            '$or': [{'is_admin': True}, {'info.username': {'$in': ADMIN_USERNAMES}}],
             'is_active': {'$ne': False},
         })
     ]

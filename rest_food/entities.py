@@ -8,6 +8,7 @@ from bson import ObjectId
 from telegram.user import User as TgUser
 
 from rest_food.translation import translate_lazy as _
+from rest_food import settings
 
 
 DT_FORMAT = '%Y%m%d%H%M%S'
@@ -223,6 +224,10 @@ class User:
         record['state'] = record.pop('bot_state', None)
         record['workflow'] = Workflow(record.get('workflow'))
         record['provider'] = Provider(record.get('provider'))
+        record['is_admin'] = (
+            record.get('is_admin')
+            or (record.get('info', {}).get(UserInfoField.USERNAME.value) in settings.ADMIN_USERNAMES)
+        )
         return cls(**record)
 
 
