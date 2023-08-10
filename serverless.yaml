@@ -13,7 +13,7 @@ provider:
     YANDEX_API_KEY: ${env:YANDEX_API_KEY}
     DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
     DB_NAME: ${env:DB_NAME}
-    TEST_TG_CHAT_ID: ${env:TEST_TG_CHAT_ID}
+    ADMIN_USERNAMES: ${env:ADMIN_USERNAMES}
   iamRoleStatements:
   - Effect: Allow
     Action:
