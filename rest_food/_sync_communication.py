@@ -62,7 +62,7 @@ def get_bot(workflow: Workflow):
 
     bot = Bot(token)
 
-    if STAGE != 'live':
+    if STAGE == 'dev':
         return FakeBot(bot)
 
     return bot
