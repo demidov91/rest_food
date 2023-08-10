@@ -391,7 +391,7 @@ msgid ""
 "with %s"
 msgstr ""
 "Мы паведамім Вам, калі акаунт будзе пацверджаны. Таксама можаце звярнуцца да "
-"%sза дадатковай інфармацыяй"
+"%s за дадатковай інфармацыяй"
 
 #: rest_food/states/supply_state.py:92
 msgid "View posted products"
