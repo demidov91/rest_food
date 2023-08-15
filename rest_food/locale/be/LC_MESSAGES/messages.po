@@ -19,7 +19,7 @@ msgstr "Бяздомны/ая"
 
 #: rest_food/entities.py:100
 msgid "hard times"
-msgstr "Цяжкае саыяльнае становішча"
+msgstr "Цяжкае сацыяльнае становішча"
 
 #: rest_food/entities.py:101
 msgid "other"
@@ -42,11 +42,11 @@ msgstr ""
 
 #: rest_food/communication.py:79
 msgid "Your request was approved"
-msgstr "Пацверджанне атрымана. Калі ласка патэлефануйце перад выхадам."
+msgstr "Пацвярджэнне атрымана. Калі ласка патэлефануйце перад выхадам."
 
 #: rest_food/communication.py:119
 msgid "Your account is approved!"
-msgstr "Ваш акаунт пацверджаны!"
+msgstr "Ваш акаўнт пацверджаны!"
 
 #: rest_food/communication.py:122 rest_food/states/demand_state.py:54
 #: rest_food/states/supply_state.py:310 rest_food/states/supply_state.py:313
@@ -58,7 +58,7 @@ msgstr "OK ✅"
 #, python-format
 msgid "Your account was declined. Please, contact %s for any clarifications."
 msgstr ""
-"Ваш акаунт быў адхілены. Калі ласка, звярніцесь у %s калі ў вас ёсць пытанні."
+"Ваш акаўнт быў адхілены. Калі ласка, звярніцеся ў %s калі ў вас ёсць пытанні."
 
 #: rest_food/states/demand_command.py:64 rest_food/states/demand_command.py:190
 msgid "Information was not found."
@@ -130,7 +130,7 @@ msgstr "Хтосьці ўжо забраў."
 #, python-format
 msgid "%s is notified that you'll take the food. Please, wait for approval."
 msgstr ""
-"Мы напісалі '%s', што Вы забярэце прадукты. Калі ласка, дачакайцеся пацверджання."
+"Мы напісалі '%s', што Вы забераце прадукты. Калі ласка, дачакайцеся пацвярджэння."
 
 #: rest_food/states/demand_command.py:216 rest_food/states/demand_reply.py:21
 #: rest_food/states/demand_reply.py:87
@@ -390,7 +390,7 @@ msgid ""
 "We'll notify you when your account is approved. Also, you can contact us "
 "with %s"
 msgstr ""
-"Мы паведамім Вам, калі акаунт будзе пацверджаны. Таксама можаце звярнуцца да "
+"Мы паведамім Вам, калі акаўнт будзе пацверджаны. Таксама можаце звярнуцца да "
 "%s за дадатковай інфармацыяй"
 
 #: rest_food/states/supply_state.py:92
@@ -427,7 +427,7 @@ msgstr "Увесці час"
 msgid ""
 "Information is sent. I'll notify you when there is someone to take this food."
 msgstr ""
-"Інфармаця выслана. Я павеамлю, калі хтосьці пажадае забраць пералічаныя "
+"Інфармацыя выслана. Я паведамлю, калі хтосьці пажадае забраць пералічаныя "
 "прадукты."
 
 #: rest_food/states/supply_state.py:192
@@ -455,7 +455,7 @@ msgstr "Калі ласка, увядзіце назву ўстановы."
 
 #: rest_food/states/supply_state.py:272
 msgid "Please, provide restaurant address."
-msgstr "Калі ласка, увядзіце адрас ўстановы."
+msgstr "Калі ласка, увядзіце адрас установы."
 
 #: rest_food/states/supply_state.py:301 rest_food/states/supply_state.py:330
 msgid "Please, send your contact number."
@@ -483,7 +483,7 @@ msgstr "Пазней"
 
 #: rest_food/states/supply_state.py:423
 msgid "What to tell the foodsaver?"
-msgstr "Што напісаць заявіўшымуся чалавеку?"
+msgstr "Што яму/ёй напісаць?"
 
 #: rest_food/states/supply_state.py:425
 msgid "Back to the message"
