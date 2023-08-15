@@ -56,10 +56,8 @@ def switch_language(language: str):
     try:
         set_language(language)
         yield
-    except:
-        pass
-
-    set_language(original_lang)
+    finally:
+        set_language(original_lang)
 
 
 translate_lazy = make_lazy_gettext(lambda: translate)

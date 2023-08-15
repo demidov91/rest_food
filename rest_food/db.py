@@ -3,7 +3,7 @@ import logging
 from typing import Optional, Union, List
 
 from bson.objectid import ObjectId
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 
 from rest_food.entities import Provider, Workflow, User, Message, UserInfoField, Command, DT_FORMAT
 from rest_food.settings import DB_CONNECTION_STRING, DB_NAME, ADMIN_USERNAMES
@@ -27,19 +27,23 @@ def import_messages(data: List[dict]):
     db.messages.insert(data)
 
 
-def _update_user(user_id: Union[str, int], provider: Provider, workflow: Workflow, *, method: str='$set', update: dict):
-    db.users.update_one({
-        'user_id': str(user_id),
-        'provider': provider.value,
-        'workflow': workflow.value,
+def _update_user(
+        user_id: Union[str, int], provider: Provider, workflow: Workflow, *, method: str='$set', update: dict,
+) -> dict:
+    return db.users.find_one_and_update(
+        {
+            'user_id': str(user_id),
+            'provider': provider.value,
+            'workflow': workflow.value,
+        },
+        {method: update},
+        return_document=ReturnDocument.AFTER,
+    )
 
-    }, {
-        method: update,
-    })
 
-
-def _update_user_entity(user: User, update: dict, *, method: str='$set'):
-    _update_user(user.user_id, user.provider, user.workflow, update=update, method=method)
+def _update_user_entity(user: User, update: dict, *, method: str='$set') -> User:
+    updated_doc = _update_user(user.user_id, user.provider, user.workflow, update=update, method=method)
+    return User.from_dict(updated_doc)
 
 
 def _update_message(message_id: str, *, owner_id: Optional[str]=None, update: dict):
@@ -131,7 +135,7 @@ def get_or_create_user(
             update_statement.update({'is_active': True, 'active_from': datetime.datetime.utcnow()})
 
         if update_statement:
-            _update_user_entity(user, update_statement)
+            user = _update_user_entity(user, update_statement)
 
     return user
 

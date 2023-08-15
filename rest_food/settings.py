@@ -9,10 +9,15 @@ logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(__file__)
 
+NOT_SET = object()
 
-def env_var(var_name: str, default=None):
+
+def env_var(var_name: str, default=NOT_SET):
     if var_name not in os.environ:
-        logger.warning('%s env variable was not found.', var_name)
+        if default is NOT_SET:
+            raise Exception('%s is not set.' % var_name)
+
+        logger.warning('%s env variable was not found. Using %s as default', var_name, default)
         return default
 
     return os.environ[var_name]
@@ -21,12 +26,12 @@ def env_var(var_name: str, default=None):
 TELEGRAM_TOKEN_SUPPLY = env_var('TELEGRAM_TOKEN_SUPPLY')
 TELEGRAM_TOKEN_DEMAND = env_var('TELEGRAM_TOKEN_DEMAND')
 YANDEX_API_KEY = env_var('YANDEX_API_KEY', None)
-GOOGLE_API_KEY = env_var('GOOGLE_API_KEY', None)
+GOOGLE_API_KEY = env_var('GOOGLE_API_KEY')
 BOT_PATH_KEY = env_var('BOT_PATH_KEY')
 DB_CONNECTION_STRING = env_var('DB_CONNECTION_STRING')
 DB_NAME = env_var('DB_NAME')
 DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE')
-ADMIN_USERNAMES = env_var('ADMIN_USERNAMES') and env_var('ADMIN_USERNAMES').split(',')
+ADMIN_USERNAMES = env_var('ADMIN_USERNAMES', None) and env_var('ADMIN_USERNAMES').split(',')
 STAGE = env_var('STAGE')
 
 # Mon, Mon, Dz, G, I, Dz(add)

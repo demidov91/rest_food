@@ -13,6 +13,7 @@ provider:
     YANDEX_API_KEY: ${env:YANDEX_API_KEY}
     DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
     DB_NAME: ${env:DB_NAME}
+    DEFAULT_LANGUAGE: ${env:DEFAULT_LANGUAGE}
     ADMIN_USERNAMES: ${env:ADMIN_USERNAMES}
   iamRoleStatements:
   - Effect: Allow
