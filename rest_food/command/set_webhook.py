@@ -64,6 +64,9 @@ def _get_prefix_by_server(server: Server) -> str:
 
 
 def _set_webhook(*, url: str, server: Server, workflow: Workflow):
+    if BOT_PATH_KEY is None:
+        raise ValueError('Set BOT_PATH_KEY env variable.')
+
     url = f'{url}/{_get_prefix_by_server(server)}/{WORKFLOW_PREFIX[workflow]}/{BOT_PATH_KEY}/'
     set_tg_webhook(url, workflow=workflow)
 
