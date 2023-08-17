@@ -7,7 +7,7 @@ msgstr ""
 
 #: rest_food/entities.py:97
 msgid "big family"
-msgstr "шматдзетная сям'я"
+msgstr "Шматдзетная сям'я"
 
 #: rest_food/entities.py:98
 msgid "disability"
