@@ -60,7 +60,7 @@ class ReadyToPostState(State):
         buttons=[
             [{
                 'text': _('Edit restaurant info'),
-                'data': SupplyState.VIEW_INFO,
+                'data': 'view-info',
             }],
         ],
     )
