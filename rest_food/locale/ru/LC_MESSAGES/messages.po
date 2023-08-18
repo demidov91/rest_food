@@ -1,31 +1,31 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 16:24+0200\n"
+"POT-Creation-Date: 2023-08-18 08:53+0200\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: rest_food/entities.py:97
+#: rest_food/entities.py:98
 msgid "big family"
 msgstr "Многодетная семья"
 
-#: rest_food/entities.py:98
+#: rest_food/entities.py:99
 msgid "disability"
 msgstr "Группа инвалидности"
 
-#: rest_food/entities.py:99
+#: rest_food/entities.py:100
 msgid "homeless"
 msgstr "Бездомный/ая"
 
-#: rest_food/entities.py:100
+#: rest_food/entities.py:101
 msgid "hard times"
 msgstr "Затруднительное соц положение"
 
-#: rest_food/entities.py:101
+#: rest_food/entities.py:102
 msgid "other"
 msgstr "Другое"
 
-#: rest_food/communication.py:57
+#: rest_food/communication.py:66
 #, python-format
 msgid ""
 "Your request was rejected with the following words:\n"
@@ -40,21 +40,21 @@ msgstr ""
 "Описание еды было следующим:\n"
 "%(food)s"
 
-#: rest_food/communication.py:79
+#: rest_food/communication.py:89
 msgid "Your request was approved"
 msgstr "Получено подтверждение. Пожалуйста, позвоните перед выходом."
 
-#: rest_food/communication.py:119
+#: rest_food/communication.py:130
 msgid "Your account is approved!"
 msgstr "Ваш аккаунт подтверждён!"
 
-#: rest_food/communication.py:122 rest_food/states/demand_state.py:54
-#: rest_food/states/supply_state.py:310 rest_food/states/supply_state.py:313
-#: rest_food/states/supply_state.py:321
+#: rest_food/communication.py:133 rest_food/states/demand_state.py:54
+#: rest_food/states/supply_state.py:311 rest_food/states/supply_state.py:314
+#: rest_food/states/supply_state.py:322
 msgid "OK ✅"
 msgstr "OK ✅"
 
-#: rest_food/communication.py:136 rest_food/states/supply_state.py:74
+#: rest_food/communication.py:148 rest_food/states/supply_state.py:74
 #, python-format
 msgid "Your account was declined. Please, contact %s for any clarifications."
 msgstr ""
@@ -141,7 +141,7 @@ msgstr "Забрать"
 
 #: rest_food/states/demand_command.py:223 rest_food/states/demand_reply.py:82
 #: rest_food/states/demand_reply.py:97 rest_food/states/demand_reply.py:107
-#: rest_food/states/utils.py:62 rest_food/states/supply_state.py:212
+#: rest_food/states/utils.py:62
 msgid "Back"
 msgstr "Назад"
 
@@ -199,7 +199,7 @@ msgstr "%s (забронировано)"
 msgid "%s (not booked)"
 msgstr "%s (не забронировано)"
 
-#: rest_food/states/supply_command.py:91
+#: rest_food/states/supply_command.py:91 rest_food/states/supply_state.py:213
 msgid "Go to product posting"
 msgstr "К публикации продуктов"
 
@@ -234,16 +234,16 @@ msgstr "Ой, подтвердить"
 msgid "Enter your name:"
 msgstr "Введите имя:"
 
-#: rest_food/states/demand_state.py:41 rest_food/states/supply_state.py:295
+#: rest_food/states/demand_state.py:41 rest_food/states/supply_state.py:296
 msgid "← Back"
 msgstr "← Назад"
 
-#: rest_food/states/demand_state.py:41 rest_food/states/supply_state.py:295
-#: rest_food/states/supply_state.py:327
+#: rest_food/states/demand_state.py:41 rest_food/states/supply_state.py:296
+#: rest_food/states/supply_state.py:328
 msgid "Send phone"
 msgstr "Выслать телефон"
 
-#: rest_food/states/demand_state.py:44 rest_food/states/supply_state.py:298
+#: rest_food/states/demand_state.py:44 rest_food/states/supply_state.py:299
 msgid "❌ Delete"
 msgstr "❌ Удалить"
 
@@ -406,8 +406,8 @@ msgid "Set time and send"
 msgstr "Ввести время и выслать"
 
 #: rest_food/states/supply_state.py:120 rest_food/states/supply_state.py:151
-#: rest_food/states/supply_state.py:246 rest_food/states/supply_state.py:364
-#: rest_food/states/supply_state.py:373
+#: rest_food/states/supply_state.py:247 rest_food/states/supply_state.py:365
+#: rest_food/states/supply_state.py:374
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -453,51 +453,51 @@ msgstr "Адрес: %s"
 msgid "Coordinates: %s"
 msgstr "Координаты: %s"
 
-#: rest_food/states/supply_state.py:267
+#: rest_food/states/supply_state.py:268
 msgid "Please, enter name of the restaurant."
 msgstr "Пожалуйста, введите название заведение."
 
-#: rest_food/states/supply_state.py:272
+#: rest_food/states/supply_state.py:273
 msgid "Please, provide restaurant address."
 msgstr "Пожалуста, введите адрес заведения."
 
-#: rest_food/states/supply_state.py:301 rest_food/states/supply_state.py:330
+#: rest_food/states/supply_state.py:302 rest_food/states/supply_state.py:331
 msgid "Please, send your contact number."
 msgstr "Пожалуйста, вышлите контактный телефон."
 
-#: rest_food/states/supply_state.py:327
+#: rest_food/states/supply_state.py:328
 msgid "❌ Dismiss"
 msgstr "❌ Пропустить"
 
-#: rest_food/states/supply_state.py:356
+#: rest_food/states/supply_state.py:357
 msgid "No! Edit! 🌍"
 msgstr "Не то. Изменить 🌍"
 
-#: rest_food/states/supply_state.py:360
+#: rest_food/states/supply_state.py:361
 msgid "Yes! Approve ✅"
 msgstr "Да ✅"
 
-#: rest_food/states/supply_state.py:370
+#: rest_food/states/supply_state.py:371
 msgid "Please, send me your coordinates. (Attach -> Location)"
 msgstr "Пожалуйста, вышлите координаты: Прикрепить -> Геопозиция"
 
-#: rest_food/states/supply_state.py:378
+#: rest_food/states/supply_state.py:379
 msgid "Provide later"
 msgstr "Позже"
 
-#: rest_food/states/supply_state.py:423
+#: rest_food/states/supply_state.py:424
 msgid "What to tell the foodsaver?"
 msgstr "Что сказать забронировавшему еду?"
 
-#: rest_food/states/supply_state.py:425
+#: rest_food/states/supply_state.py:426
 msgid "Back to the message"
 msgstr "Назад к сообщению"
 
-#: rest_food/states/supply_state.py:440
+#: rest_food/states/supply_state.py:441
 msgid "Cancelled"
 msgstr "Отменено"
 
-#: rest_food/states/supply_state.py:453
+#: rest_food/states/supply_state.py:454
 msgid "Sorry, something went wrong."
 msgstr "Прошу прощения, что-то пошло не так :("
 
@@ -513,10 +513,10 @@ msgstr "Подтвердить"
 msgid "Decline"
 msgstr "Отклонить"
 
-#: rest_food/handlers.py:86 rest_food/handlers.py:153
+#: rest_food/handlers.py:87 rest_food/handlers.py:155
 msgid "Something went wrong. Try something different, please."
 msgstr "Что-то пошло не так. Попробуйте что-нибудь другое."
 
-#: rest_food/handlers.py:89
+#: rest_food/handlers.py:90
 msgid "Start from the beginning"
 msgstr "Начать заново"

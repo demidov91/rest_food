@@ -60,7 +60,7 @@ class ReadyToPostState(State):
         buttons=[
             [{
                 'text': _('Edit restaurant info'),
-                'data': 'view-info',
+                'data': SupplyState.VIEW_INFO,
             }],
         ],
     )
@@ -208,8 +208,9 @@ class ViewInfoState(State):
                 [{
                     'text': _('Phone: %s') % (self.db_user.info['phone'] if 'phone' in self.db_user.info else '❌'),
                     'data': 'edit-phone',
-                },{
-                    'text': _('Back'),
+                }],
+                [{
+                    'text': _('Go to product posting'),
                     'data': 'back',
                 }],
             ]
