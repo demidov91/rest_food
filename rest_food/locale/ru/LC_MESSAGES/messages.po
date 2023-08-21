@@ -1,27 +1,31 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 08:53+0200\n"
+"POT-Creation-Date: 2023-08-21 23:35+0200\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: rest_food/entities.py:98
+#: rest_food/entities.py:99
 msgid "big family"
 msgstr "Многодетная семья"
 
-#: rest_food/entities.py:99
+#: rest_food/entities.py:100
 msgid "disability"
 msgstr "Группа инвалидности"
 
-#: rest_food/entities.py:100
+#: rest_food/entities.py:101
 msgid "homeless"
 msgstr "Бездомный/ая"
 
-#: rest_food/entities.py:101
+#: rest_food/entities.py:102
 msgid "hard times"
 msgstr "Затруднительное соц положение"
 
-#: rest_food/entities.py:102
+#: rest_food/entities.py:103
+msgid "emigrant"
+msgstr "Эмигрант"
+
+#: rest_food/entities.py:104
 msgid "other"
 msgstr "Другое"
 

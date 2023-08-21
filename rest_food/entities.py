@@ -79,6 +79,7 @@ class SocialStatus(Enum):
     DISABILITY = 'disability'
     HOMELESS = 'homeless'
     HARD_TIMES = 'hard_times'
+    EMIGRANT = 'emigrant'
     OTHER = 'other'
 
 
@@ -99,6 +100,7 @@ soc_status_translation = {
     SocialStatus.DISABILITY: _('disability'),
     SocialStatus.HOMELESS: _('homeless'),
     SocialStatus.HARD_TIMES: _('hard times'),
+    SocialStatus.EMIGRANT: _('emigrant'),
     SocialStatus.OTHER: _('other'),
 }
 
