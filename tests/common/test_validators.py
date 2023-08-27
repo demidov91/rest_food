@@ -1,6 +1,6 @@
 import pytest
 
-from rest_food.states.utils import validate_phone_number
+from rest_food.common.validators import validate_phone_number
 from rest_food.exceptions import ValidationError
 
 

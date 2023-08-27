@@ -14,9 +14,9 @@ from rest_food.state_machine import (
 )
 from rest_food._sync_communication import get_bot, build_tg_response
 from rest_food.communication import queue_messages
-from rest_food.states.demand_command import handle_demand_data
-from rest_food.states.supply_state import DefaultState
-from rest_food.states.supply_command import handle_supply_command
+from rest_food.demand.demand_command import handle_demand_data
+from rest_food.supply.supply_state import DefaultState
+from rest_food.supply.supply_command import handle_supply_command
 from rest_food.tg_helpers import update_to_text, update_to_coordinates
 from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _, set_language
 
@@ -45,7 +45,7 @@ def tg_supply(data):
 
         if data and data.startswith('c|'):
             parts = data.split('|')
-            reply = handle_supply_command(db_user, parts[1], parts[2:])
+            reply = handle_supply_command(db_user, SupplyCommand(parts[1]), parts[2:])
             if reply.next_state is None:
                 reply.next_state = SupplyState.NO_STATE
 

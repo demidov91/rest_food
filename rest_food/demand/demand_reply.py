@@ -3,7 +3,7 @@ import logging
 from rest_food.db import get_supply_user
 from rest_food.entities import User, Reply
 from rest_food.enums import Provider, DemandCommand, UserInfoField
-from rest_food.states.formatters import build_short_message_text_by_id, \
+from rest_food.common.formatters import build_short_message_text_by_id, \
     build_demand_side_full_message_text_by_id
 
 from rest_food.translation import translate_lazy as _

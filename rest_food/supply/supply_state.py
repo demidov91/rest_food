@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 from rest_food.enums import SupplyState, Provider, SupplyCommand, UserInfoField
-from rest_food.states.base import State
+from rest_food.common.state import State
 from rest_food.entities import Reply
 from rest_food.exceptions import ValidationError
 from rest_food.db import (
@@ -22,9 +22,9 @@ from rest_food.communication import (
     notify_admin_about_new_supply_user_if_necessary,
 )
 from rest_food.settings import FEEDBACK_TG_BOT
-from rest_food.states.formatters import build_active_food_message
-from rest_food.states.utils import validate_phone_number
-from rest_food.states.geocoding import get_coordinates
+from rest_food.common.formatters import build_active_food_message
+from rest_food.common.validators import validate_phone_number
+from rest_food.common.geocoding import get_coordinates
 from rest_food.translation import translate_lazy as _
 
 

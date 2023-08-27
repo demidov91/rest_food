@@ -1,6 +1,6 @@
 from rest_food.entities import User, Reply
 from rest_food.enums import SupplyCommand
-from rest_food.states.formatters import (
+from rest_food.common.formatters import (
     build_demanded_message_text,
     build_new_supplier_notification_text,
 )

@@ -15,17 +15,17 @@ from rest_food.entities import (
     Command,
     soc_status_translation,
 )
-from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField, TgCommand
+from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField
 from rest_food.translation import translate_lazy as _
-from rest_food.states.demand_reply import (
+from rest_food.demand.demand_reply import (
     build_demand_side_short_message,
     MapInfoHandler,
     MapTakeHandler,
     build_demand_side_message_by_id, MapBookedHandler,
     build_food_taken_message,
 )
-from rest_food.states.formatters import build_demand_side_full_message_text
-from rest_food.states.utils import (
+from rest_food.common.formatters import build_demand_side_full_message_text
+from rest_food.demand.demand_utils import (
     get_next_command,
     get_demand_back_button,
 )

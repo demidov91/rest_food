@@ -20,7 +20,7 @@ docutils==0.15.2          # via botocore
 flask==2.3.2
 future==0.17.1            # via python-telegram-bot
 idna==2.8                 # via requests
-importlib-metadata==0.19  # via pluggy, pytest
+importlib-metadata==6.80  # via pluggy, pytest
 itsdangerous==2.1.2       # via flask
 jinja2==3.1.2             # via flask
 jmespath==0.9.4           # via boto3, botocore

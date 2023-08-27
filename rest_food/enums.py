@@ -1,4 +1,5 @@
 from enum import Enum
+from itertools import chain
 
 
 class SupplyState(Enum):
@@ -76,14 +77,13 @@ class SupplyCommand(Enum):
     DECLINE_SUPPLIER = 'decline_supplier'
 
     def build(self, *args):
-        return '|'.join(('c', self.value) + args)
+        return '|'.join(chain(('c', self.value), (str(x) for x in args)))
 
 
-class TgCommand(Enum):
+class TgSupplyCommand(Enum):
     """Expected enum of Telegram /{command}s """
     START = 'start'
     LANGUAGE = 'language'
-    LOCATION = 'location'
 
 
 class UserInfoField(Enum):

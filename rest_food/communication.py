@@ -15,12 +15,12 @@ from rest_food.entities import Reply, User
 from rest_food.enums import Workflow, SupplyCommand, UserInfoField
 from rest_food.message_queue import get_mass_queue, get_single_queue
 from rest_food.settings import FEEDBACK_TG_BOT
-from rest_food.states.demand_reply import build_demand_side_short_message, \
+from rest_food.demand.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
-from rest_food.states.supply_reply import (
+from rest_food.supply.supply_reply import (
     build_supply_side_booked_message, build_new_supplier_notification,
 )
-from rest_food.states.formatters import build_demand_side_full_message_text_by_id
+from rest_food.common.formatters import build_demand_side_full_message_text_by_id
 from rest_food.translation import translate_lazy as _
 from user_utilities import user_language
 

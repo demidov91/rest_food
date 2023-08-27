@@ -17,19 +17,19 @@ from rest_food.db import (
     get_message_demanded_user,
 )
 from rest_food.entities import Reply, User, Message
-from rest_food.states.supply_reply import build_supply_side_booked_message
-from rest_food.states.formatters import (
+from rest_food.supply.supply_reply import build_supply_side_booked_message
+from rest_food.common.formatters import (
     build_short_message_text_by_id,
     build_supplier_approved_text,
     build_supplier_declined_text,
 )
-from rest_food.states.utils import db_time_to_user
+from rest_food.supply.supply_utils import db_time_to_user
 
 
 logger = logging.getLogger(__name__)
 
 
-def handle_supply_command(user: User, command_name: str, args: List[str]):
+def handle_supply_command(user: User, command_name: SupplyCommand, args: List[str]):
     """
     Handle direct stateless command.
 
