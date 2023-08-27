@@ -10,7 +10,8 @@ from telegram import Bot, Message as TgMessage
 from telegram.error import Unauthorized, BadRequest
 
 from rest_food.db import set_inactive
-from rest_food.entities import Workflow, Message, Reply, Provider
+from rest_food.entities import Reply
+from rest_food.enums import Provider, Workflow
 from rest_food.settings import TEST_TG_CHAT_ID, TELEGRAM_TOKEN_DEMAND, TELEGRAM_TOKEN_SUPPLY, STAGE
 
 logger = logging.getLogger(__name__)

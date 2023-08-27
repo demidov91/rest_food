@@ -3,7 +3,8 @@ This module methods are supposed to return strings.
 """
 
 from rest_food.db import get_supply_editing_message, get_supply_message_record_by_id
-from rest_food.entities import Message, User, UserInfoField, translate_social_status_string
+from rest_food.entities import Message, User
+from rest_food.enums import UserInfoField
 from rest_food.translation import translate_lazy as _
 
 
@@ -29,26 +30,24 @@ def build_short_message_text_by_id(message_id: str) -> str:
 
 
 def build_demand_description(user: User) -> str:
-    message = _('{} will take the food.\n').format(user.info[UserInfoField.NAME.value])
+    message = _('{} will take the food.\n').format(user.get_info_field(UserInfoField.NAME))
     is_provided_contact_info = False
 
-    if user.info.get(UserInfoField.PHONE.value):
-        message += _('Phone: {}\n').format(user.info[UserInfoField.PHONE.value])
+    if user.get_info_field(UserInfoField.PHONE):
+        message += _('Phone: {}\n').format(user.get_info_field(UserInfoField.PHONE))
         is_provided_contact_info = True
 
     if (
-            user.info.get(UserInfoField.USERNAME.value) and
-            user.info.get(UserInfoField.DISPLAY_USERNAME.value)
+            user.get_info_field(UserInfoField.USERNAME) and
+            user.get_info_field(UserInfoField.DISPLAY_USERNAME)
     ):
-        message += _('Telegram: @{}\n').format(user.info[UserInfoField.USERNAME.value])
+        message += _('Telegram: @{}\n').format(user.get_info_field(UserInfoField.USERNAME))
         is_provided_contact_info = True
 
     if not is_provided_contact_info:
         message += _('No contact info was provided.\n')
 
-    social_status_verbose = translate_social_status_string(
-        user.info.get(UserInfoField.SOCIAL_STATUS.value)
-    )
+    social_status_verbose = user.get_translated_social_status()
     if social_status_verbose is not None:
         message += (
             _('Social status: %s') % social_status_verbose

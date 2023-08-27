@@ -3,7 +3,7 @@ from enum import Enum
 
 from rest_food.handlers import set_tg_webhook
 from rest_food.settings import BOT_PATH_KEY, STAGE
-from rest_food.entities import Workflow
+from rest_food.enums import Workflow
 
 
 class Server(Enum):

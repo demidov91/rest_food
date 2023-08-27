@@ -4,35 +4,29 @@ from rest_food.communication import notify_supply_for_booked
 from rest_food.db import (
     get_user,
     mark_message_as_booked,
-    get_supply_message_record,
     set_info,
     set_next_command,
     get_supply_user,
     get_supply_message_record_by_id,
+    set_approved_language,
 )
 from rest_food.entities import (
     User,
     Reply,
-    Provider,
-    Workflow,
-    UserInfoField,
-    DemandCommandName,
-    DemandState,
     Command,
-    SocialStatus,
     soc_status_translation,
-    translate_social_status_string,
 )
-from rest_food.translation import translate_lazy as _
-from rest_food.states.demand_reply import (
+from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField
+from rest_food.translation import translate_lazy as _, set_language
+from rest_food.demand.demand_reply import (
     build_demand_side_short_message,
     MapInfoHandler,
     MapTakeHandler,
     build_demand_side_message_by_id, MapBookedHandler,
     build_food_taken_message,
 )
-from rest_food.states.formatters import build_demand_side_full_message_text
-from rest_food.states.utils import (
+from rest_food.common.formatters import build_demand_side_full_message_text
+from rest_food.demand.demand_utils import (
     get_next_command,
     get_demand_back_button,
 )
@@ -53,7 +47,7 @@ def handle_demand_data(user: User, data: str):
 
 
 def handle(user: User, command: Command):
-    return COMMAND_HANDLERS[DemandCommandName(command.name)](user, *command.arguments)
+    return COMMAND_HANDLERS[DemandCommand(command.name)](user, *command.arguments)
 
 
 def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id: str):
@@ -71,7 +65,7 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
     set_next_command(
         user,
         Command(
-            name=DemandCommandName.TAKE.value,
+            name=DemandCommand.TAKE.value,
             arguments=[provider_str, supply_user_id, message_id],
         )
     )
@@ -83,19 +77,17 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
     if coordinates is not None:
         buttons.append([{
             'text': _('🌍 Map'),
-            'data': DemandCommandName.MAP_TAKE.build(provider_str, supply_user_id, message_id),
+            'data': DemandCommand.MAP_TAKE.build(provider_str, supply_user_id, message_id),
         }])
 
     buttons.append([
         {
             'text': _('❌ Cancel'),
-            'data': f'{DemandCommandName.SHORT_INFO.value}|'
-                    f'{provider_str}|{supply_user_id}|{message_id}',
+            'data': DemandCommand.SHORT_INFO.build(provider_str, supply_user_id, message_id),
         },
         {
             'text': _('Confirm 🆗✅'),
-            'data': f'{DemandCommandName.FINISH_TAKE.value}|'
-                    f'{provider_str}|{supply_user_id}|{message_id}',
+            'data': DemandCommand.FINISH_TAKE.build(provider_str, supply_user_id, message_id),
         }
     ])
 
@@ -111,24 +103,22 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
 def _get_review_buttons(user: User):
     buttons = [{
         'text': _('Name: {}').format(user.info["name"]),
-        'data': f'{DemandCommandName.EDIT_NAME.value}',
+        'data': f'{DemandCommand.EDIT_NAME.value}',
     }]
 
     if user.info[UserInfoField.USERNAME.value]:
         if user.info[UserInfoField.DISPLAY_USERNAME.value]:
             buttons.append({
                 'text': _('Connect via {}: ✅').format(user.provider.value),
-                'data': f'{DemandCommandName.DISABLE_USERNAME.value}',
+                'data': f'{DemandCommand.DISABLE_USERNAME.value}',
             })
         else:
             buttons.append({
                 'text': _('Connect via {}: ❌').format(user.provider.value),
-                'data': DemandCommandName.ENABLE_USERNAME.value,
+                'data': DemandCommand.ENABLE_USERNAME.value,
             })
 
-    social_status_translated = translate_social_status_string(
-        user.info.get(UserInfoField.SOCIAL_STATUS.value)
-    )
+    social_status_translated = user.get_translated_social_status()
 
     if social_status_translated is None:
         social_status_text = _('Social status: not set ❌')
@@ -137,7 +127,7 @@ def _get_review_buttons(user: User):
 
     buttons.append({
         'text': social_status_text,
-        'data': DemandCommandName.EDIT_SOCIAL_STATUS.value,
+        'data': DemandCommand.EDIT_SOCIAL_STATUS.value,
     })
 
     phone = user.info.get(UserInfoField.PHONE.value)
@@ -145,7 +135,7 @@ def _get_review_buttons(user: User):
 
     buttons.append({
         'text': _('Phone: %s') % phone_verbose,
-        'data': f'{DemandCommandName.EDIT_PHONE.value}',
+        'data': f'{DemandCommand.EDIT_PHONE.value}',
 
     })
 
@@ -197,7 +187,7 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
     set_next_command(
         user,
         Command(
-            name=DemandCommandName.INFO.value,
+            name=DemandCommand.INFO.value,
             arguments=[provider_str, supply_user_id, message_id],
         )
     )
@@ -209,19 +199,16 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
     if coordinates is not None:
         buttons.append([{
             'text': _('🌍 Map'),
-            'data': DemandCommandName.MAP_INFO.build(provider_str, supply_user_id, message_id),
+            'data': DemandCommand.MAP_INFO.build(provider_str, supply_user_id, message_id),
         }])
 
     take_it_button = {
         'text': _('Take it'),
-        'data': f'{DemandCommandName.TAKE.value}|'
-                f'{supply_user.provider.value}|'
-                f'{supply_user.user_id}|'
-                f'{message_id}',
+        'data': DemandCommand.TAKE.build(supply_user.provider.value, supply_user.user_id, message_id),
     }
     back_button = {
         'text': _('Back'),
-        'data': DemandCommandName.SHORT_INFO.build(provider_str, supply_user_id, message_id),
+        'data': DemandCommand.SHORT_INFO.build(provider_str, supply_user_id, message_id),
     }
     buttons.append([back_button, take_it_button])
 
@@ -285,7 +272,7 @@ def _handle_edit_social_status(user: User):
     buttons = [[
         {
             'text': soc_status_translation.get(x) or '~~',
-            'data': f'{DemandCommandName.SET_SOCIAL_STATUS.value}|{x.value}',
+            'data': DemandCommand.SET_SOCIAL_STATUS.build(x.value),
         }] for x in SocialStatus
     ]
 
@@ -294,19 +281,26 @@ def _handle_edit_social_status(user: User):
     return Reply(text=_('Choose your social status:'), buttons=buttons)
 
 
+def _handle_set_language(user: User, language: str):
+    set_approved_language(user, language)
+    set_language(language)
+    return Reply(next_state=None)
+
+
 COMMAND_HANDLERS = {
-    DemandCommandName.TAKE: _handle_take,
-    DemandCommandName.INFO: _handle_info,
-    DemandCommandName.SHORT_INFO: _handle_short_info,
-    DemandCommandName.MAP_INFO: _handle_map_info,
-    DemandCommandName.MAP_TAKE: _handle_map_take,
-    DemandCommandName.MAP_BOOKED: _handle_map_booked,
-    DemandCommandName.ENABLE_USERNAME: _handle_enable_username,
-    DemandCommandName.DISABLE_USERNAME: _handle_disable_username,
-    DemandCommandName.FINISH_TAKE: _handle_finish_take,
-    DemandCommandName.BOOKED: _handle_booked,
-    DemandCommandName.EDIT_NAME: _handle_edit_name,
-    DemandCommandName.EDIT_PHONE: _handle_edit_phone,
-    DemandCommandName.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
-    DemandCommandName.SET_SOCIAL_STATUS: _handle_set_social_status,
+    DemandCommand.TAKE: _handle_take,
+    DemandCommand.INFO: _handle_info,
+    DemandCommand.SHORT_INFO: _handle_short_info,
+    DemandCommand.MAP_INFO: _handle_map_info,
+    DemandCommand.MAP_TAKE: _handle_map_take,
+    DemandCommand.MAP_BOOKED: _handle_map_booked,
+    DemandCommand.ENABLE_USERNAME: _handle_enable_username,
+    DemandCommand.DISABLE_USERNAME: _handle_disable_username,
+    DemandCommand.FINISH_TAKE: _handle_finish_take,
+    DemandCommand.BOOKED: _handle_booked,
+    DemandCommand.EDIT_NAME: _handle_edit_name,
+    DemandCommand.EDIT_PHONE: _handle_edit_phone,
+    DemandCommand.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
+    DemandCommand.SET_SOCIAL_STATUS: _handle_set_social_status,
+    DemandCommand.SET_LANGUAGE: _handle_set_language,
 }

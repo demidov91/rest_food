@@ -1,10 +1,12 @@
 from rest_food.communication import queue_messages
 from rest_food.db import set_info, unset_info
-from rest_food.entities import Reply, UserInfoField, Workflow
+from rest_food.entities import Reply
+from rest_food.enums import Workflow, UserInfoField
 from rest_food.exceptions import ValidationError
-from rest_food.states.base import State
-from rest_food.states.demand_command import handle
-from rest_food.states.utils import get_demand_back_button, get_next_command, validate_phone_number
+from rest_food.common.state import State
+from rest_food.demand.demand_command import handle
+from rest_food.demand.demand_utils import get_demand_back_button, get_next_command
+from rest_food.common.validators import validate_phone_number
 from rest_food.translation import translate_lazy as _
 
 

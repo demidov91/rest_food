@@ -11,17 +11,18 @@ from telegram import Message as TgMessage
 from rest_food.db import (
     get_message_demanded_user, get_admin_users, set_info,
     get_demand_users)
-from rest_food.entities import Reply, User, Workflow, UserInfoField, SupplyCommand
+from rest_food.entities import Reply, User
+from rest_food.enums import Workflow, SupplyCommand, UserInfoField
 from rest_food.message_queue import get_mass_queue, get_single_queue
 from rest_food.settings import FEEDBACK_TG_BOT
-from rest_food.states.demand_reply import build_demand_side_short_message, \
+from rest_food.demand.demand_reply import build_demand_side_short_message, \
     build_demand_side_message_by_id
-from rest_food.states.supply_reply import (
+from rest_food.supply.supply_reply import (
     build_supply_side_booked_message, build_new_supplier_notification,
 )
-from rest_food.states.formatters import build_demand_side_full_message_text_by_id
+from rest_food.common.formatters import build_demand_side_full_message_text_by_id
 from rest_food.translation import translate_lazy as _
-from user_utilities import user_language
+from rest_food.user_utilities import user_language
 
 logger = logging.getLogger(__name__)
 
@@ -129,7 +130,7 @@ def notify_supplier_is_approved(user: User):
                 Reply(
                     text=_('Your account is approved!'),
                     buttons=[[{
-                        'data': f'c|{SupplyCommand.BACK_TO_POSTING}',
+                        'data': SupplyCommand.BACK_TO_POSTING.build(),
                         'text': _('OK ✅'),
                     }]]
                 )

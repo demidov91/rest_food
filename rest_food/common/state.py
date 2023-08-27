@@ -2,7 +2,8 @@ from copy import deepcopy
 from typing import Optional, Tuple
 from decimal import Decimal
 
-from rest_food.entities import Reply, Provider, User
+from rest_food.entities import Reply, User
+from rest_food.enums import Provider
 
 
 class State:

@@ -31,7 +31,7 @@ BOT_PATH_KEY = env_var('BOT_PATH_KEY', None)
 DB_CONNECTION_STRING = env_var('DB_CONNECTION_STRING')
 DB_NAME = env_var('DB_NAME')
 DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE')
-ADMIN_USERNAMES = env_var('ADMIN_USERNAMES', None) and env_var('ADMIN_USERNAMES').split(',')
+ADMIN_USERNAMES = env_var('ADMIN_USERNAMES', []) and env_var('ADMIN_USERNAMES').split(',')
 STAGE = env_var('STAGE')
 
 # Mon, Mon, Dz, G, I, Dz(add)

@@ -1,8 +1,9 @@
 import logging
 
 from rest_food.db import get_supply_user
-from rest_food.entities import User, Reply, UserInfoField, DemandCommandName, Provider
-from rest_food.states.formatters import build_short_message_text_by_id, \
+from rest_food.entities import User, Reply
+from rest_food.enums import Provider, DemandCommand, UserInfoField
+from rest_food.common.formatters import build_short_message_text_by_id, \
     build_demand_side_full_message_text_by_id
 
 from rest_food.translation import translate_lazy as _
@@ -19,12 +20,12 @@ def build_demand_side_short_message(supply_user: User, message_id: str):
         ),
         buttons=[[{
             'text': _('Take it'),
-            'data': DemandCommandName.TAKE.build(
+            'data': DemandCommand.TAKE.build(
                 supply_user.provider.value, supply_user.user_id, message_id
             ),
         }, {
             'text': _('Info'),
-            'data': DemandCommandName.INFO.build(
+            'data': DemandCommand.INFO.build(
                 supply_user.provider.value, supply_user.user_id, message_id
             )
         }]],
@@ -39,7 +40,7 @@ def build_demand_side_message_by_id(supply_user: User, message_id: str, *, intro
 
     return Reply(text=text, buttons=[[{
         'text': _('🌍 Map'),
-        'data': DemandCommandName.MAP_BOOKED.build(
+        'data': DemandCommand.MAP_BOOKED.build(
             supply_user.provider.value, supply_user.user_id, message_id
         ),
     }]])
@@ -80,12 +81,12 @@ class MapInfoHandler(MapHandler):
     def _get_action_buttons(self, message_id: str):
         return [{
             'text': _('Back'),
-            'data': DemandCommandName.INFO.build(
+            'data': DemandCommand.INFO.build(
                 self.supply_user.provider.value, self.supply_user.user_id, message_id
             )
         }, {
             'text': _('Take it'),
-            'data': DemandCommandName.TAKE.build(
+            'data': DemandCommand.TAKE.build(
                 self.supply_user.provider.value, self.supply_user.user_id, message_id
             )
         }]
@@ -95,7 +96,7 @@ class MapTakeHandler(MapHandler):
     def _get_action_buttons(self, message_id: str):
         return [{
             'text': _('Back'),
-            'data': DemandCommandName.INFO.build(
+            'data': DemandCommand.INFO.build(
                 self.supply_user.provider.value, self.supply_user.user_id, message_id
             )
         }]
@@ -105,7 +106,7 @@ class MapBookedHandler(MapHandler):
     def _get_action_buttons(self, message_id: str):
         return [{
             'text': _('Back'),
-            'data': DemandCommandName.BOOKED.build(
+            'data': DemandCommand.BOOKED.build(
                 self.supply_user.provider.value, self.supply_user.user_id, message_id
             )
         }]

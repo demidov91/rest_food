@@ -1,8 +1,9 @@
 import logging
 from typing import Optional
 
-from rest_food.states.base import State
-from rest_food.entities import Reply, SupplyState, Provider, UserInfoField, SupplyCommand
+from rest_food.enums import SupplyState, Provider, SupplyCommand, UserInfoField
+from rest_food.common.state import State
+from rest_food.entities import Reply
 from rest_food.exceptions import ValidationError
 from rest_food.db import (
     extend_supply_message,
@@ -21,9 +22,9 @@ from rest_food.communication import (
     notify_admin_about_new_supply_user_if_necessary,
 )
 from rest_food.settings import FEEDBACK_TG_BOT
-from rest_food.states.formatters import build_active_food_message
-from rest_food.states.utils import validate_phone_number
-from rest_food.states.geocoding import get_coordinates
+from rest_food.common.formatters import build_active_food_message
+from rest_food.common.validators import validate_phone_number
+from rest_food.common.geocoding import get_coordinates
 from rest_food.translation import translate_lazy as _
 
 
@@ -90,7 +91,7 @@ class ReadyToPostState(State):
         if messages:
             reply.buttons.append([{
                 'text': _('View posted products'),
-                'data': f'c|{SupplyCommand.LIST_MESSAGES}',
+                'data': SupplyCommand.LIST_MESSAGES.build(),
             }])
 
         return reply
@@ -424,8 +425,7 @@ class BookingCancelReason(State):
             text=_('What to tell the foodsaver?'),
             buttons=[[{
                 'text': _('Back to the message'),
-                'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|'
-                        f'{self.db_user.context["booking_to_cancel"]}'
+                'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(self.db_user.context["booking_to_cancel"]),
             }]]
         )
 

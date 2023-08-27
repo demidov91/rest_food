@@ -1,9 +1,12 @@
 from telegram.user import User as TgUser
 
-from rest_food.states.base import State
-from rest_food.states import demand_state, supply_state
+from rest_food.enums import SupplyState, DemandState, Provider, Workflow, UserInfoField
+from rest_food.common.state import State
+from rest_food.demand import demand_state
+from rest_food.supply import supply_state
+from rest_food.common.shared_states import SetLanguage
 from rest_food.db import get_or_create_user, set_state
-from rest_food.entities import Provider, Workflow, SupplyState, DemandState, User, UserInfoField
+from rest_food.entities import User
 
 SUPPLY = {
     None: supply_state.DefaultState,
@@ -20,6 +23,7 @@ SUPPLY = {
     SupplyState.FORCE_COORDINATES: supply_state.ForceSetCoordinatesState,
     SupplyState.INITIAL_EDIT_PHONE: supply_state.InitialSetPhoneState,
     SupplyState.BOOKING_CANCEL_REASON: supply_state.BookingCancelReason,
+    SupplyState.SET_LANGUAGE: SetLanguage,
     SupplyState.NO_STATE: supply_state.NoState,
 }
 

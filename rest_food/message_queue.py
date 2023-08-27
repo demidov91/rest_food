@@ -11,7 +11,8 @@ import boto3
 from telegram import Message as TgMessage
 
 from rest_food import db as db_module
-from rest_food.entities import Workflow, Reply, User, UserInfoField
+from rest_food.entities import Reply, User
+from rest_food.enums import Workflow, UserInfoField
 from rest_food.translation import LazyAwareJsonEncoder, switch_language
 from rest_food.settings import STAGE
 from rest_food._sync_communication import send_messages
