@@ -17,7 +17,7 @@ from rest_food.entities import (
     soc_status_translation,
 )
 from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField
-from rest_food.translation import translate_lazy as _
+from rest_food.translation import translate_lazy as _, set_language
 from rest_food.demand.demand_reply import (
     build_demand_side_short_message,
     MapInfoHandler,
@@ -283,6 +283,7 @@ def _handle_edit_social_status(user: User):
 
 def _handle_set_language(user: User, language: str):
     set_approved_language(user, language)
+    set_language(language)
     return Reply(next_state=None)
 
 

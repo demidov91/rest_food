@@ -25,6 +25,7 @@ from rest_food.common.formatters import (
     build_supplier_declined_text,
 )
 from rest_food.supply.supply_utils import db_time_to_user
+from rest_food.translation import set_language as set_context_language
 
 
 logger = logging.getLogger(__name__)
@@ -42,7 +43,6 @@ def handle_supply_command(user: User, command_name: SupplyCommand, args: List[st
     logger.info('Command: %s, args: %s', command_name, args)
 
     return {
-        SupplyCommand.DEFAULT: go_to_default_screen,
         SupplyCommand.CANCEL_BOOKING: cancel_booking,
         SupplyCommand.APPROVE_BOOKING: approve_booking,
         SupplyCommand.BACK_TO_POSTING: back_to_posting,
@@ -130,11 +130,8 @@ def show_non_demanded_message(user, message_id: str):
 
 def set_language(user: User, language: str):
     set_approved_language(user, language)
-    return Reply(next_state=SupplyState.NO_STATE)
-
-
-def go_to_default_screen(user: User):
-    return Reply(next_state=SupplyState.NO_STATE)
+    set_context_language(language)
+    return Reply(next_state=SupplyState.READY_TO_POST)
 
 
 @admin_only

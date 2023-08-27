@@ -12,7 +12,7 @@ class SetLanguage(State):
         super().__init__(*args, **kwargs)
         if self.db_user.workflow == Workflow.SUPPLY:
             self._command_class = SupplyCommand.SET_LANGUAGE
-            self._default_command = SupplyCommand.DEFAULT
+            self._default_command = SupplyCommand.BACK_TO_POSTING
 
         else:
             self._command_class = DemandCommand.SET_LANGUAGE
@@ -27,31 +27,29 @@ class SetLanguage(State):
         return Reply(
             text=_('Choose the bot language:'),
             buttons=[
-                [
-                    {
-                        'text': 'Беларуская мова',
-                        'data': self._command_class.build('be'),
-                    },
-                    {
-                        'text': 'Українська мова',
-                        'data': self._command_class.build('uk'),
-                    },
-                    {
-                        'text': 'Język polski',
-                        'data': self._command_class.build('pl'),
-                    },
-                    {
-                        'text': 'Lietuvių kalba',
-                        'data': self._command_class.build('lt'),
-                    },
-                    {
-                        'text': 'English language',
-                        'data': self._command_class.build('en'),
-                    },
-                    {
-                        'text': _('Back'),
-                        'data': self._default_command.build(),
-                    },
-                ],
+                [{
+                    'text': 'Беларуская мова',
+                    'data': self._command_class.build('be'),
+                }],
+                [{
+                    'text': 'Українська мова',
+                    'data': self._command_class.build('uk'),
+                }],
+                [{
+                    'text': 'Język polski',
+                    'data': self._command_class.build('pl'),
+                }],
+                [{
+                    'text': 'Lietuvių kalba',
+                    'data': self._command_class.build('lt'),
+                }],
+                [{
+                    'text': 'English language',
+                    'data': self._command_class.build('en'),
+                }],
+                [{
+                    'text': _('Back'),
+                    'data': self._default_command.build(),
+                }],
             ],
         )
