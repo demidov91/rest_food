@@ -5,9 +5,18 @@ from ..entities import Reply
 from ..enums import Workflow
 from rest_food.translation import translate_lazy as _
 from rest_food.enums import SupplyCommand, DemandCommand
+from rest_food.translation import LANGUAGES_SUPPORTED
 
 
 class SetLanguage(State):
+    LANG_TO_NAME = [
+        ('be', 'Беларуская мова'),
+        ('uk', 'Українська мова'),
+        ('pl', 'Język polski'),
+        ('lt', 'Lietuvių kalba'),
+        ('en', 'English language'),
+    ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.db_user.workflow == Workflow.SUPPLY:
@@ -24,32 +33,14 @@ class SetLanguage(State):
             data: Optional[str],
             coordinates: Optional[tuple]
     ) -> Reply:
-        return Reply(
-            text=_('Choose the bot language:'),
-            buttons=[
-                [{
-                    'text': 'Беларуская мова',
-                    'data': self._command_class.build('be'),
-                }],
-                [{
-                    'text': 'Українська мова',
-                    'data': self._command_class.build('uk'),
-                }],
-                [{
-                    'text': 'Język polski',
-                    'data': self._command_class.build('pl'),
-                }],
-                [{
-                    'text': 'Lietuvių kalba',
-                    'data': self._command_class.build('lt'),
-                }],
-                [{
-                    'text': 'English language',
-                    'data': self._command_class.build('en'),
-                }],
-                [{
-                    'text': _('Back'),
-                    'data': self._default_command.build(),
-                }],
-            ],
-        )
+        buttons = [
+            [{
+                'text': name,
+                'data': self._command_class.build(lang),
+            }] for lang, name in self.LANG_TO_NAME if lang in LANGUAGES_SUPPORTED
+        ]
+        buttons.append([{
+            'text': _('Back'),
+            'data': self._default_command.build(),
+        }])
+        return Reply(text=_('Choose the bot language:'), buttons=buttons)

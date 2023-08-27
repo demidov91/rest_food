@@ -25,7 +25,7 @@ from rest_food.common.formatters import (
     build_supplier_declined_text,
 )
 from rest_food.supply.supply_utils import db_time_to_user
-from rest_food.translation import set_language as set_context_language
+from rest_food.translation import set_language as set_context_language, LANGUAGES_SUPPORTED
 
 
 logger = logging.getLogger(__name__)
