@@ -22,7 +22,7 @@ from rest_food.supply.supply_reply import (
 )
 from rest_food.common.formatters import build_demand_side_full_message_text_by_id
 from rest_food.translation import translate_lazy as _
-from user_utilities import user_language
+from rest_food.user_utilities import user_language
 
 logger = logging.getLogger(__name__)
 
