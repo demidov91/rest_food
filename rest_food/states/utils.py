@@ -6,10 +6,10 @@ from typing import Optional
 
 from rest_food.entities import (
     Command,
-    DemandCommandName,
     DT_FORMAT,
     User,
 )
+from rest_food.enums import DemandCommand
 from rest_food.exceptions import ValidationError
 
 from rest_food.translation import translate_lazy as _
@@ -55,7 +55,7 @@ def get_next_command(user: User) -> Command:
 def build_demand_command_button(text: str, command: Command):
     return {
         'text': text,
-        'data': DemandCommandName(command.name).build(*command.arguments),
+        'data': DemandCommand(command.name).build(*command.arguments),
     }
 
 

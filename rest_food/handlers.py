@@ -4,7 +4,8 @@ from typing import Optional
 from telegram import Update
 
 from rest_food.db import get_or_create_user
-from rest_food.entities import Workflow, Provider, Reply, SupplyState, UserInfoField
+from rest_food.entities import Reply
+from rest_food.enums import SupplyState, Provider, Workflow, SupplyCommand, UserInfoField
 from rest_food.state_machine import (
     get_supply_state,
     set_supply_state,
@@ -15,7 +16,7 @@ from rest_food._sync_communication import get_bot, build_tg_response
 from rest_food.communication import queue_messages
 from rest_food.states.demand_command import handle_demand_data
 from rest_food.states.supply_state import DefaultState
-from rest_food.states.supply_command import handle_supply_command, SupplyCommand
+from rest_food.states.supply_command import handle_supply_command
 from rest_food.tg_helpers import update_to_text, update_to_coordinates
 from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _, set_language
 
@@ -86,7 +87,7 @@ def tg_supply(data):
             reply=Reply(
                 text=_('Something went wrong. Try something different, please.'),
                 buttons=[[{
-                    'data': f'c|{SupplyCommand.BACK_TO_POSTING}',
+                    'data': SupplyCommand.BACK_TO_POSTING.build(),
                     'text': _('Start from the beginning'),
                 }]]
             )

@@ -1,9 +1,10 @@
 from telegram.user import User as TgUser
 
+from rest_food.enums import SupplyState, DemandState, Provider, Workflow, UserInfoField
 from rest_food.states.base import State
 from rest_food.states import demand_state, supply_state
 from rest_food.db import get_or_create_user, set_state
-from rest_food.entities import Provider, Workflow, SupplyState, DemandState, User, UserInfoField
+from rest_food.entities import User
 
 SUPPLY = {
     None: supply_state.DefaultState,

@@ -1,6 +1,7 @@
 from rest_food.communication import queue_messages
 from rest_food.db import set_info, unset_info
-from rest_food.entities import Reply, UserInfoField, Workflow
+from rest_food.entities import Reply
+from rest_food.enums import Workflow, UserInfoField
 from rest_food.exceptions import ValidationError
 from rest_food.states.base import State
 from rest_food.states.demand_command import handle

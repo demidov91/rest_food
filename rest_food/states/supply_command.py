@@ -6,18 +6,17 @@ from rest_food.communication import (
     notify_supplier_is_approved,
     notify_supplier_is_declined,
 )
+from rest_food.enums import SupplyState, SupplyCommand, UserInfoField
 from rest_food.translation import translate_lazy as _
 from rest_food.decorators import admin_only
 from rest_food.db import (
     set_booking_to_cancel,
     list_messages,
-    get_user,
     set_info,
     get_user_by_id,
     get_message_demanded_user,
 )
-from rest_food.entities import Reply, SupplyState, User, Provider, Workflow, Message, SupplyCommand, \
-    UserInfoField
+from rest_food.entities import Reply, User, Message
 from rest_food.states.supply_reply import build_supply_side_booked_message
 from rest_food.states.formatters import (
     build_short_message_text_by_id,
@@ -70,14 +69,14 @@ def back_to_posting(user):
 def _get_demanded_message_button(message: Message):
     return [{
         'text': _('%s (booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
-        'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|{message.message_id}'
+        'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(message.message_id)
     }]
 
 
 def _get_non_demanded_message_button(message: Message):
     return [{
         'text': _('%s (not booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
-        'data': f'c|{SupplyCommand.SHOW_NON_DEMANDED_MESSAGE}|{message.message_id}'
+        'data': SupplyCommand.SHOW_NON_DEMANDED_MESSAGE.build(message.message_id),
     }]
 
 
@@ -89,7 +88,7 @@ def view_messages(user):
     ]
     buttons.append([{
         'text': _('Go to product posting'),
-        'data': f'c|{SupplyCommand.BACK_TO_POSTING}'
+        'data': SupplyCommand.BACK_TO_POSTING.build(),
     }])
     return Reply(text=_('Last messages'), buttons=buttons)
 
@@ -121,7 +120,7 @@ def show_non_demanded_message(user, message_id: str):
         text=message,
         buttons=[[{
             'text': _('View all messages'),
-            'data': f'c|{SupplyCommand.LIST_MESSAGES}',
+            'data': SupplyCommand.LIST_MESSAGES.build(),
         }]]
     )
 
@@ -136,7 +135,7 @@ def approve_supplier(user: User, supplier_id: str):
         text=build_supplier_approved_text(supply_user),
         buttons=[[{
             'text': _('Nope, decline it'),
-            'data': f'c|{SupplyCommand.DECLINE_SUPPLIER}|{supplier_id}'
+            'data': SupplyCommand.DECLINE_SUPPLIER.build(supplier_id),
         }]]
     )
 
@@ -151,6 +150,6 @@ def decline_supplier(user: User, supplier_id: str):
         text=build_supplier_declined_text(supply_user),
         buttons=[[{
             'text': _('Sorry, approve it'),
-            'data': f'c|{SupplyCommand.APPROVE_SUPPLIER}|{supplier_id}'
+            'data': SupplyCommand.APPROVE_SUPPLIER.build(supplier_id),
         }]]
     )

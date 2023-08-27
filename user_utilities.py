@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 
-from rest_food.entities import UserInfoField
+from rest_food.enums import UserInfoField
 from rest_food.translation import switch_language
 
 

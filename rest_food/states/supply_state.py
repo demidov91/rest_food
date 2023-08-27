@@ -1,8 +1,9 @@
 import logging
 from typing import Optional
 
+from rest_food.enums import SupplyState, Provider, SupplyCommand, UserInfoField
 from rest_food.states.base import State
-from rest_food.entities import Reply, SupplyState, Provider, UserInfoField, SupplyCommand
+from rest_food.entities import Reply
 from rest_food.exceptions import ValidationError
 from rest_food.db import (
     extend_supply_message,
@@ -90,7 +91,7 @@ class ReadyToPostState(State):
         if messages:
             reply.buttons.append([{
                 'text': _('View posted products'),
-                'data': f'c|{SupplyCommand.LIST_MESSAGES}',
+                'data': SupplyCommand.LIST_MESSAGES.build(),
             }])
 
         return reply
@@ -424,8 +425,7 @@ class BookingCancelReason(State):
             text=_('What to tell the foodsaver?'),
             buttons=[[{
                 'text': _('Back to the message'),
-                'data': f'c|{SupplyCommand.SHOW_DEMANDED_MESSAGE}|'
-                        f'{self.db_user.context["booking_to_cancel"]}'
+                'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(self.db_user.context["booking_to_cancel"]),
             }]]
         )
 
