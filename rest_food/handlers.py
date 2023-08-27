@@ -5,7 +5,7 @@ from telegram import Update
 
 from rest_food.db import get_or_create_user
 from rest_food.entities import Reply
-from rest_food.enums import SupplyState, Provider, Workflow, SupplyCommand, UserInfoField
+from rest_food.enums import SupplyState, Provider, Workflow, SupplyCommand, UserInfoField, SupplyTgCommand
 from rest_food.state_machine import (
     get_supply_state,
     set_supply_state,
@@ -17,6 +17,7 @@ from rest_food.communication import queue_messages
 from rest_food.demand.demand_command import handle_demand_data
 from rest_food.supply.supply_state import DefaultState
 from rest_food.supply.supply_command import handle_supply_command
+from rest_food.supply.supply_tg_command import handle_supply_tg_command
 from rest_food.tg_helpers import update_to_text, update_to_coordinates
 from rest_food.translation import hack_telegram_json_dumps, translate_lazy as _, set_language
 
@@ -50,8 +51,14 @@ def tg_supply(data):
                 reply.next_state = SupplyState.NO_STATE
 
         else:
-            if update.message and update.message.text == '/start':
-                state = set_supply_state(db_user, None)
+            if update.message and update.message.text and update.message.text.startswith('/'):
+                try:
+                    tg_command = SupplyTgCommand(update.message.text[1:])
+                except ValueError:
+                    logger.info('This is not a command: %s'.format(update.message.text))
+
+                else:
+                    state = handle_supply_tg_command(db_user, tg_command)
 
             reply = state.handle(
                 update_to_text(update),

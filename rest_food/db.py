@@ -209,6 +209,15 @@ def unset_info(user: User, info_field: UserInfoField):
         del user.info[info_field.value]
 
 
+def set_approved_language(user: User, language: str):
+    update = {
+        f'info.{UserInfoField.LANGUAGE.value}': language,
+        f'info.is_approved_language': True,
+    }
+    _update_user_entity(user, update)
+    user.info.update(update)
+
+
 def set_next_command(user: User, command: Command):
     _update_user_entity(user, {
         'context.next_command': command.name,

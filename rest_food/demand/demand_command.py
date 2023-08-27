@@ -8,6 +8,7 @@ from rest_food.db import (
     set_next_command,
     get_supply_user,
     get_supply_message_record_by_id,
+    set_approved_language,
 )
 from rest_food.entities import (
     User,
@@ -280,6 +281,11 @@ def _handle_edit_social_status(user: User):
     return Reply(text=_('Choose your social status:'), buttons=buttons)
 
 
+def _handle_set_language(user: User, language: str):
+    set_approved_language(user, language)
+    return Reply(next_state=None)
+
+
 COMMAND_HANDLERS = {
     DemandCommand.TAKE: _handle_take,
     DemandCommand.INFO: _handle_info,
@@ -295,4 +301,5 @@ COMMAND_HANDLERS = {
     DemandCommand.EDIT_PHONE: _handle_edit_phone,
     DemandCommand.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
     DemandCommand.SET_SOCIAL_STATUS: _handle_set_social_status,
+    DemandCommand.SET_LANGUAGE: _handle_set_language,
 }

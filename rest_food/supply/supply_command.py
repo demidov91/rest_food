@@ -15,6 +15,7 @@ from rest_food.db import (
     set_info,
     get_user_by_id,
     get_message_demanded_user,
+    set_approved_language,
 )
 from rest_food.entities import Reply, User, Message
 from rest_food.supply.supply_reply import build_supply_side_booked_message
@@ -41,6 +42,7 @@ def handle_supply_command(user: User, command_name: SupplyCommand, args: List[st
     logger.info('Command: %s, args: %s', command_name, args)
 
     return {
+        SupplyCommand.DEFAULT: go_to_default_screen,
         SupplyCommand.CANCEL_BOOKING: cancel_booking,
         SupplyCommand.APPROVE_BOOKING: approve_booking,
         SupplyCommand.BACK_TO_POSTING: back_to_posting,
@@ -49,6 +51,7 @@ def handle_supply_command(user: User, command_name: SupplyCommand, args: List[st
         SupplyCommand.SHOW_NON_DEMANDED_MESSAGE: show_non_demanded_message,
         SupplyCommand.APPROVE_SUPPLIER: approve_supplier,
         SupplyCommand.DECLINE_SUPPLIER: decline_supplier,
+        SupplyCommand.SET_LANGUAGE: set_language,
     }[command_name](user, *args)
 
 
@@ -123,6 +126,15 @@ def show_non_demanded_message(user, message_id: str):
             'data': SupplyCommand.LIST_MESSAGES.build(),
         }]]
     )
+
+
+def set_language(user: User, language: str):
+    set_approved_language(user, language)
+    return Reply(next_state=SupplyState.NO_STATE)
+
+
+def go_to_default_screen(user: User):
+    return Reply(next_state=SupplyState.NO_STATE)
 
 
 @admin_only

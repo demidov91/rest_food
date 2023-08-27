@@ -16,6 +16,7 @@ class SupplyState(Enum):
     FORCE_COORDINATES = 'force_coordinates'
     INITIAL_EDIT_PHONE = 'initial_edit_phone'
     BOOKING_CANCEL_REASON = 'booking_cancel_reason'
+    SET_LANGUAGE = 'set_language'
     NO_STATE = 'no_state'
 
 
@@ -46,6 +47,7 @@ class SocialStatus(Enum):
 
 class DemandCommand(Enum):
     """*Demand* bot commands in a format: {command}|{arg_0}|...|{arg_n}"""
+    DEFAULT = 'default'
     TAKE = 'take'
     INFO = 'info'
     SHORT_INFO = 'sinf'
@@ -55,6 +57,7 @@ class DemandCommand(Enum):
     EDIT_PHONE = 'edit_phone'
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
+    SET_LANGUAGE = 'set_language'
     FINISH_TAKE = 'f_take'
     BOOKED = 'bkd'
     MAP_INFO = 'mapi'
@@ -67,6 +70,7 @@ class DemandCommand(Enum):
 
 class SupplyCommand(Enum):
     """*Supply* bot commands in a format: c|{command}|{arg_0}|...|{arg_n}"""
+    DEFAULT = 'default'
     CANCEL_BOOKING = 'cancel_booking'
     APPROVE_BOOKING = 'approve_booking'
     BACK_TO_POSTING = 'back_to_posting'
@@ -75,12 +79,13 @@ class SupplyCommand(Enum):
     SHOW_NON_DEMANDED_MESSAGE = 'show_ndm'
     APPROVE_SUPPLIER = 'approve_supplier'
     DECLINE_SUPPLIER = 'decline_supplier'
+    SET_LANGUAGE = 'set_language'
 
     def build(self, *args):
         return '|'.join(chain(('c', self.value), (str(x) for x in args)))
 
 
-class TgSupplyCommand(Enum):
+class SupplyTgCommand(Enum):
     """Expected enum of Telegram /{command}s """
     START = 'start'
     LANGUAGE = 'language'
