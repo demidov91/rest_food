@@ -1,0 +1,431 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Localazy (https://localazy.com)\n"
+"Project-Id-Version: Food\n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=((n%10==1) && ((n%100<11 || n%100>19))) ? 0 : ((n%10>=2 && n%10<=9) && ((n%100<11 || n%100>19))) ? 1 : 2;\n"
+
+#: rest_food/demand/demand_command.py:83 rest_food/demand/demand_command.py:205
+#: rest_food/demand/demand_reply.py:42
+msgid "🌍 Map"
+msgstr "🌍 Žemėlapis"
+
+#: rest_food/common/formatters.py:79
+#, python-format
+msgid "\nPhone: %s"
+msgstr "\nTelefonas: %s"
+
+#: rest_food/common/formatters.py:15
+msgid "\nTime: {}"
+msgstr "\nLaikas: {}"
+
+#: rest_food/demand/demand_command.py:99
+#, python-format
+msgid "%(info)s\n-----------\n%(ask_for_approve)s"
+msgstr "%(info)s\n-----------\n%(ask_for_approve)s"
+
+#: rest_food/supply/supply_command.py:74
+#, python-format
+msgid "%s (booked)"
+msgstr "%s (užsakyta)"
+
+#: rest_food/supply/supply_command.py:81
+#, python-format
+msgid "%s (not booked)"
+msgstr "%s (neužsakyta)"
+
+#: rest_food/demand/demand_command.py:170
+#, python-format
+msgid "%s is notified that you'll take the food. Please, wait for approval."
+msgstr "%s pranešama apie jūsų norą atsiimti prekes. Palaukite patvirtinimo."
+
+#: rest_food/supply/supply_state.py:200
+#, python-format
+msgid "Address: %s"
+msgstr "Adresas: %s"
+
+#: rest_food/supply/supply_reply.py:20 rest_food/supply/supply_reply.py:36
+msgid "Approve"
+msgstr "Patvirtinti"
+
+#: rest_food/common/shared_commands.py:35
+#: rest_food/demand/demand_command.py:214 rest_food/demand/demand_reply.py:83
+#: rest_food/demand/demand_reply.py:98 rest_food/demand/demand_reply.py:108
+#: rest_food/demand/demand_utils.py:17
+msgid "Back"
+msgstr "Atgal"
+
+#: rest_food/supply/supply_state.py:427
+msgid "Back to the message"
+msgstr "Grįžti į įrašą"
+
+#: rest_food/supply/supply_state.py:121 rest_food/supply/supply_state.py:152
+#: rest_food/supply/supply_state.py:248 rest_food/supply/supply_state.py:366
+#: rest_food/supply/supply_state.py:375
+msgid "Cancel"
+msgstr "Atšaukti"
+
+#: rest_food/supply/supply_state.py:441
+msgid "Cancelled"
+msgstr "Atšauktas"
+
+#: rest_food/common/shared_commands.py:38
+msgid "Choose the bot language:"
+msgstr "Pasirinkite boto kalbą:"
+
+#: rest_food/demand/demand_command.py:285
+msgid "Choose your social status:"
+msgstr "Pasirinkite socialinį statusą:"
+
+#: rest_food/demand/demand_command.py:93
+msgid "Confirm 🆗✅"
+msgstr "Patvirtinti 🆗✅"
+
+#: rest_food/demand/demand_command.py:116
+msgid "Connect via {}: ✅"
+msgstr "Susisiekite per {}: ✅"
+
+#: rest_food/demand/demand_command.py:121
+msgid "Connect via {}: ❌"
+msgstr "Susisiekite per {}: ❌"
+
+#: rest_food/supply/supply_state.py:204
+#, python-format
+msgid "Coordinates: %s"
+msgstr "Koordinatės: %s"
+
+#: rest_food/demand/demand_reply.py:73
+msgid "Coordinates where not provided."
+msgstr "Koordinačių nėra :("
+
+#: rest_food/supply/supply_reply.py:39
+msgid "Decline"
+msgstr "Atmesti"
+
+#: rest_food/supply/supply_state.py:63
+msgid "Edit restaurant info"
+msgstr "Redaguoti informaciją apie įstaigą"
+
+#: rest_food/supply/supply_state.py:71
+msgid "Enter food you can share and click \"send\""
+msgstr "Įveskite prekes, kurias galite perkelti, ir spustelėkite „siųsti“"
+
+#: rest_food/demand/demand_state.py:35
+msgid "Enter your name:"
+msgstr "Įveskite savo vardą:"
+
+#: rest_food/supply/supply_state.py:129
+msgid "Food you can share:\n{}"
+msgstr "Perkelkite produktus:\n{}"
+
+#: rest_food/supply/supply_command.py:93 rest_food/supply/supply_state.py:214
+msgid "Go to product posting"
+msgstr "Į gaminių publikavimą"
+
+#: rest_food/demand/demand_command.py:295
+msgid "Hello. Here you will see notifications about available food."
+msgstr "Sveikinimai. Pranešimai apie turimus produktus bus paskelbti čia."
+
+#: rest_food/demand/demand_reply.py:27
+msgid "Info"
+msgstr "Informacija"
+
+#: rest_food/supply/supply_state.py:180
+msgid "Information is sent. I'll notify you when there is someone to take this food."
+msgstr "Informacija išsiųsta. Jums bus pranešta, kai kas nors norės atsiimti šiuos produktus."
+
+#: rest_food/demand/demand_command.py:62 rest_food/demand/demand_command.py:184
+msgid "Information was not found."
+msgstr "Informacija nerasta."
+
+#: rest_food/supply/supply_command.py:96
+msgid "Last messages"
+msgstr "Naujausi pranešimai"
+
+#: rest_food/supply/supply_state.py:196
+#, python-format
+msgid "Name: %s"
+msgstr "Vardas: %s"
+
+#: rest_food/demand/demand_command.py:109
+msgid "Name: {}"
+msgstr "Vardas: {}"
+
+#: rest_food/common/formatters.py:101
+msgid "New user"
+msgstr "Naujas vartotojas"
+
+#: rest_food/supply/supply_state.py:358
+msgid "No! Edit! 🌍"
+msgstr "Ne tai. Redaguoti 🌍"
+
+#: rest_food/common/formatters.py:48
+msgid "No contact info was provided.\n"
+msgstr "Kontaktinė informacija nepateikta :(\n"
+
+#: rest_food/supply/supply_command.py:146
+msgid "Nope, decline it"
+msgstr "Ne, atmesti"
+
+#: rest_food/supply/supply_command.py:118
+#, python-format
+msgid "Not yet booked.\n\n%s"
+msgstr "Dar neužsakyta.\n\n%s"
+
+#: rest_food/communication.py:134 rest_food/supply/supply_state.py:312
+#: rest_food/supply/supply_state.py:315 rest_food/supply/supply_state.py:323
+#: rest_food/demand/demand_state.py:56
+msgid "OK ✅"
+msgstr "OK ✅"
+
+#: rest_food/supply/supply_state.py:210 rest_food/demand/demand_command.py:141
+#, python-format
+msgid "Phone: %s"
+msgstr "Telefonas: %s"
+
+#: rest_food/common/formatters.py:37
+msgid "Phone: {}\n"
+msgstr "Telefonas: {}\n"
+
+#: rest_food/demand/demand_command.py:101
+msgid "Please, confirm/edit your contact information to proceed."
+msgstr "Norėdami tęsti, patvirtinkite savo kontaktinę informaciją."
+
+#: rest_food/supply/supply_state.py:269
+msgid "Please, enter name of the restaurant."
+msgstr "Įveskite įstaigos pavadinimą."
+
+#: rest_food/supply/supply_state.py:54
+msgid "Please, provide information about yourself before getting started"
+msgstr "Prieš tęsdami įveskite savo kontaktinę informaciją."
+
+#: rest_food/common/validators.py:14
+msgid "Please, provide only pone number."
+msgstr "Įveskite tik kontaktinį numerį."
+
+#: rest_food/supply/supply_state.py:274
+msgid "Please, provide restaurant address."
+msgstr "Įveskite įstaigos adresą."
+
+#: rest_food/supply/supply_state.py:372
+msgid "Please, send me your coordinates. (Attach -> Location)"
+msgstr "Koordinates prašome atsiųsti: Attach -> Location"
+
+#: rest_food/supply/supply_state.py:303 rest_food/supply/supply_state.py:332
+msgid "Please, send your contact number."
+msgstr "Prašome atsiųsti kontaktinį telefono numerį."
+
+#: rest_food/supply/supply_state.py:139 rest_food/supply/supply_state.py:162
+msgid "Product list is cleared."
+msgstr "Atšauktas"
+
+#: rest_food/supply/supply_state.py:380
+msgid "Provide later"
+msgstr "Vėliau"
+
+#: rest_food/supply/supply_reply.py:17
+msgid "Reject"
+msgstr "Atmesti"
+
+#: rest_food/common/formatters.py:72
+#, python-brace-format
+msgid "Restaurant name: {name}\nAddress: {address}"
+msgstr "Institucija: {name}\nAdresas: {address}"
+
+#: rest_food/demand/demand_reply.py:54
+msgid "SOMEONE HAS ALREADY TAKEN IT!\n\n{}"
+msgstr "Kažkas jau paėmė!\n\n{}"
+
+#: rest_food/supply/supply_state.py:297 rest_food/supply/supply_state.py:329
+#: rest_food/demand/demand_state.py:43
+msgid "Send phone"
+msgstr "siųsti telefoną"
+
+#: rest_food/demand/demand_state.py:49
+msgid "Send your phone number"
+msgstr "Prašome atsiųsti savo kontaktinį numerį"
+
+#: rest_food/supply/supply_state.py:117
+msgid "Set time and send"
+msgstr "Įveskite laiką ir išsiųskite"
+
+#: rest_food/common/formatters.py:53
+#, python-format
+msgid "Social status: %s"
+msgstr "Socialinis statusas: %s"
+
+#: rest_food/demand/demand_command.py:130
+#, python-format
+msgid "Social status: %s ✅"
+msgstr "Socialinis statusas: %s ✅"
+
+#: rest_food/demand/demand_command.py:128
+msgid "Social status: not set ❌"
+msgstr "Socialinė padėtis: nenustatyta ❌"
+
+#: rest_food/demand/demand_command.py:161
+msgid "Someone has already taken it."
+msgstr "Kažkas jau paėmė."
+
+#: rest_food/handlers.py:94 rest_food/handlers.py:164
+msgid "Something went wrong. Try something different, please."
+msgstr "Kažkas nutiko. Išbandykite ką nors kita."
+
+#: rest_food/supply/supply_command.py:161
+msgid "Sorry, approve it"
+msgstr "oi, patvirtink"
+
+#: rest_food/supply/supply_state.py:454
+msgid "Sorry, something went wrong."
+msgstr "Atsiprašau, kažkas ne taip :("
+
+#: rest_food/supply/supply_state.py:149
+msgid "Specify the time"
+msgstr "Nurodykite laiką"
+
+#: rest_food/handlers.py:97
+msgid "Start from the beginning"
+msgstr "Pradėti iš naujo"
+
+#: rest_food/demand/demand_command.py:210 rest_food/demand/demand_reply.py:22
+#: rest_food/demand/demand_reply.py:88
+msgid "Take it"
+msgstr "Imk"
+
+#: rest_food/common/formatters.py:44
+msgid "Telegram: @{}\n"
+msgstr "Telegrama: @{}\n"
+
+#: rest_food/common/validators.py:18
+msgid "This is not a valid phone number."
+msgstr "Tai neteisingas telefono numeris."
+
+#: rest_food/common/formatters.py:99
+#, python-format
+msgid "User @%s"
+msgstr "Vartotojas @%s"
+
+#: rest_food/supply/supply_command.py:125 rest_food/supply/supply_reply.py:24
+msgid "View all messages"
+msgstr "Žiūrėti visus skelbimus"
+
+#: rest_food/supply/supply_state.py:93
+msgid "View posted products"
+msgstr "Žiūrėti skelbimus"
+
+#: rest_food/supply/supply_state.py:82
+#, python-format
+msgid "We'll notify you when your account is approved. Also, you can contact us with %s"
+msgstr "Kai paskyra bus patvirtinta, atsiųsime jums el. laišką. Galite remtis %s Daugiau informacijos"
+
+#: rest_food/supply/supply_state.py:425
+msgid "What to tell the foodsaver?"
+msgstr "Ką pasakyti žmogui, kuris užsisakė maistą?"
+
+#: rest_food/supply/supply_state.py:362
+msgid "Yes! Approve ✅"
+msgstr "Taip ✅"
+
+#: rest_food/demand/demand_reply.py:52
+msgid "You've already taken it.\n\n{}"
+msgstr "Jūs jau paėmėte.\n\n{}"
+
+#: rest_food/demand/demand_command.py:234
+msgid "You've booked this"
+msgstr "Jūs pažadėjote atsiimti prekes"
+
+#: rest_food/supply/supply_state.py:193
+msgid "You can edit your contact info here"
+msgstr "Redaguoti kontaktinę informaciją"
+
+#: rest_food/communication.py:131
+msgid "Your account is approved!"
+msgstr "Jūsų paskyra patvirtinta!"
+
+#: rest_food/communication.py:149 rest_food/supply/supply_state.py:75
+#, python-format
+msgid "Your account was declined. Please, contact %s for any clarifications."
+msgstr "Jūsų paskyra atmesta. Prašau kreiptis į %s daugiau paaiškinimo."
+
+#: rest_food/communication.py:90
+msgid "Your request was approved"
+msgstr "Patvirtinimas gautas. Prieš išvykstant prašome paskambinti."
+
+#: rest_food/communication.py:67
+#, python-format
+msgid "Your request was rejected with the following words:\n%(message)s\n\nRequest was:\n%(food)s"
+msgstr "❌ Maistas nebus išsineštas. Įstaiga rašo:\n%(message)s\n\nMaisto aprašymas buvo toks:\n%(food)s"
+
+#: rest_food/entities.py:19
+msgid "big family"
+msgstr "Didelė šeima"
+
+#: rest_food/entities.py:20
+msgid "disability"
+msgstr "Neįgalumo grupė"
+
+#: rest_food/entities.py:23
+msgid "emigrant"
+msgstr "Emigrantas"
+
+#: rest_food/entities.py:22
+msgid "hard times"
+msgstr "Sunki socialinė padėtis"
+
+#: rest_food/entities.py:21
+msgid "homeless"
+msgstr "Benamiai"
+
+#: rest_food/demand/demand_command.py:138
+msgid "not set ❓"
+msgstr "nepateikta ❓"
+
+#: rest_food/entities.py:24
+msgid "other"
+msgstr "Kita"
+
+#: rest_food/common/formatters.py:106
+#, python-brace-format
+msgid "{user_name} wants to join as a supplier. Provided description is:\n\n{description}"
+msgstr "{user_name} nori prisijungti dėl maisto pervežimo. Pateiktas aprašymas:\n\n{description}"
+
+#: rest_food/common/formatters.py:115
+#, python-brace-format
+msgid "{user_name} was APPROVED as a supplier. Provided description was:\n\n{description}\n\nDB id: {id}"
+msgstr "{user_name} buvo PATVIRTINTA dėl maisto perdavimo. Pateiktas aprašymas:\n\n{description}\n\nid duomenų bazėje: {id}"
+
+#: rest_food/common/formatters.py:127
+#, python-brace-format
+msgid "{user_name} was DECLINED as a supplier. Provided description was:\n\n{description}\n\nDB id: {id}"
+msgstr "{user_name} buvo ATMESTA. Pateiktas aprašymas:\n\n{description}\n\nid duomenų bazėje: {id}"
+
+#: rest_food/common/formatters.py:64
+msgid "{}\n\nYour message was:\n\n{}"
+msgstr "{}\n\ntavo žinutė buvo:\n\n{}"
+
+#: rest_food/demand/demand_reply.py:18
+msgid "{} can share the following:\n{}"
+msgstr "{} gali perduoti:\n{}"
+
+#: rest_food/common/formatters.py:33
+msgid "{} will take the food.\n"
+msgstr "{} paims produktus.\n"
+
+#: rest_food/supply/supply_state.py:297 rest_food/demand/demand_state.py:43
+msgid "← Back"
+msgstr "← Atgal"
+
+#: rest_food/demand/demand_command.py:89
+msgid "❌ Cancel"
+msgstr "❌ Atšaukti"
+
+#: rest_food/supply/supply_state.py:300 rest_food/demand/demand_state.py:46
+msgid "❌ Delete"
+msgstr "❌ Ištrinti"
+
+#: rest_food/supply/supply_state.py:329
+msgid "❌ Dismiss"
+msgstr "❌ Praleisti"
