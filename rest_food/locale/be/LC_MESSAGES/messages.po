@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-27 22:33+0200\n"
+"POT-Creation-Date: 2023-08-28 11:57+0200\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -63,16 +63,6 @@ msgstr "OK ✅"
 msgid "Your account was declined. Please, contact %s for any clarifications."
 msgstr ""
 "Ваш акаўнт быў адхілены. Калі ласка, звярніцеся ў %s калі ў вас ёсць пытанні."
-
-#: rest_food/common/shared_states.py:28
-msgid "Choose the bot language:"
-msgstr "Абярыце мову для бота:"
-
-#: rest_food/common/shared_states.py:51 rest_food/demand/demand_command.py:210
-#: rest_food/demand/demand_reply.py:83 rest_food/demand/demand_reply.py:98
-#: rest_food/demand/demand_reply.py:108 rest_food/demand/demand_utils.py:17
-msgid "Back"
-msgstr "Назад"
 
 #: rest_food/common/formatters.py:15
 msgid ""
@@ -185,13 +175,24 @@ msgstr ""
 "\n"
 "id у БД: {id}"
 
-#: rest_food/common/validators.py:11
+#: rest_food/common/validators.py:14
 msgid "Please, provide only pone number."
 msgstr "Калі ласка, увядзіце толькі кантактны тэлефон."
 
-#: rest_food/common/validators.py:15
+#: rest_food/common/validators.py:18
 msgid "This is not a valid phone number."
 msgstr "Гэта не валідны тэлефонны нумары."
+
+#: rest_food/common/shared_commands.py:35
+#: rest_food/demand/demand_command.py:214 rest_food/demand/demand_reply.py:83
+#: rest_food/demand/demand_reply.py:98 rest_food/demand/demand_reply.py:108
+#: rest_food/demand/demand_utils.py:17
+msgid "Back"
+msgstr "Назад"
+
+#: rest_food/common/shared_commands.py:38
+msgid "Choose the bot language:"
+msgstr "Абярыце мову для бота:"
 
 #: rest_food/supply/supply_command.py:74
 #, python-format
@@ -311,7 +312,7 @@ msgstr "Адрас: %s"
 msgid "Coordinates: %s"
 msgstr "Каардынаты: %s"
 
-#: rest_food/supply/supply_state.py:210 rest_food/demand/demand_command.py:137
+#: rest_food/supply/supply_state.py:210 rest_food/demand/demand_command.py:141
 #, python-format
 msgid "Phone: %s"
 msgstr "Тэлефон: %s"
@@ -389,24 +390,24 @@ msgstr "Пацвердзіць"
 msgid "Decline"
 msgstr "Адхіліць"
 
-#: rest_food/demand/demand_command.py:58 rest_food/demand/demand_command.py:180
+#: rest_food/demand/demand_command.py:62 rest_food/demand/demand_command.py:184
 msgid "Information was not found."
 msgstr "Інфармацыя не была знойдзена."
 
-#: rest_food/demand/demand_command.py:79 rest_food/demand/demand_command.py:201
+#: rest_food/demand/demand_command.py:83 rest_food/demand/demand_command.py:205
 #: rest_food/demand/demand_reply.py:42
 msgid "🌍 Map"
 msgstr "🌍 Мапа"
 
-#: rest_food/demand/demand_command.py:85
+#: rest_food/demand/demand_command.py:89
 msgid "❌ Cancel"
 msgstr "❌ Адмена"
 
-#: rest_food/demand/demand_command.py:89
+#: rest_food/demand/demand_command.py:93
 msgid "Confirm 🆗✅"
 msgstr "Пацвердзіць 🆗✅"
 
-#: rest_food/demand/demand_command.py:95
+#: rest_food/demand/demand_command.py:99
 #, python-format
 msgid ""
 "%(info)s\n"
@@ -417,58 +418,62 @@ msgstr ""
 "-----------\n"
 "%(ask_for_approve)s"
 
-#: rest_food/demand/demand_command.py:97
+#: rest_food/demand/demand_command.py:101
 msgid "Please, confirm/edit your contact information to proceed."
 msgstr "Калі ласка, пацвердзіце кантактную інфармацыю каб працягнуць."
 
-#: rest_food/demand/demand_command.py:105
+#: rest_food/demand/demand_command.py:109
 msgid "Name: {}"
 msgstr "Імя: {}"
 
-#: rest_food/demand/demand_command.py:112
+#: rest_food/demand/demand_command.py:116
 msgid "Connect via {}: ✅"
 msgstr "Звязвацца праз {}: ✅"
 
-#: rest_food/demand/demand_command.py:117
+#: rest_food/demand/demand_command.py:121
 msgid "Connect via {}: ❌"
 msgstr "Звязвацца праз {}: ❌"
 
-#: rest_food/demand/demand_command.py:124
+#: rest_food/demand/demand_command.py:128
 msgid "Social status: not set ❌"
 msgstr "Сацыяльны статус: не абраны ❌"
 
-#: rest_food/demand/demand_command.py:126
+#: rest_food/demand/demand_command.py:130
 #, python-format
 msgid "Social status: %s ✅"
 msgstr "Сацыяльны статус: %s ✅"
 
-#: rest_food/demand/demand_command.py:134
+#: rest_food/demand/demand_command.py:138
 msgid "not set ❓"
 msgstr "няма ❓"
 
-#: rest_food/demand/demand_command.py:157
+#: rest_food/demand/demand_command.py:161
 msgid "Someone has already taken it."
 msgstr "Хтосьці ўжо забраў."
 
-#: rest_food/demand/demand_command.py:166
+#: rest_food/demand/demand_command.py:170
 #, python-format
 msgid "%s is notified that you'll take the food. Please, wait for approval."
 msgstr ""
 "Мы напісалі '%s', што Вы забераце прадукты. Калі ласка, дачакайцеся "
 "пацвярджэння."
 
-#: rest_food/demand/demand_command.py:206 rest_food/demand/demand_reply.py:22
+#: rest_food/demand/demand_command.py:210 rest_food/demand/demand_reply.py:22
 #: rest_food/demand/demand_reply.py:88
 msgid "Take it"
 msgstr "Забраць"
 
-#: rest_food/demand/demand_command.py:230
+#: rest_food/demand/demand_command.py:234
 msgid "You've booked this"
 msgstr "Вы паабяцалі забраць прадукты"
 
-#: rest_food/demand/demand_command.py:281
+#: rest_food/demand/demand_command.py:285
 msgid "Choose your social status:"
 msgstr "Абярыце свой сацыяльны статус:"
+
+#: rest_food/demand/demand_command.py:295
+msgid "Hello. Here you will see notifications about available food."
+msgstr "Вітаю. Тут Вы ўбачыце паведамленні а даступных прадуктах."
 
 #: rest_food/demand/demand_reply.py:18
 msgid ""
@@ -514,14 +519,10 @@ msgstr "Увядзіце імя:"
 msgid "Send your phone number"
 msgstr "Вышліце свой нумар тэлефона"
 
-#: rest_food/demand/demand_state.py:76
-msgid "Hello. Here you will see notifications about available food."
-msgstr "Вітаю. Тут Вы ўбачыце паведамленні а даступных прадуктах."
-
-#: rest_food/handlers.py:95 rest_food/handlers.py:163
+#: rest_food/handlers.py:94 rest_food/handlers.py:164
 msgid "Something went wrong. Try something different, please."
 msgstr "Штосьці пайшло не так. Паспрабуйце па-іншаму."
 
-#: rest_food/handlers.py:98
+#: rest_food/handlers.py:97
 msgid "Start from the beginning"
 msgstr "Пачаць усё занава"
