@@ -190,7 +190,7 @@ msgid "Back"
 msgstr "Z powrotem"
 
 #: rest_food/common/shared_commands.py:38
-msgid "Choose the bot language:"
+msgid "Wybierz język dla bota:"
 msgstr "Wybierz język bota:"
 
 #: rest_food/supply/supply_command.py:74

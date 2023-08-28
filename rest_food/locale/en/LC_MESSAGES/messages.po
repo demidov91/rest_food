@@ -193,7 +193,7 @@ msgstr "Back"
 
 #: rest_food/common/shared_commands.py:38
 msgid "Choose the bot language:"
-msgstr "Choose the bot language:"
+msgstr "Choose a language for the bot:"
 
 #: rest_food/supply/supply_command.py:74
 #, python-format

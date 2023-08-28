@@ -194,7 +194,7 @@ msgstr "Назад"
 
 #: rest_food/common/shared_commands.py:38
 msgid "Choose the bot language:"
-msgstr "Оберіть мову для бота:"
+msgstr "Виберіть мову для бота:"
 
 #: rest_food/supply/supply_command.py:74
 #, python-format
