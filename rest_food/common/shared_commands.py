@@ -8,6 +8,7 @@ LANG_TO_NAME = [
     x for x in [
         ('be', 'Беларуская мова'),
         ('uk', 'Українська мова'),
+        ('ru', 'Русский язык'),
         ('pl', 'Język polski'),
         ('lt', 'Lietuvių kalba'),
         ('en', 'English language')
