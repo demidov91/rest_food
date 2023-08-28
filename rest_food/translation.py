@@ -18,7 +18,7 @@ _translations = {}
 LOCALE_DIR = os.path.join(BASE_DIR, 'locale')
 logger = logging.getLogger(__name__)
 
-LANGUAGES_SUPPORTED = ['be', 'ru', 'en', 'uk']
+LANGUAGES_SUPPORTED = ['be', 'ru', 'en', 'uk', 'pl']
 
 
 def set_language(lang_code: str):
