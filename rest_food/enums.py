@@ -16,7 +16,6 @@ class SupplyState(Enum):
     FORCE_COORDINATES = 'force_coordinates'
     INITIAL_EDIT_PHONE = 'initial_edit_phone'
     BOOKING_CANCEL_REASON = 'booking_cancel_reason'
-    SET_LANGUAGE = 'set_language'
     NO_STATE = 'no_state'
 
 
@@ -89,6 +88,13 @@ class SupplyTgCommand(Enum):
     """Expected enum of Telegram /{command}s """
     START = 'start'
     LANGUAGE = 'language'
+
+
+class DemandTgCommand(Enum):
+    """Expected enum of Telegram /{command}s """
+    START = 'start'
+    LANGUAGE = 'language'
+    LOCATION = 'location'
 
 
 class UserInfoField(Enum):

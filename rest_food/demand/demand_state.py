@@ -1,10 +1,10 @@
 from rest_food.communication import queue_messages
 from rest_food.db import set_info, unset_info
 from rest_food.entities import Reply
-from rest_food.enums import Workflow, UserInfoField
+from rest_food.enums import Workflow, UserInfoField, DemandCommand
 from rest_food.exceptions import ValidationError
 from rest_food.common.state import State
-from rest_food.demand.demand_command import handle
+from rest_food.demand.demand_command import handle_db_command, handle_parsed_command
 from rest_food.demand.demand_utils import get_demand_back_button, get_next_command
 from rest_food.common.validators import validate_phone_number
 from rest_food.translation import translate_lazy as _
@@ -24,7 +24,7 @@ class BaseSetInfoState(State):
         return self._build_cancellable_message(self._intro_text)
 
     def handle_pending_command(self):
-        return handle(self.db_user, get_next_command(self.db_user))
+        return handle_db_command(self.db_user, get_next_command(self.db_user))
 
     def handle(self, text: str, *args, **kwargs):
         set_info(self.db_user, self._info_field, text)
@@ -73,4 +73,4 @@ class SetPhoneState(BaseSetInfoState):
 
 class DefaultState(State):
     def handle(self, *args, **kwargs) -> Reply:
-        return Reply(text=_('Hello. Here you will see notifications about available food.'))
+        return handle_parsed_command(self.db_user, DemandCommand.DEFAULT)
