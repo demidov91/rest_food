@@ -4,7 +4,6 @@ from rest_food.enums import SupplyState, DemandState, Provider, Workflow, UserIn
 from rest_food.common.state import State
 from rest_food.demand import demand_state
 from rest_food.supply import supply_state
-from rest_food.common.shared_states import SetLanguage
 from rest_food.db import get_or_create_user, set_state
 from rest_food.entities import User
 
@@ -23,7 +22,6 @@ SUPPLY = {
     SupplyState.FORCE_COORDINATES: supply_state.ForceSetCoordinatesState,
     SupplyState.INITIAL_EDIT_PHONE: supply_state.InitialSetPhoneState,
     SupplyState.BOOKING_CANCEL_REASON: supply_state.BookingCancelReason,
-    SupplyState.SET_LANGUAGE: SetLanguage,
     SupplyState.NO_STATE: supply_state.NoState,
 }
 

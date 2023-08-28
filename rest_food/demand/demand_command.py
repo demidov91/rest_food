@@ -43,11 +43,15 @@ def parse_data(data) -> Command:
 
 
 def handle_demand_data(user: User, data: str):
-    return handle(user, parse_data(data))
+    return handle_db_command(user, parse_data(data))
 
 
-def handle(user: User, command: Command):
-    return COMMAND_HANDLERS[DemandCommand(command.name)](user, *command.arguments)
+def handle_db_command(user: User, command: Command):
+    return handle_parsed_command(user, DemandCommand(command.name), *command.arguments)
+
+
+def handle_parsed_command(user: User, command: DemandCommand, *arguments):
+    return COMMAND_HANDLERS[command](user, *arguments)
 
 
 def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id: str):
@@ -245,19 +249,19 @@ def _handle_map_booked(user: User, supply_provider: str, supply_user_id: str, me
 def _handle_enable_username(user: User):
     set_info(user, UserInfoField.DISPLAY_USERNAME, True)
     command = get_next_command(user)
-    return handle(user, command)
+    return handle_db_command(user, command)
 
 
 def _handle_disable_username(user: User):
     set_info(user, UserInfoField.DISPLAY_USERNAME, False)
     command = get_next_command(user)
-    return handle(user, command)
+    return handle_db_command(user, command)
 
 
 def _handle_set_social_status(user: User, social_status: str):
     set_info(user, UserInfoField.SOCIAL_STATUS, social_status)
     command = get_next_command(user)
-    return handle(user, command)
+    return handle_db_command(user, command)
 
 
 def _handle_edit_name(user: User):
@@ -284,7 +288,11 @@ def _handle_edit_social_status(user: User):
 def _handle_set_language(user: User, language: str):
     set_approved_language(user, language)
     set_language(language)
-    return Reply(next_state=None)
+    return handle_parsed_command(user, DemandCommand.DEFAULT)
+
+
+def _handle_default(user: User):
+    return Reply(text=_('Hello. Here you will see notifications about available food.'))
 
 
 COMMAND_HANDLERS = {
@@ -303,4 +311,5 @@ COMMAND_HANDLERS = {
     DemandCommand.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
     DemandCommand.SET_SOCIAL_STATUS: _handle_set_social_status,
     DemandCommand.SET_LANGUAGE: _handle_set_language,
+    DemandCommand.DEFAULT: _handle_default,
 }

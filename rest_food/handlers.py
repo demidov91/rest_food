@@ -3,9 +3,12 @@ from typing import Optional
 
 from telegram import Update
 
+from rest_food.common.validators import optional_text_to_command
 from rest_food.db import get_or_create_user
+from rest_food.demand.demand_tg_command import handle_demand_tg_command
 from rest_food.entities import Reply
-from rest_food.enums import SupplyState, Provider, Workflow, SupplyCommand, UserInfoField, SupplyTgCommand
+from rest_food.enums import SupplyState, Provider, Workflow, SupplyCommand, UserInfoField, SupplyTgCommand, \
+    DemandTgCommand
 from rest_food.state_machine import (
     get_supply_state,
     set_supply_state,
@@ -51,20 +54,16 @@ def tg_supply(data):
                 reply.next_state = SupplyState.NO_STATE
 
         else:
-            if update.message and update.message.text and update.message.text.startswith('/'):
-                try:
-                    tg_command = SupplyTgCommand(update.message.text[1:])
-                except ValueError:
-                    logger.info('This is not a command: %s'.format(update.message.text))
+            tg_command = optional_text_to_command(update.message and update.message.text, SupplyTgCommand)
+            if tg_command is not None:
+                reply = handle_supply_tg_command(db_user, tg_command)
 
-                else:
-                    state = handle_supply_tg_command(db_user, tg_command)
-
-            reply = state.handle(
-                update_to_text(update),
-                data,
-                update_to_coordinates(update),
-            )
+            else:
+                reply = state.handle(
+                    update_to_text(update),
+                    data,
+                    update_to_coordinates(update),
+                )
 
         if reply is not None and reply.next_state is not None:
             next_state = set_supply_state(db_user, reply.next_state)
@@ -126,15 +125,17 @@ def tg_demand(data):
         if update.callback_query is not None:
             reply = handle_demand_data(user=user, data=update.callback_query.data)
         else:
-            if text == '/start':
-                set_demand_state(user, None)
+            tg_command = optional_text_to_command(text, DemandTgCommand)
+            if tg_command is not None:
+                reply = handle_demand_tg_command(user, tg_command)
 
-            state = get_demand_state(user)
-            reply = state.handle(
-                update_to_text(update),
-                data=None,
-                coordinates=update_to_coordinates(update),
-            )
+            else:
+                state = get_demand_state(user)
+                reply = state.handle(
+                    update_to_text(update),
+                    data=None,
+                    coordinates=update_to_coordinates(update),
+                )
 
         replies = [reply]
 
