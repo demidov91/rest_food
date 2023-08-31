@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-31 10:34+0200\n"
+"POT-Creation-Date: 2023-08-31 11:18+0200\n"
 "Language: be.UTF-8\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,8 +201,7 @@ msgid "Belarus"
 msgstr ""
 
 #: rest_food/common/constants.py:32
-msgctxt "in"
-msgid "Belarus"
+msgid "in-Belarus"
 msgstr ""
 
 #: rest_food/common/constants.py:33
@@ -210,8 +209,7 @@ msgid "Poland"
 msgstr ""
 
 #: rest_food/common/constants.py:33
-msgctxt "in"
-msgid "Poland"
+msgid "in-Poland"
 msgstr ""
 
 #: rest_food/common/constants.py:34
@@ -219,8 +217,7 @@ msgid "Lithuania"
 msgstr ""
 
 #: rest_food/common/constants.py:34
-msgctxt "in"
-msgid "Lithuania"
+msgid "in-Lithuania"
 msgstr ""
 
 #: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:312
@@ -234,8 +231,7 @@ msgid "Minsk"
 msgstr ""
 
 #: rest_food/common/constants.py:40
-msgctxt "for"
-msgid "Minsk"
+msgid "for-Minsk"
 msgstr ""
 
 #: rest_food/common/constants.py:41
@@ -243,8 +239,7 @@ msgid "Warszawa"
 msgstr ""
 
 #: rest_food/common/constants.py:41
-msgctxt "for"
-msgid "Warszawa"
+msgid "for-Warszawa"
 msgstr ""
 
 #: rest_food/common/constants.py:42
@@ -252,8 +247,7 @@ msgid "Vilnius"
 msgstr ""
 
 #: rest_food/common/constants.py:42
-msgctxt "for"
-msgid "Vilnius"
+msgid "for-Vilnius"
 msgstr ""
 
 #: rest_food/supply/supply_command.py:74

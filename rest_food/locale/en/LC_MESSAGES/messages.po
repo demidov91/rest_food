@@ -1,261 +1,26 @@
 msgid ""
 msgstr ""
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-31 10:34+0200\n"
-"Language: be.UTF-8\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: rest_food/entities.py:19
-msgid "big family"
-msgstr "The large family"
-
-#: rest_food/entities.py:20
-msgid "disability"
-msgstr "Disability group"
-
-#: rest_food/entities.py:21
-msgid "homeless"
-msgstr "Homeless"
-
-#: rest_food/entities.py:22
-msgid "hard times"
-msgstr "Difficult social situation"
-
-#: rest_food/entities.py:23
-msgid "emigrant"
-msgstr "Emigrant"
-
-#: rest_food/entities.py:24
-msgid "other"
-msgstr "Other"
-
-#: rest_food/communication.py:67
-#, python-format
-msgid ""
-"Your request was rejected with the following words:\n"
-"%(message)s\n"
-"\n"
-"Request was:\n"
-"%(food)s"
-msgstr ""
-"Your request was rejected with the following words:\n"
-"%(message)s\n"
-"\n"
-"Food description:\n"
-"%(food)s"
-
-#: rest_food/communication.py:90
-msgid "Your request was approved"
-msgstr ""
-"Your request was approved. Please, make a phone call before you go out."
-
-#: rest_food/communication.py:131
-msgid "Your account is approved!"
-msgstr "Your account is approved!"
-
-#: rest_food/communication.py:134 rest_food/supply/supply_state.py:312
-#: rest_food/supply/supply_state.py:315 rest_food/supply/supply_state.py:323
-#: rest_food/demand/demand_state.py:56
-msgid "OK ✅"
-msgstr "OK ✅"
-
-#: rest_food/communication.py:149 rest_food/supply/supply_state.py:75
-#, python-format
-msgid "Your account was declined. Please, contact %s for any clarifications."
-msgstr "Your account was declined. Please, contact %s for any clarifications."
-
-#: rest_food/common/formatters.py:15
-msgid ""
-"\n"
-"Time: {}"
-msgstr ""
-"\n"
-"Time: {}"
-
-#: rest_food/common/formatters.py:33
-msgid "{} will take the food.\n"
-msgstr "{} will take the food.\n"
-
-#: rest_food/common/formatters.py:37
-msgid "Phone: {}\n"
-msgstr "Phone: {}\n"
-
-#: rest_food/common/formatters.py:44
-msgid "Telegram: @{}\n"
-msgstr "Telegram: @{}\n"
-
-#: rest_food/common/formatters.py:48
-msgid "No contact info was provided.\n"
-msgstr "No contact info was provided.\n"
-
-#: rest_food/common/formatters.py:53
-#, python-format
-msgid "Social status: %s"
-msgstr "Social status: %s"
-
-#: rest_food/common/formatters.py:64
-msgid ""
-"{}\n"
-"\n"
-"Your message was:\n"
-"\n"
-"{}"
-msgstr ""
-"{}\n"
-"\n"
-"Your message was:\n"
-"\n"
-"{}"
-
-#: rest_food/common/formatters.py:72
-#, python-brace-format
-msgid ""
-"Restaurant name: {name}\n"
-"Address: {address}"
-msgstr ""
-"Name: {name}\n"
-"Address: {address}"
+#: rest_food/demand/demand_command.py:84 rest_food/demand/demand_command.py:206
+#: rest_food/demand/demand_reply.py:43
+msgid "🌍 Map"
+msgstr "🌍 Map"
 
 #: rest_food/common/formatters.py:79
 #, python-format
-msgid ""
-"\n"
-"Phone: %s"
-msgstr ""
-"\n"
-"Phone: %s"
+msgid "\nPhone: %s"
+msgstr "\nPhone: %s"
 
-#: rest_food/common/formatters.py:99
+#: rest_food/common/formatters.py:15
+msgid "\nTime: {}"
+msgstr "\nTime: {}"
+
+#: rest_food/demand/demand_command.py:100
 #, python-format
-msgid "User @%s"
-msgstr "User @%s"
-
-#: rest_food/common/formatters.py:101
-msgid "New user"
-msgstr "New user"
-
-#: rest_food/common/formatters.py:106
-#, python-brace-format
-msgid ""
-"{user_name} wants to join as a supplier. Provided description is:\n"
-"\n"
-"{description}"
-msgstr ""
-"{user_name} wants to join as a food sharer. Provided description:\n"
-"\n"
-"{description}"
-
-#: rest_food/common/formatters.py:115
-#, python-brace-format
-msgid ""
-"{user_name} was APPROVED as a supplier. Provided description was:\n"
-"\n"
-"{description}\n"
-"\n"
-"DB id: {id}"
-msgstr ""
-"{user_name} was APPROVED as a food sharer. The description was:\n"
-"\n"
-"{description}\n"
-"\n"
-"DB id: {id}"
-
-#: rest_food/common/formatters.py:127
-#, python-brace-format
-msgid ""
-"{user_name} was DECLINED as a supplier. Provided description was:\n"
-"\n"
-"{description}\n"
-"\n"
-"DB id: {id}"
-msgstr ""
-"{user_name} was DECLINED as a food sharer. The description:\n"
-"\n"
-"{description}\n"
-"\n"
-"DB id: {id}"
-
-#: rest_food/common/validators.py:14
-msgid "Please, provide only pone number."
-msgstr "Please, provide only your pone number."
-
-#: rest_food/common/validators.py:18
-msgid "This is not a valid phone number."
-msgstr "This is not a valid phone number."
-
-#: rest_food/common/shared_commands.py:24
-#: rest_food/demand/demand_command.py:215
-#: rest_food/demand/demand_command.py:308
-#: rest_food/demand/demand_command.py:329 rest_food/demand/demand_reply.py:111
-#: rest_food/demand/demand_reply.py:126 rest_food/demand/demand_reply.py:136
-#: rest_food/demand/demand_utils.py:17
-msgid "Back"
-msgstr "Back"
-
-#: rest_food/common/shared_commands.py:27
-msgid "Choose the bot language:"
-msgstr "Choose a language for the bot:"
-
-#: rest_food/common/constants.py:32
-msgid "Belarus"
-msgstr ""
-
-#: rest_food/common/constants.py:32
-msgctxt "in"
-msgid "Belarus"
-msgstr ""
-
-#: rest_food/common/constants.py:33
-msgid "Poland"
-msgstr ""
-
-#: rest_food/common/constants.py:33
-msgctxt "in"
-msgid "Poland"
-msgstr ""
-
-#: rest_food/common/constants.py:34
-msgid "Lithuania"
-msgstr ""
-
-#: rest_food/common/constants.py:34
-msgctxt "in"
-msgid "Lithuania"
-msgstr ""
-
-#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:312
-#: rest_food/demand/demand_command.py:332
-#, fuzzy
-msgid "Other"
-msgstr "Other"
-
-#: rest_food/common/constants.py:40
-msgid "Minsk"
-msgstr ""
-
-#: rest_food/common/constants.py:40
-msgctxt "for"
-msgid "Minsk"
-msgstr ""
-
-#: rest_food/common/constants.py:41
-msgid "Warszawa"
-msgstr ""
-
-#: rest_food/common/constants.py:41
-msgctxt "for"
-msgid "Warszawa"
-msgstr ""
-
-#: rest_food/common/constants.py:42
-msgid "Vilnius"
-msgstr ""
-
-#: rest_food/common/constants.py:42
-msgctxt "for"
-msgid "Vilnius"
-msgstr ""
+msgid "%(info)s\n-----------\n%(ask_for_approve)s"
+msgstr "%(info)s\n-----------\n%(ask_for_approve)s"
 
 #: rest_food/supply/supply_command.py:74
 #, python-format
@@ -267,65 +32,36 @@ msgstr "%s (booked)"
 msgid "%s (not booked)"
 msgstr "%s (not booked)"
 
-#: rest_food/supply/supply_command.py:93 rest_food/supply/supply_state.py:214
-msgid "Go to product posting"
-msgstr "Go to product sharing"
-
-#: rest_food/supply/supply_command.py:96
-msgid "Last messages"
-msgstr "Last messages"
-
-#: rest_food/supply/supply_command.py:118
+#: rest_food/demand/demand_command.py:171
 #, python-format
-msgid ""
-"Not yet booked.\n"
-"\n"
-"%s"
-msgstr ""
-"Not yet booked.\n"
-"\n"
-"%s"
+msgid "%s is notified that you'll take the food. Please, wait for approval."
+msgstr "%s is notified that you'll take the food. Please, wait for approval."
 
-#: rest_food/supply/supply_command.py:125 rest_food/supply/supply_reply.py:24
-msgid "View all messages"
-msgstr "View all messages"
-
-#: rest_food/supply/supply_command.py:146
-msgid "Nope, decline it"
-msgstr "Nope, decline it"
-
-#: rest_food/supply/supply_command.py:161
-msgid "Sorry, approve it"
-msgstr "Sorry, approve it"
-
-#: rest_food/supply/supply_state.py:54
-msgid "Please, provide information about yourself before getting started"
-msgstr "Please, provide information about yourself before getting started"
-
-#: rest_food/supply/supply_state.py:63
-msgid "Edit restaurant info"
-msgstr "Edit contact information"
-
-#: rest_food/supply/supply_state.py:71
-msgid "Enter food you can share and click \"send\""
-msgstr "Enter food you can share and click \"send\""
-
-#: rest_food/supply/supply_state.py:82
+#: rest_food/supply/supply_state.py:200
 #, python-format
-msgid ""
-"We'll notify you when your account is approved. Also, you can contact us "
-"with %s"
-msgstr ""
-"We'll notify you when your account is approved. Also, you can contact %s for "
-"additional info"
+msgid "Address: %s"
+msgstr "Address: %s"
 
-#: rest_food/supply/supply_state.py:93
-msgid "View posted products"
-msgstr "View products shared"
+#: rest_food/supply/supply_reply.py:20 rest_food/supply/supply_reply.py:36
+msgid "Approve"
+msgstr "Approve"
 
-#: rest_food/supply/supply_state.py:117
-msgid "Set time and send"
-msgstr "Set time and send"
+#: rest_food/common/shared_commands.py:24
+#: rest_food/demand/demand_command.py:215
+#: rest_food/demand/demand_command.py:308
+#: rest_food/demand/demand_command.py:329 rest_food/demand/demand_reply.py:111
+#: rest_food/demand/demand_reply.py:126 rest_food/demand/demand_reply.py:136
+#: rest_food/demand/demand_utils.py:17
+msgid "Back"
+msgstr "Back"
+
+#: rest_food/supply/supply_state.py:427
+msgid "Back to the message"
+msgstr "Back to the message"
+
+#: rest_food/common/constants.py:32
+msgid "Belarus"
+msgstr "Belarus"
 
 #: rest_food/supply/supply_state.py:121 rest_food/supply/supply_state.py:152
 #: rest_food/supply/supply_state.py:248 rest_food/supply/supply_state.py:366
@@ -333,160 +69,25 @@ msgstr "Set time and send"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: rest_food/supply/supply_state.py:129
-msgid ""
-"Food you can share:\n"
-"{}"
-msgstr ""
-"Food you can share:\n"
-"{}"
-
-#: rest_food/supply/supply_state.py:139 rest_food/supply/supply_state.py:162
-msgid "Product list is cleared."
-msgstr "Cancelled"
-
-#: rest_food/supply/supply_state.py:149
-msgid "Specify the time"
-msgstr "Specify the time"
-
-#: rest_food/supply/supply_state.py:180
-msgid ""
-"Information is sent. I'll notify you when there is someone to take this food."
-msgstr ""
-"Information is sent. I'll tell you when there is someone to take this food."
-
-#: rest_food/supply/supply_state.py:193
-msgid "You can edit your contact info here"
-msgstr "Contact information"
-
-#: rest_food/supply/supply_state.py:196
-#, python-format
-msgid "Name: %s"
-msgstr "Name: %s"
-
-#: rest_food/supply/supply_state.py:200
-#, python-format
-msgid "Address: %s"
-msgstr "Address: %s"
-
-#: rest_food/supply/supply_state.py:204
-#, python-format
-msgid "Coordinates: %s"
-msgstr "Coordinates: %s"
-
-#: rest_food/supply/supply_state.py:210 rest_food/demand/demand_command.py:142
-#, python-format
-msgid "Phone: %s"
-msgstr "Phone: %s"
-
-#: rest_food/supply/supply_state.py:269
-msgid "Please, enter name of the restaurant."
-msgstr "Please enter the name of the institution."
-
-#: rest_food/supply/supply_state.py:274
-msgid "Please, provide restaurant address."
-msgstr "Please, provide the address."
-
-#: rest_food/supply/supply_state.py:297 rest_food/demand/demand_state.py:43
-msgid "← Back"
-msgstr "← Back"
-
-#: rest_food/supply/supply_state.py:297 rest_food/supply/supply_state.py:329
-#: rest_food/demand/demand_state.py:43
-msgid "Send phone"
-msgstr "Send phone"
-
-#: rest_food/supply/supply_state.py:300 rest_food/demand/demand_state.py:46
-msgid "❌ Delete"
-msgstr "❌ Delete"
-
-#: rest_food/supply/supply_state.py:303 rest_food/supply/supply_state.py:332
-msgid "Please, send your contact number."
-msgstr "Please, send your contact number."
-
-#: rest_food/supply/supply_state.py:329
-msgid "❌ Dismiss"
-msgstr "❌ Dismiss"
-
-#: rest_food/supply/supply_state.py:358
-msgid "No! Edit! 🌍"
-msgstr "No, edit! 🌍"
-
-#: rest_food/supply/supply_state.py:362
-msgid "Yes! Approve ✅"
-msgstr "Yes ✅"
-
-#: rest_food/supply/supply_state.py:372
-msgid "Please, send me your coordinates. (Attach -> Location)"
-msgstr "Please, send me your coordinates: Attach -> Location"
-
-#: rest_food/supply/supply_state.py:380
-msgid "Provide later"
-msgstr "Later"
-
-#: rest_food/supply/supply_state.py:425
-msgid "What to tell the foodsaver?"
-msgstr "What to tell the foodsaver?"
-
-#: rest_food/supply/supply_state.py:427
-msgid "Back to the message"
-msgstr "Back to the message"
-
 #: rest_food/supply/supply_state.py:441
 msgid "Cancelled"
 msgstr "Cancelled"
 
-#: rest_food/supply/supply_state.py:454
-msgid "Sorry, something went wrong."
-msgstr "Sorry, something went wrong."
+#: rest_food/common/shared_commands.py:27
+msgid "Choose the bot language:"
+msgstr "Choose a language for the bot:"
 
-#: rest_food/supply/supply_reply.py:17
-msgid "Reject"
-msgstr "Reject"
+#: rest_food/demand/demand_command.py:317
+msgid "Choose your active area"
+msgstr "Choose your city:"
 
-#: rest_food/supply/supply_reply.py:20 rest_food/supply/supply_reply.py:36
-msgid "Approve"
-msgstr "Approve"
-
-#: rest_food/supply/supply_reply.py:39
-msgid "Decline"
-msgstr "Decline"
-
-#: rest_food/demand/demand_command.py:63 rest_food/demand/demand_command.py:185
-msgid "Information was not found."
-msgstr "Information was not found."
-
-#: rest_food/demand/demand_command.py:84 rest_food/demand/demand_command.py:206
-#: rest_food/demand/demand_reply.py:43
-msgid "🌍 Map"
-msgstr "🌍 Map"
-
-#: rest_food/demand/demand_command.py:90
-msgid "❌ Cancel"
-msgstr "❌ Cancel"
+#: rest_food/demand/demand_command.py:286
+msgid "Choose your social status:"
+msgstr "Choose your social status:"
 
 #: rest_food/demand/demand_command.py:94
 msgid "Confirm 🆗✅"
 msgstr "Confirm 🆗✅"
-
-#: rest_food/demand/demand_command.py:100
-#, python-format
-msgid ""
-"%(info)s\n"
-"-----------\n"
-"%(ask_for_approve)s"
-msgstr ""
-"%(info)s\n"
-"-----------\n"
-"%(ask_for_approve)s"
-
-#: rest_food/demand/demand_command.py:102
-msgid "Please, confirm/edit your contact information to proceed."
-msgstr "Please, confirm your contact information to proceed."
-
-#: rest_food/demand/demand_command.py:110
-msgid "Name: {}"
-msgstr "Name: {}"
 
 #: rest_food/demand/demand_command.py:117
 msgid "Connect via {}: ✅"
@@ -496,129 +97,412 @@ msgstr "Connect via {}: ✅"
 msgid "Connect via {}: ❌"
 msgstr "Connect via {}: ❌"
 
-#: rest_food/demand/demand_command.py:129
-msgid "Social status: not set ❌"
-msgstr "Social status: not set ❌"
+#: rest_food/supply/supply_state.py:204
+#, python-format
+msgid "Coordinates: %s"
+msgstr "Coordinates: %s"
+
+#: rest_food/demand/demand_reply.py:101
+msgid "Coordinates where not provided."
+msgstr "Coordinates where not provided"
+
+#: rest_food/supply/supply_reply.py:39
+msgid "Decline"
+msgstr "Decline"
+
+#: rest_food/supply/supply_state.py:63
+msgid "Edit restaurant info"
+msgstr "Edit contact information"
+
+#: rest_food/supply/supply_state.py:71
+msgid "Enter food you can share and click \"send\""
+msgstr "Enter food you can share and click \"send\""
+
+#: rest_food/demand/demand_state.py:35
+msgid "Enter your name:"
+msgstr "Enter your name:"
+
+#: rest_food/supply/supply_state.py:129
+msgid "Food you can share:\n{}"
+msgstr "Food you can share:\n{}"
+
+#: rest_food/supply/supply_command.py:93 rest_food/supply/supply_state.py:214
+msgid "Go to product posting"
+msgstr "Go to product sharing"
+
+#: rest_food/demand/demand_command.py:296
+msgid "Hello. Here you will see notifications about available food."
+msgstr "Hello. Here you will see notifications about available food."
+
+#: rest_food/demand/demand_reply.py:28
+msgid "Info"
+msgstr "Information"
+
+#: rest_food/supply/supply_state.py:180
+msgid "Information is sent. I'll notify you when there is someone to take this food."
+msgstr "Information is sent. I'll tell you when there is someone to take this food."
+
+#: rest_food/demand/demand_command.py:63 rest_food/demand/demand_command.py:185
+msgid "Information was not found."
+msgstr "Information was not found."
+
+#: rest_food/supply/supply_command.py:96
+msgid "Last messages"
+msgstr "Last messages"
+
+#: rest_food/common/constants.py:34
+msgid "Lithuania"
+msgstr "Lithuania"
+
+#: rest_food/common/constants.py:40
+msgid "Minsk"
+msgstr "Minsk"
+
+#: rest_food/supply/supply_state.py:196
+#, python-format
+msgid "Name: %s"
+msgstr "Name: %s"
+
+#: rest_food/demand/demand_command.py:110
+msgid "Name: {}"
+msgstr "Name: {}"
+
+#: rest_food/common/formatters.py:101
+msgid "New user"
+msgstr "New user"
+
+#: rest_food/supply/supply_state.py:358
+msgid "No! Edit! 🌍"
+msgstr "No, edit! 🌍"
+
+#: rest_food/common/formatters.py:48
+msgid "No contact info was provided.\n"
+msgstr "No contact info was provided.\n"
+
+#: rest_food/supply/supply_command.py:146
+msgid "Nope, decline it"
+msgstr "Nope, decline it"
+
+#: rest_food/supply/supply_command.py:118
+#, python-format
+msgid "Not yet booked.\n\n%s"
+msgstr "Not yet booked.\n\n%s"
+
+#: rest_food/demand/demand_reply.py:79
+#, python-brace-format
+msgid "Now you'll see notifications for {city}. Use /{command} to change your choice."
+msgstr "Now you'll see notifications for {city}. Use /{command} to change your choice."
+
+#: rest_food/communication.py:134 rest_food/supply/supply_state.py:312
+#: rest_food/supply/supply_state.py:315 rest_food/supply/supply_state.py:323
+#: rest_food/demand/demand_state.py:56
+msgid "OK ✅"
+msgstr "OK ✅"
+
+#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:312
+#: rest_food/demand/demand_command.py:332
+msgid "Other"
+msgstr "Other"
+
+#: rest_food/supply/supply_state.py:210 rest_food/demand/demand_command.py:142
+#, python-format
+msgid "Phone: %s"
+msgstr "Phone: %s"
+
+#: rest_food/common/formatters.py:37
+msgid "Phone: {}\n"
+msgstr "Phone: {}\n"
+
+#: rest_food/demand/demand_command.py:102
+msgid "Please, confirm/edit your contact information to proceed."
+msgstr "Please, confirm your contact information to proceed."
+
+#: rest_food/supply/supply_state.py:269
+msgid "Please, enter name of the restaurant."
+msgstr "Please enter the name of the institution."
+
+#: rest_food/supply/supply_state.py:54
+msgid "Please, provide information about yourself before getting started"
+msgstr "Please, provide information about yourself before getting started"
+
+#: rest_food/common/validators.py:14
+msgid "Please, provide only pone number."
+msgstr "Please, provide only your pone number."
+
+#: rest_food/supply/supply_state.py:274
+msgid "Please, provide restaurant address."
+msgstr "Please, provide the address."
+
+#: rest_food/supply/supply_state.py:372
+msgid "Please, send me your coordinates. (Attach -> Location)"
+msgstr "Please, send me your coordinates: Attach -> Location"
+
+#: rest_food/supply/supply_state.py:303 rest_food/supply/supply_state.py:332
+msgid "Please, send your contact number."
+msgstr "Please, send your contact number."
+
+#: rest_food/common/constants.py:33
+msgid "Poland"
+msgstr "Poland"
+
+#: rest_food/supply/supply_state.py:139 rest_food/supply/supply_state.py:162
+msgid "Product list is cleared."
+msgstr "Cancelled"
+
+#: rest_food/supply/supply_state.py:380
+msgid "Provide later"
+msgstr "Later"
+
+#: rest_food/supply/supply_reply.py:17
+msgid "Reject"
+msgstr "Reject"
+
+#: rest_food/common/formatters.py:72
+#, python-brace-format
+msgid "Restaurant name: {name}\nAddress: {address}"
+msgstr "Name: {name}\nAddress: {address}"
+
+#: rest_food/demand/demand_reply.py:55
+msgid "SOMEONE HAS ALREADY TAKEN IT!\n\n{}"
+msgstr "Someone has already taken it!\n\n{}"
+
+#: rest_food/supply/supply_state.py:297 rest_food/supply/supply_state.py:329
+#: rest_food/demand/demand_state.py:43
+msgid "Send phone"
+msgstr "Send phone"
+
+#: rest_food/demand/demand_state.py:49
+msgid "Send your phone number"
+msgstr "Send your phone number"
+
+#: rest_food/supply/supply_state.py:117
+msgid "Set time and send"
+msgstr "Set time and send"
+
+#: rest_food/common/formatters.py:53
+#, python-format
+msgid "Social status: %s"
+msgstr "Social status: %s"
 
 #: rest_food/demand/demand_command.py:131
 #, python-format
 msgid "Social status: %s ✅"
 msgstr "Social status: %s ✅"
 
-#: rest_food/demand/demand_command.py:139
-msgid "not set ❓"
-msgstr "not set ❓"
+#: rest_food/demand/demand_command.py:129
+msgid "Social status: not set ❌"
+msgstr "Social status: not set ❌"
 
 #: rest_food/demand/demand_command.py:162
 msgid "Someone has already taken it."
 msgstr "Someone has already taken it."
 
-#: rest_food/demand/demand_command.py:171
-#, python-format
-msgid "%s is notified that you'll take the food. Please, wait for approval."
-msgstr "%s is notified that you'll take the food. Please, wait for approval."
+#: rest_food/handlers.py:94 rest_food/handlers.py:164
+msgid "Something went wrong. Try something different, please."
+msgstr "Something went wrong. Try something different, please."
+
+#: rest_food/supply/supply_command.py:161
+msgid "Sorry, approve it"
+msgstr "Sorry, approve it"
+
+#: rest_food/supply/supply_state.py:454
+msgid "Sorry, something went wrong."
+msgstr "Sorry, something went wrong."
+
+#: rest_food/demand/demand_command.py:356
+msgid "Sorry. Unexpected error happened. Please, try later."
+msgstr "Sorry. Unexpected error happened. Please, try again later."
+
+#: rest_food/supply/supply_state.py:149
+msgid "Specify the time"
+msgstr "Specify the time"
+
+#: rest_food/handlers.py:97
+msgid "Start from the beginning"
+msgstr "Start from the beginning"
 
 #: rest_food/demand/demand_command.py:211 rest_food/demand/demand_reply.py:23
 #: rest_food/demand/demand_reply.py:116
 msgid "Take it"
 msgstr "Take it"
 
+#: rest_food/common/formatters.py:44
+msgid "Telegram: @{}\n"
+msgstr "Telegram: @{}\n"
+
+#: rest_food/demand/demand_command.py:339
+msgid "The bot is not active outside of those cities. We will notify you when anything new appears in your area."
+msgstr "The bot is not active outside of those cities. We will notify you when anything new appears in your area."
+
+#: rest_food/common/validators.py:18
+msgid "This is not a valid phone number."
+msgstr "This is not a valid phone number."
+
+#: rest_food/common/formatters.py:99
+#, python-format
+msgid "User @%s"
+msgstr "User @%s"
+
+#: rest_food/supply/supply_command.py:125 rest_food/supply/supply_reply.py:24
+msgid "View all messages"
+msgstr "View all messages"
+
+#: rest_food/supply/supply_state.py:93
+msgid "View posted products"
+msgstr "View products shared"
+
+#: rest_food/common/constants.py:42
+msgid "Vilnius"
+msgstr "Vilnius"
+
+#: rest_food/common/constants.py:41
+msgid "Warszawa"
+msgstr "Warsaw"
+
+#: rest_food/demand/demand_reply.py:71
+#, python-brace-format
+msgid "We'll let you know if new food sharers appear in {country}. Use /{command} to change your choice."
+msgstr "We'll let you know if new food sharers appear in {country}. Use /{command} to change your choice."
+
+#: rest_food/demand/demand_reply.py:62
+#, python-brace-format
+msgid "We'll let you know if the bot starts working in other countries. Use /{command} to update location"
+msgstr "We'll let you know if the bot starts working in other countries. Use /{command} to update location"
+
+#: rest_food/supply/supply_state.py:82
+#, python-format
+msgid "We'll notify you when your account is approved. Also, you can contact us with %s"
+msgstr "We'll notify you when your account is approved. Also, you can contact %s for additional info"
+
+#: rest_food/supply/supply_state.py:425
+msgid "What to tell the foodsaver?"
+msgstr "What to tell the foodsaver?"
+
+#: rest_food/supply/supply_state.py:362
+msgid "Yes! Approve ✅"
+msgstr "Yes ✅"
+
+#: rest_food/demand/demand_reply.py:53
+msgid "You've already taken it.\n\n{}"
+msgstr "You've already taken it.\n\n{}"
+
 #: rest_food/demand/demand_command.py:235
 msgid "You've booked this"
 msgstr "You've booked this"
 
-#: rest_food/demand/demand_command.py:286
-msgid "Choose your social status:"
-msgstr "Choose your social status:"
+#: rest_food/supply/supply_state.py:193
+msgid "You can edit your contact info here"
+msgstr "Contact information"
 
-#: rest_food/demand/demand_command.py:296
-msgid "Hello. Here you will see notifications about available food."
-msgstr "Hello. Here you will see notifications about available food."
+#: rest_food/communication.py:131
+msgid "Your account is approved!"
+msgstr "Your account is approved!"
 
-#: rest_food/demand/demand_command.py:317
-#, fuzzy
-msgid "Choose your active area"
-msgstr "Choose your social status:"
+#: rest_food/communication.py:149 rest_food/supply/supply_state.py:75
+#, python-format
+msgid "Your account was declined. Please, contact %s for any clarifications."
+msgstr "Your account was declined. Please, contact %s for any clarifications."
 
-#: rest_food/demand/demand_command.py:339
-msgid ""
-"The bot is not active outside of those cities. We will notify you when "
-"anything new appears in your area."
-msgstr ""
+#: rest_food/communication.py:90
+msgid "Your request was approved"
+msgstr "Your request was approved. Please, make a phone call before you go out."
 
-#: rest_food/demand/demand_command.py:356
-msgid "Sorry. Unexpected error happened. Please, try later."
-msgstr ""
+#: rest_food/communication.py:67
+#, python-format
+msgid "Your request was rejected with the following words:\n%(message)s\n\nRequest was:\n%(food)s"
+msgstr "Your request was rejected with the following words:\n%(message)s\n\nFood description:\n%(food)s"
+
+#: rest_food/entities.py:19
+msgid "big family"
+msgstr "The large family"
+
+#: rest_food/entities.py:20
+msgid "disability"
+msgstr "Disability group"
+
+#: rest_food/entities.py:23
+msgid "emigrant"
+msgstr "Emigrant"
+
+#: rest_food/common/constants.py:40
+msgid "for-Minsk"
+msgstr "Minsk"
+
+#: rest_food/common/constants.py:42
+msgid "for-Vilnius"
+msgstr "Vilnius"
+
+#: rest_food/common/constants.py:41
+msgid "for-Warszawa"
+msgstr "Warsaw"
+
+#: rest_food/entities.py:22
+msgid "hard times"
+msgstr "Difficult social situation"
+
+#: rest_food/entities.py:21
+msgid "homeless"
+msgstr "Homeless"
+
+#: rest_food/common/constants.py:32
+msgid "in-Belarus"
+msgstr "Belarus"
+
+#: rest_food/common/constants.py:34
+msgid "in-Lithuania"
+msgstr "Lithuania"
+
+#: rest_food/common/constants.py:33
+msgid "in-Poland"
+msgstr "Poland"
+
+#: rest_food/demand/demand_command.py:139
+msgid "not set ❓"
+msgstr "not set ❓"
+
+#: rest_food/entities.py:24
+msgid "other"
+msgstr "Other"
+
+#: rest_food/common/formatters.py:106
+#, python-brace-format
+msgid "{user_name} wants to join as a supplier. Provided description is:\n\n{description}"
+msgstr "{user_name} wants to join as a food sharer. Provided description:\n\n{description}"
+
+#: rest_food/common/formatters.py:115
+#, python-brace-format
+msgid "{user_name} was APPROVED as a supplier. Provided description was:\n\n{description}\n\nDB id: {id}"
+msgstr "{user_name} was APPROVED as a food sharer. The description was:\n\n{description}\n\nDB id: {id}"
+
+#: rest_food/common/formatters.py:127
+#, python-brace-format
+msgid "{user_name} was DECLINED as a supplier. Provided description was:\n\n{description}\n\nDB id: {id}"
+msgstr "{user_name} was DECLINED as a food sharer. The description:\n\n{description}\n\nDB id: {id}"
+
+#: rest_food/common/formatters.py:64
+msgid "{}\n\nYour message was:\n\n{}"
+msgstr "{}\n\nYour message was:\n\n{}"
 
 #: rest_food/demand/demand_reply.py:19
-msgid ""
-"{} can share the following:\n"
-"{}"
-msgstr ""
-"{} can share the following:\n"
-"{}"
+msgid "{} can share the following:\n{}"
+msgstr "{} can share the following:\n{}"
 
-#: rest_food/demand/demand_reply.py:28
-msgid "Info"
-msgstr "Information"
+#: rest_food/common/formatters.py:33
+msgid "{} will take the food.\n"
+msgstr "{} will take the food.\n"
 
-#: rest_food/demand/demand_reply.py:53
-msgid ""
-"You've already taken it.\n"
-"\n"
-"{}"
-msgstr ""
-"You've already taken it.\n"
-"\n"
-"{}"
+#: rest_food/supply/supply_state.py:297 rest_food/demand/demand_state.py:43
+msgid "← Back"
+msgstr "← Back"
 
-#: rest_food/demand/demand_reply.py:55
-msgid ""
-"SOMEONE HAS ALREADY TAKEN IT!\n"
-"\n"
-"{}"
-msgstr ""
-"Someone has already taken it!\n"
-"\n"
-"{}"
+#: rest_food/demand/demand_command.py:90
+msgid "❌ Cancel"
+msgstr "❌ Cancel"
 
-#: rest_food/demand/demand_reply.py:62
-#, python-brace-format
-msgid ""
-"We'll let you know if the bot starts working in other countries. Use /"
-"{command} to update location"
-msgstr ""
+#: rest_food/supply/supply_state.py:300 rest_food/demand/demand_state.py:46
+msgid "❌ Delete"
+msgstr "❌ Delete"
 
-#: rest_food/demand/demand_reply.py:71
-#, python-brace-format
-msgid ""
-"We'll let you know if new food sharers appear in {country}. Use /{command} "
-"to change your choice."
-msgstr ""
-
-#: rest_food/demand/demand_reply.py:79
-#, python-brace-format
-msgid ""
-"Now you'll see notifications for {city}. Use /{command} to change your "
-"choice."
-msgstr ""
-
-#: rest_food/demand/demand_reply.py:101
-msgid "Coordinates where not provided."
-msgstr "Coordinates where not provided"
-
-#: rest_food/demand/demand_state.py:35
-msgid "Enter your name:"
-msgstr "Enter your name:"
-
-#: rest_food/demand/demand_state.py:49
-msgid "Send your phone number"
-msgstr "Send your phone number"
-
-#: rest_food/handlers.py:94 rest_food/handlers.py:164
-msgid "Something went wrong. Try something different, please."
-msgstr "Something went wrong. Try something different, please."
-
-#: rest_food/handlers.py:97
-msgid "Start from the beginning"
-msgstr "Start from the beginning"
+#: rest_food/supply/supply_state.py:329
+msgid "❌ Dismiss"
+msgstr "❌ Dismiss"
