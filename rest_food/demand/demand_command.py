@@ -300,7 +300,7 @@ def _handle_choose_location(user: User):
     buttons = [
         [{
             'text': city.name,
-            'data': DemandCommand.SET_LOCATION.build(f'{city.country_code}:{city.name}'),
+            'data': DemandCommand.SET_LOCATION.build(f'{city.country_code}:{city.code}'),
         }] for city in CITIES
     ]
     buttons.append([
@@ -321,8 +321,8 @@ def _handle_choose_other_location(user: User):
     buttons = [
         [{
             'text': country.name,
-            'data': DemandCommand.SET_LOCATION.build(country.country_code),
-        }] for country in COUNTRIES
+            'data': DemandCommand.SET_LOCATION.build(country.code),
+        }] for country in COUNTRIES if country.code != 'other'
     ]
     buttons.append([
         {

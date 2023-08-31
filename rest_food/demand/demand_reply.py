@@ -67,13 +67,17 @@ def build_set_location_reply(location: str):
         in_country = {x.code: x.in_name for x in COUNTRIES}[location]
 
         return Reply(
-            text=_("We'll let you know if new food sharers appear in {country}").format(country=in_country)
+            text=_(
+                "We'll let you know if new food sharers appear in {country}. Use /{command} to change your choice."
+            ).format(country=in_country, command=DemandTgCommand.LOCATION.value)
         )
 
     if len(location) > 3:
         city_code = location[3:]
         for_city = {x.code: x.for_name for x in CITIES}[city_code]
-        return Reply(text=_("Now you'll see notifications for {city}").format(country=for_city))
+        return Reply(text=_(
+            "Now you'll see notifications for {city}. Use /{command} to change your choice."
+        ).format(city=for_city, command=DemandTgCommand.LOCATION.value))
 
     raise ValueError(location)
 
