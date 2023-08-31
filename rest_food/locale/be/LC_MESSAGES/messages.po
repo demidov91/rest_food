@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-28 11:57+0200\n"
+"POT-Creation-Date: 2023-08-31 11:18+0200\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -183,16 +183,71 @@ msgstr "Калі ласка, увядзіце толькі кантактны т
 msgid "This is not a valid phone number."
 msgstr "Гэта не валідны тэлефонны нумары."
 
-#: rest_food/common/shared_commands.py:35
-#: rest_food/demand/demand_command.py:214 rest_food/demand/demand_reply.py:83
-#: rest_food/demand/demand_reply.py:98 rest_food/demand/demand_reply.py:108
+#: rest_food/common/shared_commands.py:24
+#: rest_food/demand/demand_command.py:215
+#: rest_food/demand/demand_command.py:308
+#: rest_food/demand/demand_command.py:329 rest_food/demand/demand_reply.py:111
+#: rest_food/demand/demand_reply.py:126 rest_food/demand/demand_reply.py:136
 #: rest_food/demand/demand_utils.py:17
 msgid "Back"
 msgstr "Назад"
 
-#: rest_food/common/shared_commands.py:38
+#: rest_food/common/shared_commands.py:27
 msgid "Choose the bot language:"
 msgstr "Абярыце мову для бота:"
+
+#: rest_food/common/constants.py:32
+msgid "Belarus"
+msgstr "Беларусь"
+
+#: rest_food/common/constants.py:32
+msgid "in-Belarus"
+msgstr "Беларусі"
+
+#: rest_food/common/constants.py:33
+msgid "Poland"
+msgstr "Польшча"
+
+#: rest_food/common/constants.py:33
+msgid "in-Poland"
+msgstr "Польшчы"
+
+#: rest_food/common/constants.py:34
+msgid "Lithuania"
+msgstr "Літва"
+
+#: rest_food/common/constants.py:34
+msgid "in-Lithuania"
+msgstr "Літве"
+
+#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:312
+#: rest_food/demand/demand_command.py:332
+msgid "Other"
+msgstr "Іншае"
+
+#: rest_food/common/constants.py:40
+msgid "Minsk"
+msgstr "Мінск"
+
+#: rest_food/common/constants.py:40
+msgid "for-Minsk"
+msgstr "Мінска"
+
+#: rest_food/common/constants.py:41
+msgid "Warszawa"
+msgstr "Варшава"
+
+#: rest_food/common/constants.py:41
+msgid "for-Warszawa"
+msgstr "Варшавы"
+
+#: rest_food/common/constants.py:42
+msgid "Vilnius"
+msgstr "Вільнюс"
+
+#: rest_food/common/constants.py:42
+msgid "for-Vilnius"
+msgstr "Вільнюса"
 
 #: rest_food/supply/supply_command.py:74
 #, python-format
@@ -312,7 +367,7 @@ msgstr "Адрас: %s"
 msgid "Coordinates: %s"
 msgstr "Каардынаты: %s"
 
-#: rest_food/supply/supply_state.py:210 rest_food/demand/demand_command.py:141
+#: rest_food/supply/supply_state.py:210 rest_food/demand/demand_command.py:142
 #, python-format
 msgid "Phone: %s"
 msgstr "Тэлефон: %s"
@@ -390,24 +445,24 @@ msgstr "Пацвердзіць"
 msgid "Decline"
 msgstr "Адхіліць"
 
-#: rest_food/demand/demand_command.py:62 rest_food/demand/demand_command.py:184
+#: rest_food/demand/demand_command.py:63 rest_food/demand/demand_command.py:185
 msgid "Information was not found."
 msgstr "Інфармацыя не была знойдзена."
 
-#: rest_food/demand/demand_command.py:83 rest_food/demand/demand_command.py:205
-#: rest_food/demand/demand_reply.py:42
+#: rest_food/demand/demand_command.py:84 rest_food/demand/demand_command.py:206
+#: rest_food/demand/demand_reply.py:43
 msgid "🌍 Map"
 msgstr "🌍 Мапа"
 
-#: rest_food/demand/demand_command.py:89
+#: rest_food/demand/demand_command.py:90
 msgid "❌ Cancel"
 msgstr "❌ Адмена"
 
-#: rest_food/demand/demand_command.py:93
+#: rest_food/demand/demand_command.py:94
 msgid "Confirm 🆗✅"
 msgstr "Пацвердзіць 🆗✅"
 
-#: rest_food/demand/demand_command.py:99
+#: rest_food/demand/demand_command.py:100
 #, python-format
 msgid ""
 "%(info)s\n"
@@ -418,64 +473,80 @@ msgstr ""
 "-----------\n"
 "%(ask_for_approve)s"
 
-#: rest_food/demand/demand_command.py:101
+#: rest_food/demand/demand_command.py:102
 msgid "Please, confirm/edit your contact information to proceed."
 msgstr "Калі ласка, пацвердзіце кантактную інфармацыю каб працягнуць."
 
-#: rest_food/demand/demand_command.py:109
+#: rest_food/demand/demand_command.py:110
 msgid "Name: {}"
 msgstr "Імя: {}"
 
-#: rest_food/demand/demand_command.py:116
+#: rest_food/demand/demand_command.py:117
 msgid "Connect via {}: ✅"
 msgstr "Звязвацца праз {}: ✅"
 
-#: rest_food/demand/demand_command.py:121
+#: rest_food/demand/demand_command.py:122
 msgid "Connect via {}: ❌"
 msgstr "Звязвацца праз {}: ❌"
 
-#: rest_food/demand/demand_command.py:128
+#: rest_food/demand/demand_command.py:129
 msgid "Social status: not set ❌"
 msgstr "Сацыяльны статус: не абраны ❌"
 
-#: rest_food/demand/demand_command.py:130
+#: rest_food/demand/demand_command.py:131
 #, python-format
 msgid "Social status: %s ✅"
 msgstr "Сацыяльны статус: %s ✅"
 
-#: rest_food/demand/demand_command.py:138
+#: rest_food/demand/demand_command.py:139
 msgid "not set ❓"
 msgstr "няма ❓"
 
-#: rest_food/demand/demand_command.py:161
+#: rest_food/demand/demand_command.py:162
 msgid "Someone has already taken it."
 msgstr "Хтосьці ўжо забраў."
 
-#: rest_food/demand/demand_command.py:170
+#: rest_food/demand/demand_command.py:171
 #, python-format
 msgid "%s is notified that you'll take the food. Please, wait for approval."
 msgstr ""
 "Мы напісалі '%s', што Вы забераце прадукты. Калі ласка, дачакайцеся "
 "пацвярджэння."
 
-#: rest_food/demand/demand_command.py:210 rest_food/demand/demand_reply.py:22
-#: rest_food/demand/demand_reply.py:88
+#: rest_food/demand/demand_command.py:211 rest_food/demand/demand_reply.py:23
+#: rest_food/demand/demand_reply.py:116
 msgid "Take it"
 msgstr "Забраць"
 
-#: rest_food/demand/demand_command.py:234
+#: rest_food/demand/demand_command.py:235
 msgid "You've booked this"
 msgstr "Вы паабяцалі забраць прадукты"
 
-#: rest_food/demand/demand_command.py:285
+#: rest_food/demand/demand_command.py:286
 msgid "Choose your social status:"
 msgstr "Абярыце свой сацыяльны статус:"
 
-#: rest_food/demand/demand_command.py:295
+#: rest_food/demand/demand_command.py:296
 msgid "Hello. Here you will see notifications about available food."
 msgstr "Вітаю. Тут Вы ўбачыце паведамленні а даступных прадуктах."
 
-#: rest_food/demand/demand_reply.py:18
+#: rest_food/demand/demand_command.py:317
+msgid "Choose your active area"
+msgstr "Які горад вас цікавіць?"
+
+#: rest_food/demand/demand_command.py:339
+msgid ""
+"The bot is not active outside of those cities. We will notify you when "
+"anything new appears in your area."
+msgstr ""
+"Па-за гэтымі гарадамі бот не актыўны. Мы вам паведамім, калі ў вашай "
+"мясцовасці штосьці з'явіцца."
+
+#: rest_food/demand/demand_command.py:356
+msgid "Sorry. Unexpected error happened. Please, try later."
+msgstr "Сталася неперадбачаная памылка. Паспрабуйце пазней."
+
+#: rest_food/demand/demand_reply.py:19
 msgid ""
 "{} can share the following:\n"
 "{}"
@@ -483,11 +554,11 @@ msgstr ""
 "{} можа перадаць наступнае:\n"
 "{}"
 
-#: rest_food/demand/demand_reply.py:27
+#: rest_food/demand/demand_reply.py:28
 msgid "Info"
 msgstr "Інфармацыя"
 
-#: rest_food/demand/demand_reply.py:52
+#: rest_food/demand/demand_reply.py:53
 msgid ""
 "You've already taken it.\n"
 "\n"
@@ -497,7 +568,7 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/demand/demand_reply.py:54
+#: rest_food/demand/demand_reply.py:55
 msgid ""
 "SOMEONE HAS ALREADY TAKEN IT!\n"
 "\n"
@@ -507,7 +578,34 @@ msgstr ""
 "\n"
 "{}"
 
-#: rest_food/demand/demand_reply.py:73
+#: rest_food/demand/demand_reply.py:62
+#, python-brace-format
+msgid ""
+"We'll let you know if the bot starts working in other countries. Use /"
+"{command} to update location"
+msgstr ""
+"Мы вам паведамім, калі бот пачне працаваць у іншых краінах. Націсніце /"
+"{command}, каб змяніць выбар"
+
+#: rest_food/demand/demand_reply.py:71
+#, python-brace-format
+msgid ""
+"We'll let you know if new food sharers appear in {country}. Use /{command} "
+"to change your choice."
+msgstr ""
+"Мы вам паведамім, калі ў {country} з'явяцца новыя ратавальнікі ежы. "
+"Націсніце /{command}, каб змяніць выбар"
+
+#: rest_food/demand/demand_reply.py:79
+#, python-brace-format
+msgid ""
+"Now you'll see notifications for {city}. Use /{command} to change your "
+"choice."
+msgstr ""
+"Вам будуць прыходзіць паведамленні, актуальныя для {city}. Націсніце /"
+"{command}, каб змяніць выбар"
+
+#: rest_food/demand/demand_reply.py:101
 msgid "Coordinates where not provided."
 msgstr "Не ведаю каардынаты :("
 

@@ -13,3 +13,6 @@ def handle_demand_tg_command(user: User, command: DemandTgCommand) -> Reply:
 
         case DemandTgCommand.LANGUAGE:
             return choose_language(user)
+
+        case DemandTgCommand.LOCATION:
+            return handle_parsed_command(user, DemandCommand.CHOOSE_LOCATION)
