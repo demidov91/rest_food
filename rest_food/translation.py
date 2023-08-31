@@ -49,10 +49,6 @@ def translate(text: str) -> str:
     return get_translation(_active_language.get()).gettext(text)
 
 
-def translate_with_context(context: str, text: str) -> str:
-    return translate(text)
-
-
 @contextmanager
 def switch_language(language: str):
     original_lang = _active_language.get()
