@@ -61,6 +61,7 @@ def switch_language(language: str):
 
 
 translate_lazy = make_lazy_gettext(lambda: translate)
+pgettext = make_lazy_gettext(lambda: lambda context, text: translate(text))
 
 
 class LazyAwareJsonEncoder(JSONEncoder):

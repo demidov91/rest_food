@@ -1,8 +1,9 @@
 import logging
 
+from rest_food.common.constants import COUNTRIES, CITIES
 from rest_food.db import get_supply_user
 from rest_food.entities import User, Reply
-from rest_food.enums import Provider, DemandCommand, UserInfoField
+from rest_food.enums import Provider, DemandCommand, UserInfoField, DemandTgCommand
 from rest_food.common.formatters import build_short_message_text_by_id, \
     build_demand_side_full_message_text_by_id
 
@@ -52,6 +53,29 @@ def build_food_taken_message(user: User, demand_user_id: str, info: str):
         return Reply(text=_("You've already taken it.\n\n{}".format(info)))
 
     return Reply(text=_("SOMEONE HAS ALREADY TAKEN IT!\n\n{}").format(info))
+
+
+def build_set_location_reply(location: str):
+    if location == 'other':
+        return Reply(
+            text=_(
+                "We'll let you know if the bot starts working in other countries. Use /{command} to update location"
+            ).format(command=DemandTgCommand.LOCATION.value)
+        )
+
+    if len(location) == 2:
+        in_country = {x.code: x.in_name for x in COUNTRIES}[location]
+
+        return Reply(
+            text=_("We'll let you know if new food sharers appear in {country}").format(country=in_country)
+        )
+
+    if len(location) > 3:
+        city_code = location[3:]
+        for_city = {x.code: x.for_name for x in CITIES}[city_code]
+        return Reply(text=_("Now you'll see notifications for {city}").format(country=for_city))
+
+    raise ValueError(location)
 
 
 class MapHandler:

@@ -1,19 +1,8 @@
+from rest_food.common.constants import LANG_TO_NAME
 from rest_food.entities import Reply, User
 from rest_food.enums import Workflow, SupplyCommand, DemandCommand
 from rest_food.translation import LANGUAGES_SUPPORTED
 from rest_food.translation import translate_lazy as _
-
-
-LANG_TO_NAME = [
-    x for x in [
-        ('be', 'Беларуская мова'),
-        ('uk', 'Українська мова'),
-        ('ru', 'Русский язык'),
-        ('pl', 'Język polski'),
-        ('lt', 'Lietuvių kalba'),
-        ('en', 'English language')
-    ] if x[0] in LANGUAGES_SUPPORTED
-]
 
 
 def choose_language(user: User):

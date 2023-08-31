@@ -16,20 +16,21 @@ from rest_food.entities import (
     Command,
     soc_status_translation,
 )
-from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField
+from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField, DemandTgCommand
 from rest_food.translation import translate_lazy as _, set_language
 from rest_food.demand.demand_reply import (
     build_demand_side_short_message,
     MapInfoHandler,
     MapTakeHandler,
     build_demand_side_message_by_id, MapBookedHandler,
-    build_food_taken_message,
+    build_food_taken_message, build_set_location_reply,
 )
 from rest_food.common.formatters import build_demand_side_full_message_text
 from rest_food.demand.demand_utils import (
     get_next_command,
     get_demand_back_button,
 )
+from rest_food.common.constants import COUNTRIES, CITIES
 
 logger = logging.getLogger(__name__)
 
@@ -295,6 +296,69 @@ def _handle_default(user: User):
     return Reply(text=_('Hello. Here you will see notifications about available food.'))
 
 
+def _handle_choose_location(user: User):
+    buttons = [
+        [{
+            'text': city.name,
+            'data': DemandCommand.SET_LOCATION.build(f'{city.country_code}:{city.name}'),
+        }] for city in CITIES
+    ]
+    buttons.append([
+        {
+            'text': _('Back'),
+            'data': DemandCommand.DEFAULT.build(),
+        },
+        {
+            'text': _('Other'),
+            'data': DemandCommand.CHOOSE_OTHER_LOCATION.build(),
+        }
+    ])
+
+    return Reply(text=_('Choose your active area'), buttons=buttons)
+
+
+def _handle_choose_other_location(user: User):
+    buttons = [
+        [{
+            'text': country.name,
+            'data': DemandCommand.SET_LOCATION.build(country.country_code),
+        }] for country in COUNTRIES
+    ]
+    buttons.append([
+        {
+            'text': _('Back'),
+            'data': DemandCommand.CHOOSE_LOCATION.build(),
+        }, {
+            'text': _('Other'),
+            'data': DemandCommand.SET_LOCATION.build('other'),
+        },
+    ])
+
+    return Reply(
+        text=_(
+            "The bot is not active outside of those cities. "
+            "We will notify you when anything new appears in your area."
+        ),
+        buttons=buttons,
+    )
+
+
+def _handle_set_location(user: User, location: str):
+    """
+    location: str
+        location in a format {country code}:{city}
+        For example, by:minsk for Minsk.
+    """
+    try:
+        reply = build_set_location_reply(location)
+    except ValueError:
+        logger.exception(f'Failed to handle location {location}')
+        return Reply(text=_("Sorry. Unexpected error happened. Please, try later."))
+
+    set_info(user, UserInfoField.LOCATION, location)
+    return reply
+
+
 COMMAND_HANDLERS = {
     DemandCommand.TAKE: _handle_take,
     DemandCommand.INFO: _handle_info,
@@ -311,5 +375,8 @@ COMMAND_HANDLERS = {
     DemandCommand.EDIT_SOCIAL_STATUS: _handle_edit_social_status,
     DemandCommand.SET_SOCIAL_STATUS: _handle_set_social_status,
     DemandCommand.SET_LANGUAGE: _handle_set_language,
+    DemandCommand.CHOOSE_LOCATION: _handle_choose_location,
+    DemandCommand.CHOOSE_OTHER_LOCATION: _handle_choose_other_location,
+    DemandCommand.SET_LOCATION: _handle_set_location,
     DemandCommand.DEFAULT: _handle_default,
 }

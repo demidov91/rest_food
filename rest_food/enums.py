@@ -57,11 +57,14 @@ class DemandCommand(Enum):
     EDIT_SOCIAL_STATUS = 'edit_ss'
     SET_SOCIAL_STATUS = 'set_ss'
     SET_LANGUAGE = 'set_language'
+    SET_LOCATION = 'set_location'
     FINISH_TAKE = 'f_take'
     BOOKED = 'bkd'
     MAP_INFO = 'mapi'
     MAP_TAKE = 'mapt'
     MAP_BOOKED = 'mapb'
+    CHOOSE_LOCATION = 'choose_location'
+    CHOOSE_OTHER_LOCATION = 'choose_other_location'
 
     def build(self, *args):
         return '|'.join((self.value, ) + args)
@@ -106,6 +109,8 @@ class UserInfoField(Enum):
     ADDRESS = 'address'
     # supply coordinates
     COORDINATES = 'coordinates'
+    # city/town/active area for the user
+    LOCATION = 'location'
     # contact phone
     PHONE = 'phone'
     # True if the user has shared their username
