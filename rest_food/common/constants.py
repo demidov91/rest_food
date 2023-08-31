@@ -1,7 +1,6 @@
 from typing import Optional
 
 from rest_food.translation import translate_lazy as _
-from rest_food.translation import pgettext
 import dataclasses
 
 
@@ -30,16 +29,16 @@ LANG_TO_NAME = [
 ]
 
 COUNTRIES = [
-    CountryData('by', _('Belarus'), pgettext('in', 'Belarus')),
-    CountryData('pl', _('Poland'), pgettext('in', 'Poland')),
-    CountryData('lt', _('Lithuania'), pgettext('in', 'Lithuania')),
+    CountryData('by', _('Belarus'), _('in-Belarus')),
+    CountryData('pl', _('Poland'), _('in-Poland')),
+    CountryData('lt', _('Lithuania'), _('in-Lithuania')),
     CountryData('other', _('Other'), None),
 ]
 
 
 CITIES = [
-    CityData('by', 'minsk', _('Minsk'), pgettext('for', 'Minsk')),
-    CityData('pl', 'warszawa', _('Warszawa'), pgettext('for', 'Warszawa')),
-    CityData('lt', 'vilnius', _('Vilnius'), pgettext('for', 'Vilnius')),
+    CityData('by', 'minsk', _('Minsk'), _('for-Minsk')),
+    CityData('pl', 'warszawa', _('Warszawa'), _('for-Warszawa')),
+    CityData('lt', 'vilnius', _('Vilnius'), _('for-Vilnius')),
 ]
 
