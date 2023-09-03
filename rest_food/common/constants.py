@@ -41,3 +41,6 @@ CITIES = [
     CityData('pl', 'warszawa', _('Warszawa'), _('for-Warszawa')),
     CityData('lt', 'vilnius', _('Vilnius'), _('for-Vilnius')),
 ]
+
+COUNTRY_DICT = {x.code: x for x in COUNTRIES}
+CITY_DICT = {x.code: x for x in CITIES}

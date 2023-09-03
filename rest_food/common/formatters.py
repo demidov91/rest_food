@@ -1,7 +1,7 @@
 """
 This module methods are supposed to return strings.
 """
-
+from rest_food.common.constants import CITIES, CITY_DICT, COUNTRY_DICT
 from rest_food.db import get_supply_editing_message, get_supply_message_record_by_id
 from rest_food.entities import Message, User
 from rest_food.enums import UserInfoField
@@ -132,3 +132,14 @@ def build_supplier_declined_text(user: User):
         description=build_supply_user_description(user),
         id=user.id,
     )
+
+
+def location_to_string(location_code: str) -> str:
+    if not location_code:
+        return '❌'
+
+    country_city = location_code.split(':')
+    if len(country_city) == 2:
+        return CITY_DICT[country_city[1]].name
+
+    return COUNTRY_DICT[country_city[0]].name

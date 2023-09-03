@@ -1,6 +1,7 @@
 import logging
 from typing import Optional
 
+from rest_food.common.constants import CITIES, COUNTRIES
 from rest_food.enums import SupplyState, Provider, SupplyCommand, UserInfoField
 from rest_food.common.state import State
 from rest_food.entities import Reply
@@ -22,7 +23,7 @@ from rest_food.communication import (
     notify_admin_about_new_supply_user_if_necessary,
 )
 from rest_food.settings import FEEDBACK_TG_BOT
-from rest_food.common.formatters import build_active_food_message
+from rest_food.common.formatters import build_active_food_message, location_to_string
 from rest_food.common.validators import validate_phone_number
 from rest_food.common.geocoding import get_coordinates
 from rest_food.translation import translate_lazy as _
@@ -36,6 +37,7 @@ class ForceInfoMixin:
         super(ForceInfoMixin, self).__init__(*args, **kwargs)
         self._fields_to_check = dict((
             (UserInfoField.NAME, SupplyState.FORCE_NAME),
+            (UserInfoField.LOCATION, SupplyState.FORCE_LOCATION),
             (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
             (UserInfoField.IS_APPROVED_COORDINATES, SupplyState.FORCE_COORDINATES),
         ))
@@ -193,11 +195,15 @@ class ViewInfoState(State):
             text=_('You can edit your contact info here'),
             buttons=[
                 [{
-                    'text': _('Name: %s') % self.db_user.info['name'],
+                    'text': _('Name: %s') % self.db_user.get_info_field(UserInfoField.NAME),
                     'data': 'edit-name',
                 }],
                 [{
-                    'text': _('Address: %s') % self.db_user.info['address'],
+                    'text': _('Location: %s') % location_to_string(self.db_user.get_info_field(UserInfoField.LOCATION)),
+                    'data': 'edit-location',
+                }],
+                [{
+                    'text': _('Address: %s') % self.db_user.get_info_field(UserInfoField.ADDRESS),
                     'data': 'edit-address',
                 }],
                 [{
@@ -207,7 +213,7 @@ class ViewInfoState(State):
                     'data': 'edit-coordinates',
                 }],
                 [{
-                    'text': _('Phone: %s') % (self.db_user.info['phone'] if 'phone' in self.db_user.info else '❌'),
+                    'text': _('Phone: %s') % (self.db_user.get_info_field(UserInfoField.PHONE) or '❌'),
                     'data': 'edit-phone',
                 }],
                 [{
@@ -220,6 +226,9 @@ class ViewInfoState(State):
     def handle(self, text: str, data: Optional[str], *args, **kwargs):
         if data == 'edit-name':
             return Reply(next_state=SupplyState.EDIT_NAME)
+
+        if data == 'edit-location':
+            return Reply(next_state=SupplyState.EDIT_LOCATION)
 
         if data == 'edit-address':
             return Reply(next_state=SupplyState.EDIT_ADDRESS)
@@ -262,12 +271,27 @@ class BaseEditInfoState(State):
         if data == 'cancel':
             return Reply(next_state=SupplyState.VIEW_INFO)
 
-        return self.handle_text(text)
+        return self.handle_text(data or text)
 
 
 class SetNameState(BaseEditInfoState):
     _message = _('Please, enter name of the restaurant.')
     _info_to_edit = UserInfoField.NAME
+
+
+class SetLocationState(BaseEditInfoState):
+    _message = _('Where are you located?')
+    _info_to_edit = UserInfoField.LOCATION
+
+    def get_intro(self) -> Reply:
+        reply = super().get_intro()
+        reply.buttons = [[{'text': x.name, 'data': f'{x.country_code}:{x.code}'}] for x in CITIES]
+        reply.buttons.extend([
+            [{'text': _('{}, other').format(x.name), 'data': x.code}] for x in COUNTRIES if x.code != 'other'
+        ])
+        reply.buttons.append([{'text': _('Very different'), 'data': 'other'}])
+
+        return reply
 
 
 class SetAddressState(BaseEditInfoState):
@@ -408,6 +432,10 @@ class SetCoordinatesState(BaseEditInfoState):
 
 
 class ForceSetNameState(ForceInfoMixin, SetNameState):
+    pass
+
+
+class ForceSetLocationState(ForceInfoMixin, SetLocationState):
     pass
 
 
