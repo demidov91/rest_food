@@ -199,7 +199,7 @@ msgstr "Абярыце мову для бота:"
 #: rest_food/common/shared_commands.py:33
 msgid ""
 "I don't know you anymore. Press /start to start everything from scratch."
-msgstr "Я вас больш не ведаю. Націсніце /start, каб пачаць усё з пачатку."
+msgstr "Я вас больш не ведаю. Націсніце /start, каб пачаць усё спачатку."
 
 #: rest_food/common/constants.py:32
 msgid "Belarus"
