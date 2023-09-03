@@ -292,8 +292,45 @@ def _handle_set_language(user: User, language: str):
     return handle_parsed_command(user, DemandCommand.DEFAULT)
 
 
+def _handle_intro(user: User):
+    intro_text = _('This is a foodsharing bot. _intro_text_goes_here_\n')
+    if user.get_info_field(UserInfoField.LOCATION) is None:
+        intro_text += _(
+            'Please, specify your location to get notifications from foodsavers.\n'
+            'You can always change your choice using a /{location_command} command.'
+        ).format(location_command=DemandTgCommand.LOCATION.value)
+
+        buttons = [
+            [{
+                'text': city.name,
+                'data': DemandCommand.SET_LOCATION.build(f'{city.country_code}:{city.code}'),
+            }] for city in CITIES
+        ]
+        buttons.append([
+            {
+                'text': _('Other'),
+                'data': DemandCommand.CHOOSE_OTHER_LOCATION.build(),
+            }
+        ])
+
+    else:
+        intro_text += _('\n/{location_command} - change location').format(
+            location_command=DemandTgCommand.LOCATION.value
+        )
+        buttons = None
+
+    intro_text += (
+        '\n/{language_command} - мова/язык/język/kalba'
+    ).format(language_command=DemandTgCommand.LANGUAGE.value)
+
+    return Reply(text=intro_text, buttons=buttons)
+
+
 def _handle_default(user: User):
-    return Reply(text=_('Hello. Here you will see notifications about available food.'))
+    if user.get_info_field(UserInfoField.LOCATION) is not None:
+        return Reply(text=_('Hello. Here you will see notifications about available food.'))
+
+    return handle_parsed_command(user, DemandCommand.INTRO)
 
 
 def _handle_choose_location(user: User):
@@ -379,4 +416,5 @@ COMMAND_HANDLERS = {
     DemandCommand.CHOOSE_OTHER_LOCATION: _handle_choose_other_location,
     DemandCommand.SET_LOCATION: _handle_set_location,
     DemandCommand.DEFAULT: _handle_default,
+    DemandCommand.INTRO: _handle_intro,
 }

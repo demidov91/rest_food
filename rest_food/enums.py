@@ -47,6 +47,7 @@ class SocialStatus(Enum):
 class DemandCommand(Enum):
     """*Demand* bot commands in a format: {command}|{arg_0}|...|{arg_n}"""
     DEFAULT = 'default'
+    INTRO = 'intro'
     TAKE = 'take'
     INFO = 'info'
     SHORT_INFO = 'sinf'

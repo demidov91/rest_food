@@ -9,7 +9,7 @@ def handle_demand_tg_command(user: User, command: DemandTgCommand) -> Reply:
     set_demand_state(user, None)
     match command:
         case DemandTgCommand.START:
-            return handle_parsed_command(user, DemandCommand.DEFAULT)
+            return handle_parsed_command(user, DemandCommand.INTRO)
 
         case DemandTgCommand.LANGUAGE:
             return choose_language(user)
