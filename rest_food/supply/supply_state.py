@@ -51,11 +51,10 @@ class ForceInfoMixin:
 
 
 class DefaultState(ForceInfoMixin, State):
+    intro = Reply(text=_('Please, provide information about yourself before getting started'))
+
     def handle(self, *args, **kwargs):
-        return Reply(
-            text=_('Please, provide information about yourself before getting started'),
-            next_state=self.get_next_state()
-        )
+        return Reply(next_state=self.get_next_state())
 
 
 class ReadyToPostState(State):

@@ -70,9 +70,6 @@ def tg_supply(data):
         else:
             next_state = state
 
-        if isinstance(state, DefaultState):
-            return build_tg_response(chat_id=chat_id, reply=next_state.get_intro())
-
         queue_messages(
             tg_chat_id=chat_id,
             original_message=update.callback_query and update.callback_query.message,
@@ -80,6 +77,7 @@ def tg_supply(data):
             workflow=Workflow.SUPPLY
         )
 
+        # Remove a spinner on tg application UI.
         if update.callback_query:
             return {
                 'method': 'answerCallbackQuery',
