@@ -8,7 +8,7 @@ from rest_food.db import (
     set_next_command,
     get_supply_user,
     get_supply_message_record_by_id,
-    set_approved_language,
+    set_approved_language, delete_user,
 )
 from rest_food.entities import (
     User,
@@ -296,8 +296,8 @@ def _handle_intro(user: User):
     intro_text = _('This is a foodsharing bot. _intro_text_goes_here_\n')
     if user.get_info_field(UserInfoField.LOCATION) is None:
         intro_text += _(
-            'Please, specify your location to get notifications from foodsavers.\n'
-            'You can always change your choice using a /{location_command} command.'
+            '\nPlease, specify your location to get notifications from foodsavers.\n'
+            'You can always change your choice using a /{location_command} command.\n'
         ).format(location_command=DemandTgCommand.LOCATION.value)
 
         buttons = [

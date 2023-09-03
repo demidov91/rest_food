@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-03 20:04+0200\n"
+"POT-Creation-Date: 2023-09-03 21:52+0200\n"
 "Language: be.UTF-8\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -549,8 +549,9 @@ msgstr ""
 #: rest_food/demand/demand_command.py:299
 #, python-brace-format
 msgid ""
+"\n"
 "Please, specify your location to get notifications from foodsavers.\n"
-"You can always change your choice using a /{location_command} command."
+"You can always change your choice using a /{location_command} command.\n"
 msgstr ""
 
 #: rest_food/demand/demand_command.py:317
@@ -576,6 +577,10 @@ msgstr ""
 
 #: rest_food/demand/demand_command.py:393
 msgid "Sorry. Unexpected error happened. Please, try later."
+msgstr ""
+
+#: rest_food/demand/demand_tg_command.py:25
+msgid "I don't know you anymore. Press /{} to start everything from scratch."
 msgstr ""
 
 #: rest_food/demand/demand_reply.py:19

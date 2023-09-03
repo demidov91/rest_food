@@ -236,6 +236,10 @@ def set_booking_to_cancel(user: User, message_id: str):
     user.context['booking_to_cancel'] = message_id
 
 
+def delete_user(user: User):
+    db.users.remove({'_id': user.id})
+
+
 def create_supply_message(user: User, message: str, *, provider: Provider):
     message_id = ObjectId()
     db.messages.insert_one({

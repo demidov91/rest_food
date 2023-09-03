@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-03 20:04+0200\n"
+"POT-Creation-Date: 2023-09-03 21:52+0200\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -549,11 +549,14 @@ msgid "This is a foodsharing bot. _intro_text_goes_here_\n"
 msgstr "Вітаю. Гэта бот атрымання прадуктаў... <дадаць астатні тэкст>\n"
 
 #: rest_food/demand/demand_command.py:299
-#, python-brace-format
+# python-brace-format
 msgid ""
+"\n"
 "Please, specify your location to get notifications from foodsavers.\n"
-"You can always change your choice using a /{location_command} command."
-msgstr "Калі ласка, абярыце, паведамленні якой мясцовасці вы жадалі б атрымліваць.\nВы заўжды можаце змяніць свой выбар камандай /{location_command}"
+"You can always change your choice using a /{location_command} command.\n"
+msgstr ""
+"\nКалі ласка, абярыце, паведамленні якой мясцовасці вы жадалі б атрымліваць.\n"
+"Вы заўжды можаце змяніць свой выбар камандай /{location_command}\n"
 
 #: rest_food/demand/demand_command.py:317
 #, python-brace-format
@@ -583,6 +586,10 @@ msgstr ""
 #: rest_food/demand/demand_command.py:393
 msgid "Sorry. Unexpected error happened. Please, try later."
 msgstr "Сталася неперадбачаная памылка. Паспрабуйце пазней."
+
+#: rest_food/demand/demand_tg_command.py:25
+msgid "I don't know you anymore. Press /{} to start everything from scratch."
+msgstr "Я вас больш не ведаю. Націсніце /{}, каб пачаць усё з пачатку."
 
 #: rest_food/demand/demand_reply.py:19
 msgid ""

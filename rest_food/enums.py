@@ -101,6 +101,7 @@ class DemandTgCommand(Enum):
     START = 'start'
     LANGUAGE = 'language'
     LOCATION = 'location'
+    DELETE = 'delete'
 
 
 class UserInfoField(Enum):
