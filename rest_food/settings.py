@@ -34,8 +34,7 @@ DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE')
 ADMIN_USERNAMES = env_var('ADMIN_USERNAMES', []) and env_var('ADMIN_USERNAMES').split(',')
 STAGE = env_var('STAGE')
 
-# Mon, Mon, Dz, G, I, Dz(add)
 TEST_TG_CHAT_ID = env_var('TEST_TG_CHAT_ID', '').split(',')
 TEST_TG_CHAT_ID.extend([int(x) for x in TEST_TG_CHAT_ID if x])
 
-FEEDBACK_TG_BOT = '@foodsharingsupportbot'
+FEEDBACK_TG_BOT = '@foodsharingsupport_bot'
