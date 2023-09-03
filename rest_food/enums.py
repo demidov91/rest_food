@@ -94,6 +94,7 @@ class SupplyTgCommand(Enum):
     """Expected enum of Telegram /{command}s """
     START = 'start'
     LANGUAGE = 'language'
+    DELETE = 'delete'
 
 
 class DemandTgCommand(Enum):

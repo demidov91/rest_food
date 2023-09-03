@@ -1,10 +1,8 @@
-from rest_food.common.shared_commands import choose_language
-from rest_food.db import delete_user
+from rest_food.common.shared_commands import choose_language, handle_delete
 from rest_food.demand.demand_command import handle_parsed_command
 from rest_food.entities import User, Reply
 from rest_food.enums import DemandTgCommand, DemandCommand
 from rest_food.state_machine import set_demand_state
-from rest_food.translation import translate_lazy as _
 
 
 def handle_demand_tg_command(user: User, command: DemandTgCommand) -> Reply:
@@ -20,9 +18,5 @@ def handle_demand_tg_command(user: User, command: DemandTgCommand) -> Reply:
             return handle_parsed_command(user, DemandCommand.CHOOSE_LOCATION)
 
         case DemandTgCommand.DELETE:
-            delete_user(user)
-            return Reply(
-                text=_("I don't know you anymore. Press /{} to start everything from scratch.").format(
-                    DemandTgCommand.START.value
-                )
-            )
+            return handle_delete(user)
+

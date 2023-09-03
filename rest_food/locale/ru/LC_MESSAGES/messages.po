@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-03 21:52+0200\n"
+"POT-Creation-Date: 2023-09-03 22:01+0200\n"
 "Language: ru.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -185,7 +185,7 @@ msgstr "Пожалуйста, введите только контактный �
 msgid "This is not a valid phone number."
 msgstr "Это невалидный телефонный номер."
 
-#: rest_food/common/shared_commands.py:24
+#: rest_food/common/shared_commands.py:25
 #: rest_food/demand/demand_command.py:215
 #: rest_food/demand/demand_command.py:345
 #: rest_food/demand/demand_command.py:366 rest_food/demand/demand_reply.py:111
@@ -194,9 +194,14 @@ msgstr "Это невалидный телефонный номер."
 msgid "Back"
 msgstr "Назад"
 
-#: rest_food/common/shared_commands.py:27
+#: rest_food/common/shared_commands.py:28
 msgid "Choose the bot language:"
 msgstr "Выберите язык для бота:"
+
+#: rest_food/common/shared_commands.py:33
+msgid ""
+"I don't know you anymore. Press /start to start everything from scratch."
+msgstr ""
 
 #: rest_food/common/constants.py:32
 msgid "Belarus"
@@ -582,10 +587,6 @@ msgstr ""
 
 #: rest_food/demand/demand_command.py:393
 msgid "Sorry. Unexpected error happened. Please, try later."
-msgstr ""
-
-#: rest_food/demand/demand_tg_command.py:25
-msgid "I don't know you anymore. Press /{} to start everything from scratch."
 msgstr ""
 
 #: rest_food/demand/demand_reply.py:19

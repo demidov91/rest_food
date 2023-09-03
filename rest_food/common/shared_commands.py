@@ -1,4 +1,5 @@
 from rest_food.common.constants import LANG_TO_NAME
+from rest_food.db import delete_user
 from rest_food.entities import Reply, User
 from rest_food.enums import Workflow, SupplyCommand, DemandCommand
 from rest_food.translation import LANGUAGES_SUPPORTED
@@ -25,3 +26,8 @@ def choose_language(user: User):
         'data': _default_command.build(),
     }])
     return Reply(text=_('Choose the bot language:'), buttons=buttons)
+
+
+def handle_delete(user: User) -> Reply:
+    delete_user(user)
+    return Reply(text=_("I don't know you anymore. Press /start to start everything from scratch."))
