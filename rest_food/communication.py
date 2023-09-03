@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 def publish_supply_event(supply_user: User):
-    users = get_demand_users()
+    users = get_demand_users(location=supply_user.get_info_field(UserInfoField.LOCATION))
     random.shuffle(users)
 
     message_and_user_list = []

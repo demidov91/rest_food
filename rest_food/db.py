@@ -161,7 +161,7 @@ def _create_user(user: User) -> ObjectId:
     return result.inserted_id
 
 
-def get_demand_users():
+def get_demand_users(location: Optional[str]=None):
     """
 
     Returns
@@ -169,13 +169,14 @@ def get_demand_users():
     All active demand users.
 
     """
-    return [
-        User.from_dict(x)
-        for x in db.users.find({
-            'workflow': Workflow.DEMAND.value,
-            'is_active': {'$ne': False},
-        })
-    ]
+    filters = {
+        'workflow': Workflow.DEMAND.value,
+        'is_active': {'$ne': False},
+    }
+    if location is not None:
+        filters['info.location'] = location
+
+    return [User.from_dict(x) for x in db.users.find(filters)]
 
 
 def get_admin_users():

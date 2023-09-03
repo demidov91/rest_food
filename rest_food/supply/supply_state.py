@@ -165,12 +165,23 @@ class SetMessageTimeState(State):
             )
 
         if text:
-            if not self.db_user.info.get(UserInfoField.IS_APPROVED_SUPPLY.value):
-                logger.warning(
-                    'There is an attempt to post a message by user %s', self.db_user.user_id
-                )
+            is_approved = self.db_user.get_info_field(UserInfoField.IS_APPROVED_SUPPLY)
+            location = self.db_user.get_info_field(UserInfoField.LOCATION)
+
+            if not is_approved or not location or len(location) < 3:
+                logger.warning('There is an attempt to post a message by user %s', self.db_user.user_id)
                 cancel_supply_message(self.db_user, provider=self.provider)
-                return Reply(next_state=SupplyState.READY_TO_POST)
+
+                if not is_approved:
+                    text = _("You're not allowed to use the bot for foodsharing yet.")
+
+                elif not location:
+                    text = _("Location is not defined.")
+
+                elif len(location) < 3:
+                    text = _("You have to specify your location as a city rather than a country to use bot for sharing.")
+
+                return Reply(text=text, next_state=SupplyState.READY_TO_POST)
 
             message_id = self.db_user.editing_message_id
             set_message_time(message_id, text)
