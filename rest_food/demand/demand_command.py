@@ -295,11 +295,6 @@ def _handle_set_language(user: User, language: str):
 def _handle_intro(user: User):
     intro_text = _('This is a foodsharing bot. _intro_text_goes_here_\n')
     if user.get_info_field(UserInfoField.LOCATION) is None:
-        intro_text += _(
-            '\nPlease, specify your location to get notifications from foodsavers.\n'
-            'You can always change your choice using a /{location_command} command.\n'
-        ).format(location_command=DemandTgCommand.LOCATION.value)
-
         buttons = [
             [{
                 'text': city.name,
@@ -314,14 +309,7 @@ def _handle_intro(user: User):
         ])
 
     else:
-        intro_text += _('\n/{location_command} - change location').format(
-            location_command=DemandTgCommand.LOCATION.value
-        )
         buttons = None
-
-    intro_text += (
-        '\n/{language_command} - мова/язык/język/kalba'
-    ).format(language_command=DemandTgCommand.LANGUAGE.value)
 
     return Reply(text=intro_text, buttons=buttons)
 

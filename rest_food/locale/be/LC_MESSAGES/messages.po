@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-03 22:54+0200\n"
+"POT-Creation-Date: 2023-09-04 12:56+0200\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -185,8 +185,8 @@ msgstr "Гэта не валідны тэлефонны нумары."
 
 #: rest_food/common/shared_commands.py:25
 #: rest_food/demand/demand_command.py:215
-#: rest_food/demand/demand_command.py:345
-#: rest_food/demand/demand_command.py:366 rest_food/demand/demand_reply.py:111
+#: rest_food/demand/demand_command.py:333
+#: rest_food/demand/demand_command.py:354 rest_food/demand/demand_reply.py:111
 #: rest_food/demand/demand_reply.py:126 rest_food/demand/demand_reply.py:136
 #: rest_food/demand/demand_utils.py:17
 msgid "Back"
@@ -225,9 +225,9 @@ msgstr "Літва"
 msgid "in-Lithuania"
 msgstr "Літве"
 
-#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:311
-#: rest_food/demand/demand_command.py:349
-#: rest_food/demand/demand_command.py:369
+#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:306
+#: rest_food/demand/demand_command.py:337
+#: rest_food/demand/demand_command.py:357
 msgid "Other"
 msgstr "Іншае"
 
@@ -565,10 +565,12 @@ msgstr "Абярыце свой сацыяльны статус:"
 
 #: rest_food/demand/demand_command.py:296
 msgid "This is a foodsharing bot. _intro_text_goes_here_\n"
-msgstr "Вітаем вас! Вас вітае фудшэрынг тэлеграм бот! Прайшоўшы простую працэдуру рэгістрацыі, Вы зможаце далучыцца да сусветнага руху фудшэрынга!\n"
+msgstr ""
+"Вітаем вас! Вас вітае фудшэрынг тэлеграм бот! Прайшоўшы простую працэдуру "
+"рэгістрацыі, Вы зможаце далучыцца да сусветнага руху фудшэрынга!\n"
 "\n"
 "Крокі:\n"
-"1.Выберыце вашу лакацыі\n"
+"1.Выберыце вашу лакацыю\n"
 "2.Дачакайцеся калі з'явіцца публікацыя прадуктаў\n"
 "3.Калі зʼявіцца публікацыя прадуктаў націсніце «забраць»\n"
 "4.Укажыце ваш сацыяльны статус і кантактны нумар тэлефона\n"
@@ -576,42 +578,25 @@ msgstr "Вітаем вас! Вас вітае фудшэрынг тэлегра
 "\n"
 "Далей прытрымлівайцеся ўказанням.\n"
 "\n"
-"Мова аўтаматычна выбіраецца ў адпаведнасці з мовай кліента Telegram, але калі вы хочаце змяніць мову, націсніце /language.\n"
+"Мова аўтаматычна выбіраецца ў адпаведнасці з мовай кліента Telegram, але "
+"калі вы хочаце змяніць мову, націсніце /language.\n"
 "\n"
-"Гэта ўсё! Карыстайцеся ботам для фудшэрынга з задавальненнем! Памятаеце, што маленькімі крокамі вы можаце ўнесці вялікі ўклад у захаванне ўстойлівасці планеты і барацьбу з сусветным голадам!\n"
+"Гэта ўсё! Карыстайцеся ботам для фудшэрынга з задавальненнем! Памятаеце, што "
+"маленькімі крокамі вы можаце ўнесці вялікі ўклад у захаванне ўстойлівасці "
+"планеты і барацьбу з сусветным голадам!\n"
 "\n"
-"Калі ў вас узнікнуць пытанні, пішыце боту для зваротнай сувязі: @foodsharingsupport_bot.\n"
+"Калі ў вас узнікнуць пытанні, пішыце боту для зваротнай сувязі: "
+"@foodsharingsupport_bot.\n"
 
-# python-brace-format
-#: rest_food/demand/demand_command.py:299
-#, python-brace-format
-msgid ""
-"\n"
-"Please, specify your location to get notifications from foodsavers.\n"
-"You can always change your choice using a /{location_command} command.\n"
-msgstr ""
-"\n"
-"Калі ласка, абярыце, паведамленні якой мясцовасці вы жадалі б атрымліваць.\n"
-"Вы заўжды можаце змяніць свой выбар камандай /{location_command}\n"
-
-#: rest_food/demand/demand_command.py:317
-#, python-brace-format
-msgid ""
-"\n"
-"/{location_command} - change location"
-msgstr ""
-"\n"
-"/{location_command} - змяніць мясцовасць"
-
-#: rest_food/demand/demand_command.py:331
+#: rest_food/demand/demand_command.py:319
 msgid "Hello. Here you will see notifications about available food."
 msgstr "Вітаю. Тут Вы ўбачыце паведамленні а даступных прадуктах."
 
-#: rest_food/demand/demand_command.py:354
+#: rest_food/demand/demand_command.py:342
 msgid "Choose your active area"
 msgstr "Які горад вас цікавіць?"
 
-#: rest_food/demand/demand_command.py:376
+#: rest_food/demand/demand_command.py:364
 msgid ""
 "The bot is not active outside of those cities. We will notify you when "
 "anything new appears in your area."
@@ -619,7 +604,7 @@ msgstr ""
 "Па-за гэтымі гарадамі бот не актыўны. Мы вам паведамім, калі ў вашай "
 "мясцовасці штосьці з'явіцца."
 
-#: rest_food/demand/demand_command.py:393
+#: rest_food/demand/demand_command.py:381
 msgid "Sorry. Unexpected error happened. Please, try later."
 msgstr "Сталася неперадбачаная памылка. Паспрабуйце пазней."
 
