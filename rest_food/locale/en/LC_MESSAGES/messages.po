@@ -53,8 +53,8 @@ msgstr "Approve"
 
 #: rest_food/common/shared_commands.py:25
 #: rest_food/demand/demand_command.py:215
-#: rest_food/demand/demand_command.py:345
-#: rest_food/demand/demand_command.py:366 rest_food/demand/demand_reply.py:111
+#: rest_food/demand/demand_command.py:333
+#: rest_food/demand/demand_command.py:354 rest_food/demand/demand_reply.py:111
 #: rest_food/demand/demand_reply.py:126 rest_food/demand/demand_reply.py:136
 #: rest_food/demand/demand_utils.py:17
 msgid "Back"
@@ -82,7 +82,7 @@ msgstr "Cancelled"
 msgid "Choose the bot language:"
 msgstr "Choose a language for the bot:"
 
-#: rest_food/demand/demand_command.py:354
+#: rest_food/demand/demand_command.py:342
 msgid "Choose your active area"
 msgstr "Choose your city:"
 
@@ -135,7 +135,7 @@ msgstr "Food you can share:\n{}"
 msgid "Go to product posting"
 msgstr "Go to product sharing"
 
-#: rest_food/demand/demand_command.py:331
+#: rest_food/demand/demand_command.py:319
 msgid "Hello. Here you will see notifications about available food."
 msgstr "Hello. Here you will see notifications about available food."
 
@@ -170,7 +170,7 @@ msgstr "Terrain: %s"
 
 #: rest_food/supply/supply_state.py:179
 msgid "Location is not defined."
-msgstr ""
+msgstr "Не определена местность."
 
 #: rest_food/common/constants.py:40
 msgid "Minsk"
@@ -217,9 +217,9 @@ msgstr "Now you'll see notifications for {city}. Use /{command} to change your c
 msgid "OK ✅"
 msgstr "OK ✅"
 
-#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:311
-#: rest_food/demand/demand_command.py:349
-#: rest_food/demand/demand_command.py:369
+#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:306
+#: rest_food/demand/demand_command.py:337
+#: rest_food/demand/demand_command.py:357
 msgid "Other"
 msgstr "Other"
 
@@ -328,7 +328,7 @@ msgstr "Sorry, approve it"
 msgid "Sorry, something went wrong."
 msgstr "Sorry, something went wrong."
 
-#: rest_food/demand/demand_command.py:393
+#: rest_food/demand/demand_command.py:381
 msgid "Sorry. Unexpected error happened. Please, try later."
 msgstr "Sorry. Unexpected error happened. Please, try again later."
 
@@ -349,13 +349,13 @@ msgstr "Take it"
 msgid "Telegram: @{}\n"
 msgstr "Telegram: @{}\n"
 
-#: rest_food/demand/demand_command.py:376
+#: rest_food/demand/demand_command.py:364
 msgid "The bot is not active outside of those cities. We will notify you when anything new appears in your area."
 msgstr "The bot is not active outside of those cities. We will notify you when anything new appears in your area."
 
 #: rest_food/demand/demand_command.py:296
 msgid "This is a foodsharing bot. _intro_text_goes_here_\n"
-msgstr "Hello! You are welcomed by the foodsharing telegram bot! By going through a simple registration procedure, you will be able to join the global foodsharing movement!\n\nSteps:\n1. Select your location\n2. wait for the product posting to appear\n3.When the publication of products appears, click \"Pick up\"\n4. indicate your social status and contact phone number\n5. In order to pick up food, click \"Confirm\"\n\nNext, follow the directions.\n\nThe language is automatically selected according to the language of the Telegram client, but if you want to change the language, press /language.\n\nThat's it! Use the bot for foodsharing with pleasure! Remember that with small steps you can make a big contribution to the sustainability of the planet and the fight against world hunger!\n\nIf you have any questions, message the bot for feedback: @foodsharingsupport_bot.\n"
+msgstr "Hello! You are welcomed by foodsharing telegram bot! By following a simple registration procedure, you can join the global foodsharing movement!\n\nSteps:\n1. Select your location\n2. Wait for your food publication to appear\n3. when the products are posted, click \"pick up\".\n4. provide your social status and contact phone number\n5. click \"Confirm\" to pick up the food.\n\nNext, follow the instructions.\n\nThe language is automatically selected according to the language of the Telegram client, but if you want to change the language, press /language.\n\nThat's it! Use the foodsharing bot with pleasure! Remember that with small steps you can make a big contribution to the sustainability of the planet and the fight against world hunger!\n\nIf you have any questions, message the bot for feedback: @foodsharingsupport_bot.\n"
 
 #: rest_food/common/validators.py:18
 msgid "This is not a valid phone number."
@@ -368,7 +368,7 @@ msgstr "User @%s"
 
 #: rest_food/supply/supply_state.py:302
 msgid "Very different"
-msgstr ""
+msgstr "Totally different"
 
 #: rest_food/supply/supply_command.py:125 rest_food/supply/supply_reply.py:24
 msgid "View all messages"
@@ -407,7 +407,7 @@ msgstr "What to tell the foodsaver?"
 
 #: rest_food/supply/supply_state.py:293
 msgid "Where are you located?"
-msgstr ""
+msgstr "Where are you located?"
 
 #: rest_food/supply/supply_state.py:396
 msgid "Yes! Approve ✅"
@@ -415,7 +415,7 @@ msgstr "Yes ✅"
 
 #: rest_food/supply/supply_state.py:176
 msgid "You're not allowed to use the bot for foodsharing yet."
-msgstr ""
+msgstr "Your account has been confirmed for now."
 
 #: rest_food/demand/demand_reply.py:53
 msgid "You've already taken it.\n\n{}"
@@ -431,7 +431,7 @@ msgstr "Contact information"
 
 #: rest_food/supply/supply_state.py:182
 msgid "You have to specify your location as a city rather than a country to use bot for sharing."
-msgstr ""
+msgstr "To publish a meal, you must select a city in the contact information."
 
 #: rest_food/communication.py:131
 msgid "Your account is approved!"
@@ -524,7 +524,7 @@ msgstr "{}\n\nYour message was:\n\n{}"
 
 #: rest_food/supply/supply_state.py:300
 msgid "{}, other"
-msgstr ""
+msgstr "{}, other"
 
 #: rest_food/demand/demand_reply.py:19
 msgid "{} can share the following:\n{}"
