@@ -209,7 +209,7 @@ msgstr "Ще не заброньовано.\n\n%s"
 #: rest_food/demand/demand_reply.py:79
 #, python-brace-format
 msgid "Now you'll see notifications for {city}. Use /{command} to change your choice."
-msgstr "Вам надходитимуть повідомлення, актуальні для {city}. Натиснути /{command}, щоб змінити вибір"
+msgstr "Вам надходитимуть повідомлення, актуальні для {city}. Натисніть /{command}, щоб змінити вибір"
 
 #: rest_food/communication.py:134 rest_food/supply/supply_state.py:346
 #: rest_food/supply/supply_state.py:349 rest_food/supply/supply_state.py:357
