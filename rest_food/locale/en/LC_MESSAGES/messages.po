@@ -16,7 +16,7 @@ msgstr "🌍 Map"
 #: rest_food/demand/demand_command.py:317
 #, python-brace-format
 msgid "\n/{location_command} - change location"
-msgstr ""
+msgstr "\n/{location_command} - change terrain"
 
 #: rest_food/common/formatters.py:79
 #, python-format
@@ -26,7 +26,7 @@ msgstr "\nPhone: %s"
 #: rest_food/demand/demand_command.py:299
 #, python-brace-format
 msgid "\nPlease, specify your location to get notifications from foodsavers.\nYou can always change your choice using a /{location_command} command.\n"
-msgstr ""
+msgstr "\nPlease select which area you would like to receive messages from.\nYou can always change your selection with the command /{location_command}\n"
 
 #: rest_food/common/formatters.py:15
 msgid "\nTime: {}"
@@ -151,7 +151,7 @@ msgstr "Hello. Here you will see notifications about available food."
 
 #: rest_food/common/shared_commands.py:33
 msgid "I don't know you anymore. Press /start to start everything from scratch."
-msgstr ""
+msgstr "I don't know you anymore. Press /start to start over."
 
 #: rest_food/demand/demand_reply.py:28
 msgid "Info"
@@ -176,7 +176,7 @@ msgstr "Lithuania"
 #: rest_food/supply/supply_state.py:212
 #, python-format
 msgid "Location: %s"
-msgstr ""
+msgstr "Terrain: %s"
 
 #: rest_food/supply/supply_state.py:179
 msgid "Location is not defined."
@@ -365,7 +365,7 @@ msgstr "The bot is not active outside of those cities. We will notify you when a
 
 #: rest_food/demand/demand_command.py:296
 msgid "This is a foodsharing bot. _intro_text_goes_here_\n"
-msgstr "Foodsharing Telegram bot is not only a convenient way to send and receive food and meals, but also a contribution to the solution of a global problem. At a time when our world is facing hunger and inequality, even a small step of utilizing this innovative technology can have a big social impact. Every order through a foodsharing bot has the potential to reduce food waste, as it pinpoints needs and avoids surpluses, as well as helping to reduce environmental impact.\n\t\nBut most importantly, every order through a foodsharing bot contributes to the fight against world hunger. So, by using a foodsharing telegram bot, you can really make an impact for a better future by doing something good and meaningful even in the most mundane moments.\n"
+msgstr "Hello! You are welcomed by the foodsharing telegram bot! By going through a simple registration procedure, you will be able to join the global foodsharing movement!\n\nSteps:\n1. Select your location\n2. wait for the product posting to appear\n3.When the publication of products appears, click \"Pick up\"\n4. indicate your social status and contact phone number\n5. In order to pick up food, click \"Confirm\"\n\nNext, follow the directions.\n\nThe language is automatically selected according to the language of the Telegram client, but if you want to change the language, press /language.\n\nThat's it! Use the bot for foodsharing with pleasure! Remember that with small steps you can make a big contribution to the sustainability of the planet and the fight against world hunger!\n\nIf you have any questions, message the bot for feedback: @foodsharingsupport_bot.\n"
 
 #: rest_food/common/validators.py:18
 msgid "This is not a valid phone number."
