@@ -13,20 +13,10 @@ msgstr ""
 msgid "🌍 Map"
 msgstr "🌍 Карта"
 
-#: rest_food/demand/demand_command.py:317
-#, python-brace-format
-msgid "\n/{location_command} - change location"
-msgstr ""
-
 #: rest_food/common/formatters.py:79
 #, python-format
 msgid "\nPhone: %s"
 msgstr "\n \nТелефон: %s"
-
-#: rest_food/demand/demand_command.py:299
-#, python-brace-format
-msgid "\nPlease, specify your location to get notifications from foodsavers.\nYou can always change your choice using a /{location_command} command.\n"
-msgstr ""
 
 #: rest_food/common/formatters.py:15
 msgid "\nTime: {}"
