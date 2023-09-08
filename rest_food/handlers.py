@@ -91,7 +91,7 @@ def tg_supply(data):
             reply=Reply(
                 text=_('Something went wrong. Try something different, please.'),
                 buttons=[[{
-                    'data': SupplyCommand.BACK_TO_POSTING.build(),
+                    'data': SupplyCommand.SET_STATE.build(SupplyState.READY_TO_POST),
                     'text': _('Start from the beginning'),
                 }]]
             )

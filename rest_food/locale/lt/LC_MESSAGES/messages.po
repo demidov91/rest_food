@@ -27,12 +27,12 @@ msgstr "\nLaikas: {}"
 msgid "%(info)s\n-----------\n%(ask_for_approve)s"
 msgstr "%(info)s\n-----------\n%(ask_for_approve)s"
 
-#: rest_food/supply/supply_command.py:74
+#: rest_food/supply/supply_command.py:78
 #, python-format
 msgid "%s (booked)"
 msgstr "%s (užsakyta)"
 
-#: rest_food/supply/supply_command.py:81
+#: rest_food/supply/supply_command.py:85
 #, python-format
 msgid "%s (not booked)"
 msgstr "%s (neužsakyta)"
@@ -42,7 +42,7 @@ msgstr "%s (neužsakyta)"
 msgid "%s is notified that you'll take the food. Please, wait for approval."
 msgstr "%s pranešama apie jūsų norą atsiimti prekes. Palaukite patvirtinimo."
 
-#: rest_food/supply/supply_state.py:216
+#: rest_food/supply/supply_state.py:217
 #, python-format
 msgid "Address: %s"
 msgstr "Adresas: %s"
@@ -60,7 +60,7 @@ msgstr "Patvirtinti"
 msgid "Back"
 msgstr "Atgal"
 
-#: rest_food/supply/supply_state.py:465
+#: rest_food/supply/supply_state.py:466
 msgid "Back to the message"
 msgstr "Grįžti į įrašą"
 
@@ -68,13 +68,13 @@ msgstr "Grįžti į įrašą"
 msgid "Belarus"
 msgstr "Baltarusija"
 
-#: rest_food/supply/supply_state.py:122 rest_food/supply/supply_state.py:153
-#: rest_food/supply/supply_state.py:267 rest_food/supply/supply_state.py:400
-#: rest_food/supply/supply_state.py:409
+#: rest_food/supply/supply_state.py:123 rest_food/supply/supply_state.py:154
+#: rest_food/supply/supply_state.py:268 rest_food/supply/supply_state.py:401
+#: rest_food/supply/supply_state.py:410
 msgid "Cancel"
 msgstr "Atšaukti"
 
-#: rest_food/supply/supply_state.py:479
+#: rest_food/supply/supply_state.py:480
 msgid "Cancelled"
 msgstr "Atšauktas"
 
@@ -102,7 +102,7 @@ msgstr "Susisiekite per {}: ✅"
 msgid "Connect via {}: ❌"
 msgstr "Susisiekite per {}: ❌"
 
-#: rest_food/supply/supply_state.py:220
+#: rest_food/supply/supply_state.py:221
 #, python-format
 msgid "Coordinates: %s"
 msgstr "Koordinatės: %s"
@@ -115,11 +115,11 @@ msgstr "Koordinačių nėra :("
 msgid "Decline"
 msgstr "Atmesti"
 
-#: rest_food/supply/supply_state.py:64
+#: rest_food/supply/supply_tg_command.py:26 rest_food/supply/supply_state.py:65
 msgid "Edit restaurant info"
 msgstr "Redaguoti informaciją apie įstaigą"
 
-#: rest_food/supply/supply_state.py:72
+#: rest_food/supply/supply_state.py:73
 msgid "Enter food you can share and click \"send\""
 msgstr "Įveskite prekes, kurias galite perkelti, ir spustelėkite „siųsti“"
 
@@ -127,13 +127,22 @@ msgstr "Įveskite prekes, kurias galite perkelti, ir spustelėkite „siųsti“
 msgid "Enter your name:"
 msgstr "Įveskite savo vardą:"
 
-#: rest_food/supply/supply_state.py:130
+#: rest_food/supply/supply_state.py:131
 msgid "Food you can share:\n{}"
 msgstr "Perkelkite produktus:\n{}"
 
-#: rest_food/supply/supply_command.py:93 rest_food/supply/supply_state.py:230
+#: rest_food/supply/supply_tg_command.py:30
+#: rest_food/supply/supply_command.py:97 rest_food/supply/supply_state.py:231
 msgid "Go to product posting"
 msgstr "Į gaminių publikavimą"
+
+#: rest_food/supply/supply_tg_command.py:19
+msgid "Got it"
+msgstr "Supratau, pradėkime"
+
+#: rest_food/supply/supply_tg_command.py:35
+msgid "Hello. <Supply-side intro>"
+msgstr "Sveikinimai! Jus sveikina maisto dalijimosi telegramos botas! Atlikę paprastą registracijos procedūrą, galite prisijungti prie pasaulinio dalijimosi maistu judėjimo!\n\nŽingsniai:\n1.Įveskite savo įstaigos pavadinimą\n2.Įveskite miestą, kuriame esate įsikūrę\n3.Įveskite savo įmonės adresą\n4.Įveskite savo kontaktinį telefono numerį\n5.Palaukite, kol bus gautas jūsų įstaigos patvirtinimas\n\nTada vykdykite nurodymus.\n\nKalba parenkama automatiškai pagal \"Telegram\" kliento kalbą, bet jei norite pakeisti kalbą, paspauskite /language.\n\nŠtai ir viskas! Su malonumu naudokitės maisto dalijimosi botu! Nepamirškite, kad mažais žingsneliais galite labai prisidėti prie planetos tvarumo ir kovos su badu pasaulyje!\n\nJei turite klausimų, parašykite botui žinutę, kad gautumėte grįžtamąjį ryšį: Užtikrinkite, kad jūsų atsakymai būtų: @foodsharingsupport_bot."
 
 #: rest_food/demand/demand_command.py:319
 msgid "Hello. Here you will see notifications about available food."
@@ -147,7 +156,7 @@ msgstr "Aš tavęs nebepažįstu. Paspauskite /start, kad pradėtumėte iš nauj
 msgid "Info"
 msgstr "Informacija"
 
-#: rest_food/supply/supply_state.py:192
+#: rest_food/supply/supply_state.py:193
 msgid "Information is sent. I'll notify you when there is someone to take this food."
 msgstr "Informacija išsiųsta. Jums bus pranešta, kai kas nors norės atsiimti šiuos produktus."
 
@@ -155,7 +164,7 @@ msgstr "Informacija išsiųsta. Jums bus pranešta, kai kas nors norės atsiimti
 msgid "Information was not found."
 msgstr "Informacija nerasta."
 
-#: rest_food/supply/supply_command.py:96
+#: rest_food/supply/supply_command.py:100
 msgid "Last messages"
 msgstr "Naujausi pranešimai"
 
@@ -163,12 +172,12 @@ msgstr "Naujausi pranešimai"
 msgid "Lithuania"
 msgstr "Lietuva"
 
-#: rest_food/supply/supply_state.py:212
+#: rest_food/supply/supply_state.py:213
 #, python-format
 msgid "Location: %s"
 msgstr "Vietovė: %s"
 
-#: rest_food/supply/supply_state.py:179
+#: rest_food/supply/supply_state.py:180
 msgid "Location is not defined."
 msgstr "Neapibrėžta vietovė."
 
@@ -176,7 +185,7 @@ msgstr "Neapibrėžta vietovė."
 msgid "Minsk"
 msgstr "Minskas"
 
-#: rest_food/supply/supply_state.py:208
+#: rest_food/supply/supply_state.py:209
 #, python-format
 msgid "Name: %s"
 msgstr "Vardas: %s"
@@ -189,7 +198,7 @@ msgstr "Vardas: {}"
 msgid "New user"
 msgstr "Naujas vartotojas"
 
-#: rest_food/supply/supply_state.py:392
+#: rest_food/supply/supply_state.py:393
 msgid "No! Edit! 🌍"
 msgstr "Ne tai. Redaguoti 🌍"
 
@@ -197,11 +206,11 @@ msgstr "Ne tai. Redaguoti 🌍"
 msgid "No contact info was provided.\n"
 msgstr "Kontaktinė informacija nepateikta :(\n"
 
-#: rest_food/supply/supply_command.py:146
+#: rest_food/supply/supply_command.py:150
 msgid "Nope, decline it"
 msgstr "Ne, atmesti"
 
-#: rest_food/supply/supply_command.py:118
+#: rest_food/supply/supply_command.py:122
 #, python-format
 msgid "Not yet booked.\n\n%s"
 msgstr "Dar neužsakyta.\n\n%s"
@@ -211,8 +220,8 @@ msgstr "Dar neužsakyta.\n\n%s"
 msgid "Now you'll see notifications for {city}. Use /{command} to change your choice."
 msgstr "Gausite pranešimus, susijusius su {city}. Paspauskite /{command} norėdami pakeisti pasirinkimą"
 
-#: rest_food/communication.py:134 rest_food/supply/supply_state.py:346
-#: rest_food/supply/supply_state.py:349 rest_food/supply/supply_state.py:357
+#: rest_food/communication.py:134 rest_food/supply/supply_state.py:347
+#: rest_food/supply/supply_state.py:350 rest_food/supply/supply_state.py:358
 #: rest_food/demand/demand_state.py:56
 msgid "OK ✅"
 msgstr "OK ✅"
@@ -223,7 +232,7 @@ msgstr "OK ✅"
 msgid "Other"
 msgstr "Kita"
 
-#: rest_food/supply/supply_state.py:226 rest_food/demand/demand_command.py:142
+#: rest_food/supply/supply_state.py:227 rest_food/demand/demand_command.py:142
 #, python-format
 msgid "Phone: %s"
 msgstr "Telefonas: %s"
@@ -236,11 +245,11 @@ msgstr "Telefonas: {}\n"
 msgid "Please, confirm/edit your contact information to proceed."
 msgstr "Norėdami tęsti, patvirtinkite savo kontaktinę informaciją."
 
-#: rest_food/supply/supply_state.py:288
+#: rest_food/supply/supply_state.py:289
 msgid "Please, enter name of the restaurant."
 msgstr "Įveskite įstaigos pavadinimą."
 
-#: rest_food/supply/supply_state.py:54
+#: rest_food/supply/supply_state.py:55
 msgid "Please, provide information about yourself before getting started"
 msgstr "Prieš tęsdami įveskite savo kontaktinę informaciją."
 
@@ -248,15 +257,15 @@ msgstr "Prieš tęsdami įveskite savo kontaktinę informaciją."
 msgid "Please, provide only pone number."
 msgstr "Įveskite tik kontaktinį numerį."
 
-#: rest_food/supply/supply_state.py:308
+#: rest_food/supply/supply_state.py:309
 msgid "Please, provide restaurant address."
 msgstr "Įveskite įstaigos adresą."
 
-#: rest_food/supply/supply_state.py:406
+#: rest_food/supply/supply_state.py:407
 msgid "Please, send me your coordinates. (Attach -> Location)"
 msgstr "Koordinates prašome atsiųsti: Attach -> Location"
 
-#: rest_food/supply/supply_state.py:337 rest_food/supply/supply_state.py:366
+#: rest_food/supply/supply_state.py:338 rest_food/supply/supply_state.py:367
 msgid "Please, send your contact number."
 msgstr "Prašome atsiųsti kontaktinį telefono numerį."
 
@@ -264,11 +273,11 @@ msgstr "Prašome atsiųsti kontaktinį telefono numerį."
 msgid "Poland"
 msgstr "Lenkija"
 
-#: rest_food/supply/supply_state.py:140 rest_food/supply/supply_state.py:163
+#: rest_food/supply/supply_state.py:141 rest_food/supply/supply_state.py:164
 msgid "Product list is cleared."
 msgstr "Atšauktas"
 
-#: rest_food/supply/supply_state.py:414
+#: rest_food/supply/supply_state.py:415
 msgid "Provide later"
 msgstr "Vėliau"
 
@@ -285,7 +294,7 @@ msgstr "Institucija: {name}\nAdresas: {address}"
 msgid "SOMEONE HAS ALREADY TAKEN IT!\n\n{}"
 msgstr "Kažkas jau paėmė!\n\n{}"
 
-#: rest_food/supply/supply_state.py:331 rest_food/supply/supply_state.py:363
+#: rest_food/supply/supply_state.py:332 rest_food/supply/supply_state.py:364
 #: rest_food/demand/demand_state.py:43
 msgid "Send phone"
 msgstr "siųsti telefoną"
@@ -294,7 +303,7 @@ msgstr "siųsti telefoną"
 msgid "Send your phone number"
 msgstr "Prašome atsiųsti savo kontaktinį numerį"
 
-#: rest_food/supply/supply_state.py:118
+#: rest_food/supply/supply_state.py:119
 msgid "Set time and send"
 msgstr "Įveskite laiką ir išsiųskite"
 
@@ -320,11 +329,11 @@ msgstr "Kažkas jau paėmė."
 msgid "Something went wrong. Try something different, please."
 msgstr "Kažkas nutiko. Išbandykite ką nors kita."
 
-#: rest_food/supply/supply_command.py:161
+#: rest_food/supply/supply_command.py:165
 msgid "Sorry, approve it"
 msgstr "oi, patvirtink"
 
-#: rest_food/supply/supply_state.py:492
+#: rest_food/supply/supply_state.py:493
 msgid "Sorry, something went wrong."
 msgstr "Atsiprašau, kažkas ne taip :("
 
@@ -332,7 +341,7 @@ msgstr "Atsiprašau, kažkas ne taip :("
 msgid "Sorry. Unexpected error happened. Please, try later."
 msgstr "Įvyko netikėta klaida. Pabandykite vėliau."
 
-#: rest_food/supply/supply_state.py:150
+#: rest_food/supply/supply_state.py:151
 msgid "Specify the time"
 msgstr "Nurodykite laiką"
 
@@ -366,15 +375,15 @@ msgstr "Tai neteisingas telefono numeris."
 msgid "User @%s"
 msgstr "Vartotojas @%s"
 
-#: rest_food/supply/supply_state.py:302
+#: rest_food/supply/supply_state.py:303
 msgid "Very different"
 msgstr "Tai visai kas kita"
 
-#: rest_food/supply/supply_command.py:125 rest_food/supply/supply_reply.py:24
+#: rest_food/supply/supply_command.py:129 rest_food/supply/supply_reply.py:24
 msgid "View all messages"
 msgstr "Žiūrėti visus skelbimus"
 
-#: rest_food/supply/supply_state.py:94
+#: rest_food/supply/supply_state.py:95
 msgid "View posted products"
 msgstr "Žiūrėti skelbimus"
 
@@ -396,24 +405,24 @@ msgstr "Informuosime jus, jei {country} atsiras naujų maisto gelbėjimo priemon
 msgid "We'll let you know if the bot starts working in other countries. Use /{command} to update location"
 msgstr "Kai botas pradės veikti kitose šalyse, apie tai informuosime. Spauda /{command} norėdami pakeisti pasirinkimą"
 
-#: rest_food/supply/supply_state.py:83
+#: rest_food/supply/supply_state.py:84
 #, python-format
 msgid "We'll notify you when your account is approved. Also, you can contact us with %s"
 msgstr "Kai paskyra bus patvirtinta, atsiųsime jums el. laišką. Galite remtis %s Daugiau informacijos"
 
-#: rest_food/supply/supply_state.py:463
+#: rest_food/supply/supply_state.py:464
 msgid "What to tell the foodsaver?"
 msgstr "Ką pasakyti žmogui, kuris užsisakė maistą?"
 
-#: rest_food/supply/supply_state.py:293
+#: rest_food/supply/supply_state.py:294
 msgid "Where are you located?"
 msgstr "Kur esate?"
 
-#: rest_food/supply/supply_state.py:396
+#: rest_food/supply/supply_state.py:397
 msgid "Yes! Approve ✅"
 msgstr "Taip ✅"
 
-#: rest_food/supply/supply_state.py:176
+#: rest_food/supply/supply_state.py:177
 msgid "You're not allowed to use the bot for foodsharing yet."
 msgstr "Jūsų paskyra kol kas patvirtinta."
 
@@ -425,11 +434,11 @@ msgstr "Jūs jau paėmėte.\n\n{}"
 msgid "You've booked this"
 msgstr "Jūs pažadėjote atsiimti prekes"
 
-#: rest_food/supply/supply_state.py:205
+#: rest_food/supply/supply_state.py:206
 msgid "You can edit your contact info here"
 msgstr "Redaguoti kontaktinę informaciją"
 
-#: rest_food/supply/supply_state.py:182
+#: rest_food/supply/supply_state.py:183
 msgid "You have to specify your location as a city rather than a country to use bot for sharing."
 msgstr "Norėdami paskelbti patiekalą, kontaktinėje informacijoje turite pasirinkti miestą."
 
@@ -437,7 +446,7 @@ msgstr "Norėdami paskelbti patiekalą, kontaktinėje informacijoje turite pasir
 msgid "Your account is approved!"
 msgstr "Jūsų paskyra patvirtinta!"
 
-#: rest_food/communication.py:149 rest_food/supply/supply_state.py:76
+#: rest_food/communication.py:149 rest_food/supply/supply_state.py:77
 #, python-format
 msgid "Your account was declined. Please, contact %s for any clarifications."
 msgstr "Jūsų paskyra atmesta. Prašau kreiptis į %s daugiau paaiškinimo."
@@ -522,7 +531,7 @@ msgstr "{user_name} buvo ATMESTA. Pateiktas aprašymas:\n\n{description}\n\nid d
 msgid "{}\n\nYour message was:\n\n{}"
 msgstr "{}\n\ntavo žinutė buvo:\n\n{}"
 
-#: rest_food/supply/supply_state.py:300
+#: rest_food/supply/supply_state.py:301
 msgid "{}, other"
 msgstr "{}, kita"
 
@@ -534,7 +543,7 @@ msgstr "{} gali perduoti:\n{}"
 msgid "{} will take the food.\n"
 msgstr "{} paims produktus.\n"
 
-#: rest_food/supply/supply_state.py:331 rest_food/demand/demand_state.py:43
+#: rest_food/supply/supply_state.py:332 rest_food/demand/demand_state.py:43
 msgid "← Back"
 msgstr "← Atgal"
 
@@ -542,10 +551,10 @@ msgstr "← Atgal"
 msgid "❌ Cancel"
 msgstr "❌ Atšaukti"
 
-#: rest_food/supply/supply_state.py:334 rest_food/demand/demand_state.py:46
+#: rest_food/supply/supply_state.py:335 rest_food/demand/demand_state.py:46
 msgid "❌ Delete"
 msgstr "❌ Ištrinti"
 
-#: rest_food/supply/supply_state.py:363
+#: rest_food/supply/supply_state.py:364
 msgid "❌ Dismiss"
 msgstr "❌ Praleisti"

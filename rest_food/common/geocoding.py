@@ -19,7 +19,6 @@ class YandexBBox(Enum):
 
 
 class GoogleBounds(Enum):
-    GDANSK = '54.3,18.5|54.6,18.8'
     WARSZAWA = '52,20.5|52.5,21.3'
     POLAND = '49.13,14.3|55,24.5'
 

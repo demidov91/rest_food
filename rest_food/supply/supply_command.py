@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from rest_food.communication import (
     notify_demand_for_approved,
@@ -45,13 +45,13 @@ def handle_supply_command(user: User, command_name: SupplyCommand, args: List[st
     return {
         SupplyCommand.CANCEL_BOOKING: cancel_booking,
         SupplyCommand.APPROVE_BOOKING: approve_booking,
-        SupplyCommand.BACK_TO_POSTING: back_to_posting,
         SupplyCommand.LIST_MESSAGES: view_messages,
         SupplyCommand.SHOW_DEMANDED_MESSAGE: show_demanded_message,
         SupplyCommand.SHOW_NON_DEMANDED_MESSAGE: show_non_demanded_message,
         SupplyCommand.APPROVE_SUPPLIER: approve_supplier,
         SupplyCommand.DECLINE_SUPPLIER: decline_supplier,
         SupplyCommand.SET_LANGUAGE: set_language,
+        SupplyCommand.SET_STATE: set_state,
     }[command_name](user, *args)
 
 
@@ -67,6 +67,10 @@ def approve_booking(user: User, booking_id: str):
 
 def back_to_posting(user):
     return Reply(next_state=SupplyState.READY_TO_POST)
+
+
+def set_state(user: User, state: Optional[str]=None):
+    return Reply(next_state=SupplyState(state))
 
 
 def _get_demanded_message_button(message: Message):
@@ -91,7 +95,7 @@ def view_messages(user):
     ]
     buttons.append([{
         'text': _('Go to product posting'),
-        'data': SupplyCommand.BACK_TO_POSTING.build(),
+        'data': SupplyCommand.SET_STATE.build(SupplyState.READY_TO_POST),
     }])
     return Reply(text=_('Last messages'), buttons=buttons)
 

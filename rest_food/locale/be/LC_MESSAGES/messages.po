@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-04 12:56+0200\n"
+"POT-Creation-Date: 2023-09-08 13:06+0200\n"
 "Language: be.UTF-8\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -52,13 +52,13 @@ msgstr "Пацвярджэнне атрымана. Калі ласка патэ�
 msgid "Your account is approved!"
 msgstr "Ваш акаўнт пацверджаны!"
 
-#: rest_food/communication.py:134 rest_food/supply/supply_state.py:346
-#: rest_food/supply/supply_state.py:349 rest_food/supply/supply_state.py:357
+#: rest_food/communication.py:134 rest_food/supply/supply_state.py:347
+#: rest_food/supply/supply_state.py:350 rest_food/supply/supply_state.py:358
 #: rest_food/demand/demand_state.py:56
 msgid "OK ✅"
 msgstr "OK ✅"
 
-#: rest_food/communication.py:149 rest_food/supply/supply_state.py:76
+#: rest_food/communication.py:149 rest_food/supply/supply_state.py:77
 #, python-format
 msgid "Your account was declined. Please, contact %s for any clarifications."
 msgstr ""
@@ -255,25 +255,55 @@ msgstr "Вільнюс"
 msgid "for-Vilnius"
 msgstr "Вільнюса"
 
-#: rest_food/supply/supply_command.py:74
+#: rest_food/supply/supply_tg_command.py:19
+msgid "Got it"
+msgstr "Зразумела, пачынаем"
+
+#: rest_food/supply/supply_tg_command.py:26 rest_food/supply/supply_state.py:65
+msgid "Edit restaurant info"
+msgstr "Рэдагаваць кантактную інфармацыю"
+
+#: rest_food/supply/supply_tg_command.py:30
+#: rest_food/supply/supply_command.py:97 rest_food/supply/supply_state.py:231
+msgid "Go to product posting"
+msgstr "Да публікацыі новых прадуктаў"
+
+#: rest_food/supply/supply_tg_command.py:35
+msgid "Hello. <Supply-side intro>"
+msgstr ""
+"Добры дзень! Вас вітае фудшэрынг тэлеграм бот! Прайшоўшы простую працэдуру рэгістрацыі, Вы зможаце далучыцца да сусветнага руху фудшэрынга!\n"
+"\n"
+"Крокі:\n"
+"1.Увядзіце назву вашага ўстановы\n"
+"2.Пакажыце горад у якім вы знаходзіцеся\n"
+"3.Увядзіце адрас вашага ўстановы\n"
+"4.Увядзіце кантактны нумар тэлефона\n"
+"5.Дачакайцеся пацверджання вашай установы\n"
+"\n"
+"Далей прытрымлівайцеся ўказанням.\n"
+"\n"
+"Мова аўтаматычна выбіраецца ў адпаведнасці з мовай кліента Telegram, але калі вы хочаце змяніць мову, націсніце / language.\n"
+"\n"
+"Гэта ўсё! Карыстайцеся ботам для фудшэрынга з задавальненнем! Памятаеце, што маленькімі крокамі вы можаце ўнесці вялікі ўклад у захаванне ўстойлівасці планеты і барацьбу з сусветным голадам!\n"
+"\n"
+"Калі ў вас узнікнуць пытанні, пішыце боту для зваротнай сувязі: @foodsharingsupport_bot."
+
+
+#: rest_food/supply/supply_command.py:78
 #, python-format
 msgid "%s (booked)"
 msgstr "%s (забраніравана)"
 
-#: rest_food/supply/supply_command.py:81
+#: rest_food/supply/supply_command.py:85
 #, python-format
 msgid "%s (not booked)"
 msgstr "%s (не забраніравана)"
 
-#: rest_food/supply/supply_command.py:93 rest_food/supply/supply_state.py:230
-msgid "Go to product posting"
-msgstr "Да публікацыі новых прадуктаў"
-
-#: rest_food/supply/supply_command.py:96
+#: rest_food/supply/supply_command.py:100
 msgid "Last messages"
 msgstr "Апошнія аб'явы"
 
-#: rest_food/supply/supply_command.py:118
+#: rest_food/supply/supply_command.py:122
 #, python-format
 msgid ""
 "Not yet booked.\n"
@@ -284,31 +314,27 @@ msgstr ""
 "\n"
 "%s"
 
-#: rest_food/supply/supply_command.py:125 rest_food/supply/supply_reply.py:24
+#: rest_food/supply/supply_command.py:129 rest_food/supply/supply_reply.py:24
 msgid "View all messages"
 msgstr "Праглядзець усе аб'явы"
 
-#: rest_food/supply/supply_command.py:146
+#: rest_food/supply/supply_command.py:150
 msgid "Nope, decline it"
 msgstr "Не, адхіліць"
 
-#: rest_food/supply/supply_command.py:161
+#: rest_food/supply/supply_command.py:165
 msgid "Sorry, approve it"
 msgstr "Ой, пацвердзіць"
 
-#: rest_food/supply/supply_state.py:54
+#: rest_food/supply/supply_state.py:55
 msgid "Please, provide information about yourself before getting started"
 msgstr "Калі ласка, увядзіце кантактную інфармацыю перад тым як пачаць"
 
-#: rest_food/supply/supply_state.py:64
-msgid "Edit restaurant info"
-msgstr "Рэдагаваць кантактную інфармацыю"
-
-#: rest_food/supply/supply_state.py:72
+#: rest_food/supply/supply_state.py:73
 msgid "Enter food you can share and click \"send\""
 msgstr "Пералічыце прадукты, якія можаце перадаць і націсніце \"Даслаць\""
 
-#: rest_food/supply/supply_state.py:83
+#: rest_food/supply/supply_state.py:84
 #, python-format
 msgid ""
 "We'll notify you when your account is approved. Also, you can contact us "
@@ -317,21 +343,21 @@ msgstr ""
 "Мы паведамім Вам, калі акаўнт будзе пацверджаны. Таксама можаце звярнуцца да "
 "%s за дадатковай інфармацыяй"
 
-#: rest_food/supply/supply_state.py:94
+#: rest_food/supply/supply_state.py:95
 msgid "View posted products"
 msgstr "Праглядзець апублікаваныя прадукты"
 
-#: rest_food/supply/supply_state.py:118
+#: rest_food/supply/supply_state.py:119
 msgid "Set time and send"
 msgstr "Увесці час і даслаць"
 
-#: rest_food/supply/supply_state.py:122 rest_food/supply/supply_state.py:153
-#: rest_food/supply/supply_state.py:267 rest_food/supply/supply_state.py:400
-#: rest_food/supply/supply_state.py:409
+#: rest_food/supply/supply_state.py:123 rest_food/supply/supply_state.py:154
+#: rest_food/supply/supply_state.py:268 rest_food/supply/supply_state.py:401
+#: rest_food/supply/supply_state.py:410
 msgid "Cancel"
 msgstr "Адмена"
 
-#: rest_food/supply/supply_state.py:130
+#: rest_food/supply/supply_state.py:131
 msgid ""
 "Food you can share:\n"
 "{}"
@@ -339,134 +365,134 @@ msgstr ""
 "Прадукты якія можаце перадаць:\n"
 "{}"
 
-#: rest_food/supply/supply_state.py:140 rest_food/supply/supply_state.py:163
+#: rest_food/supply/supply_state.py:141 rest_food/supply/supply_state.py:164
 msgid "Product list is cleared."
 msgstr "Адменена"
 
-#: rest_food/supply/supply_state.py:150
+#: rest_food/supply/supply_state.py:151
 msgid "Specify the time"
 msgstr "Увесці час"
 
-#: rest_food/supply/supply_state.py:176
+#: rest_food/supply/supply_state.py:177
 msgid "You're not allowed to use the bot for foodsharing yet."
 msgstr "Вам акаунт пакуль што пацверджаны. "
 
-#: rest_food/supply/supply_state.py:179
+#: rest_food/supply/supply_state.py:180
 msgid "Location is not defined."
 msgstr "Не вызначана мясцовасць."
 
-#: rest_food/supply/supply_state.py:182
+#: rest_food/supply/supply_state.py:183
 msgid ""
 "You have to specify your location as a city rather than a country to use bot "
 "for sharing."
 msgstr "Для публікацыі ежы неабходна абраць горад у кантактнай інфармацыі."
 
-#: rest_food/supply/supply_state.py:192
+#: rest_food/supply/supply_state.py:193
 msgid ""
 "Information is sent. I'll notify you when there is someone to take this food."
 msgstr ""
 "Інфармацыя выслана. Я паведамлю, калі хтосьці пажадае забраць пералічаныя "
 "прадукты."
 
-#: rest_food/supply/supply_state.py:205
+#: rest_food/supply/supply_state.py:206
 msgid "You can edit your contact info here"
 msgstr "Кантактная інфармацыя"
 
-#: rest_food/supply/supply_state.py:208
+#: rest_food/supply/supply_state.py:209
 #, python-format
 msgid "Name: %s"
 msgstr "Імя: %s"
 
-#: rest_food/supply/supply_state.py:212
+#: rest_food/supply/supply_state.py:213
 #, python-format
 msgid "Location: %s"
 msgstr "Мясцовасць: %s"
 
-#: rest_food/supply/supply_state.py:216
+#: rest_food/supply/supply_state.py:217
 #, python-format
 msgid "Address: %s"
 msgstr "Адрас: %s"
 
-#: rest_food/supply/supply_state.py:220
+#: rest_food/supply/supply_state.py:221
 #, python-format
 msgid "Coordinates: %s"
 msgstr "Каардынаты: %s"
 
-#: rest_food/supply/supply_state.py:226 rest_food/demand/demand_command.py:142
+#: rest_food/supply/supply_state.py:227 rest_food/demand/demand_command.py:142
 #, python-format
 msgid "Phone: %s"
 msgstr "Тэлефон: %s"
 
-#: rest_food/supply/supply_state.py:288
+#: rest_food/supply/supply_state.py:289
 msgid "Please, enter name of the restaurant."
 msgstr "Калі ласка, увядзіце назву ўстановы."
 
-#: rest_food/supply/supply_state.py:293
+#: rest_food/supply/supply_state.py:294
 msgid "Where are you located?"
 msgstr "Дзе вы знаходзецеся?"
 
-#: rest_food/supply/supply_state.py:300
+#: rest_food/supply/supply_state.py:301
 msgid "{}, other"
 msgstr "{}, іншае"
 
-#: rest_food/supply/supply_state.py:302
+#: rest_food/supply/supply_state.py:303
 msgid "Very different"
 msgstr "Зусім іншае"
 
-#: rest_food/supply/supply_state.py:308
+#: rest_food/supply/supply_state.py:309
 msgid "Please, provide restaurant address."
 msgstr "Калі ласка, увядзіце адрас установы."
 
-#: rest_food/supply/supply_state.py:331 rest_food/demand/demand_state.py:43
+#: rest_food/supply/supply_state.py:332 rest_food/demand/demand_state.py:43
 msgid "← Back"
 msgstr "← Назад"
 
-#: rest_food/supply/supply_state.py:331 rest_food/supply/supply_state.py:363
+#: rest_food/supply/supply_state.py:332 rest_food/supply/supply_state.py:364
 #: rest_food/demand/demand_state.py:43
 msgid "Send phone"
 msgstr "Выслаць тэлефон"
 
-#: rest_food/supply/supply_state.py:334 rest_food/demand/demand_state.py:46
+#: rest_food/supply/supply_state.py:335 rest_food/demand/demand_state.py:46
 msgid "❌ Delete"
 msgstr "❌ Выдаліць"
 
-#: rest_food/supply/supply_state.py:337 rest_food/supply/supply_state.py:366
+#: rest_food/supply/supply_state.py:338 rest_food/supply/supply_state.py:367
 msgid "Please, send your contact number."
 msgstr "Калі ласка, вышліце свой кантактны тэлефон."
 
-#: rest_food/supply/supply_state.py:363
+#: rest_food/supply/supply_state.py:364
 msgid "❌ Dismiss"
 msgstr "❌ Прапусціць"
 
-#: rest_food/supply/supply_state.py:392
+#: rest_food/supply/supply_state.py:393
 msgid "No! Edit! 🌍"
 msgstr "Не, змяніць 🌍"
 
-#: rest_food/supply/supply_state.py:396
+#: rest_food/supply/supply_state.py:397
 msgid "Yes! Approve ✅"
 msgstr "Так ✅"
 
-#: rest_food/supply/supply_state.py:406
+#: rest_food/supply/supply_state.py:407
 msgid "Please, send me your coordinates. (Attach -> Location)"
 msgstr "Калі ласка, дашліце каардынаты: Прымацаваць -> Месцазнаходжанне"
 
-#: rest_food/supply/supply_state.py:414
+#: rest_food/supply/supply_state.py:415
 msgid "Provide later"
 msgstr "Пазней"
 
-#: rest_food/supply/supply_state.py:463
+#: rest_food/supply/supply_state.py:464
 msgid "What to tell the foodsaver?"
 msgstr "Што яму/ёй напісаць?"
 
-#: rest_food/supply/supply_state.py:465
+#: rest_food/supply/supply_state.py:466
 msgid "Back to the message"
 msgstr "Назад да аб'явы"
 
-#: rest_food/supply/supply_state.py:479
+#: rest_food/supply/supply_state.py:480
 msgid "Cancelled"
 msgstr "Адменена"
 
-#: rest_food/supply/supply_state.py:492
+#: rest_food/supply/supply_state.py:493
 msgid "Sorry, something went wrong."
 msgstr "Прабачце, штосьці пайшло не так :("
 
@@ -566,7 +592,7 @@ msgstr "Абярыце свой сацыяльны статус:"
 #: rest_food/demand/demand_command.py:296
 msgid "This is a foodsharing bot. _intro_text_goes_here_\n"
 msgstr ""
-"Вітаем вас! Вас вітае фудшэрынг тэлеграм бот! Прайшоўшы простую працэдуру "
+"Добры дзень! Вас вітае фудшэрынг тэлеграм бот! Прайшоўшы простую працэдуру "
 "рэгістрацыі, Вы зможаце далучыцца да сусветнага руху фудшэрынга!\n"
 "\n"
 "Крокі:\n"
