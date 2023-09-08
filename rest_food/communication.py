@@ -12,7 +12,7 @@ from rest_food.db import (
     get_message_demanded_user, get_admin_users, set_info,
     get_demand_users)
 from rest_food.entities import Reply, User
-from rest_food.enums import Workflow, SupplyCommand, UserInfoField
+from rest_food.enums import Workflow, SupplyCommand, UserInfoField, SupplyState
 from rest_food.message_queue import get_mass_queue, get_single_queue
 from rest_food.settings import FEEDBACK_TG_BOT
 from rest_food.demand.demand_reply import build_demand_side_short_message, \
@@ -130,7 +130,7 @@ def notify_supplier_is_approved(user: User):
                 Reply(
                     text=_('Your account is approved!'),
                     buttons=[[{
-                        'data': SupplyCommand.BACK_TO_POSTING.build(),
+                        'data': SupplyCommand.SET_STATE.build(SupplyState.READY_TO_POST),
                         'text': _('OK ✅'),
                     }]]
                 )

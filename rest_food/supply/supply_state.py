@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from collections import OrderedDict
 
 from rest_food.common.constants import CITIES, COUNTRIES
 from rest_food.enums import SupplyState, Provider, SupplyCommand, UserInfoField
@@ -33,17 +34,17 @@ logger = logging.getLogger(__name__)
 
 
 class ForceInfoMixin:
-    def __init__(self, *args, **kwargs):
-        super(ForceInfoMixin, self).__init__(*args, **kwargs)
-        self._fields_to_check = dict((
+    fields_to_check = OrderedDict(
+        (
             (UserInfoField.NAME, SupplyState.FORCE_NAME),
             (UserInfoField.LOCATION, SupplyState.FORCE_LOCATION),
             (UserInfoField.ADDRESS, SupplyState.FORCE_ADDRESS),
             (UserInfoField.IS_APPROVED_COORDINATES, SupplyState.FORCE_COORDINATES),
-        ))
+        )
+    )
 
     def get_next_state(self):
-        for field, state in self._fields_to_check.items():
+        for field, state in self.fields_to_check.items():
             if not self.db_user.info.get(field.value):
                 return state
 

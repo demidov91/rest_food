@@ -78,15 +78,19 @@ class SupplyCommand(Enum):
     DEFAULT = 'default'
     CANCEL_BOOKING = 'cancel_booking'
     APPROVE_BOOKING = 'approve_booking'
-    BACK_TO_POSTING = 'back_to_posting'
     LIST_MESSAGES = 'list_messages'
     SHOW_DEMANDED_MESSAGE = 'sdm'
     SHOW_NON_DEMANDED_MESSAGE = 'show_ndm'
     APPROVE_SUPPLIER = 'approve_supplier'
     DECLINE_SUPPLIER = 'decline_supplier'
     SET_LANGUAGE = 'set_language'
+    SET_STATE = 'set_state'
 
     def build(self, *args):
+        if self == self.SET_STATE:
+            if args:
+                args = (args[0].value, ) + args[1:]
+
         return '|'.join(chain(('c', self.value), (str(x) for x in args)))
 
 
