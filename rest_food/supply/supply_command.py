@@ -73,24 +73,24 @@ def set_state(user: User, state: Optional[str]=None):
     return Reply(next_state=SupplyState(state))
 
 
-def _get_demanded_message_button(message: Message):
+def _get_demanded_message_button(message: Message, supply_user: User):
     return [{
         'text': _('%s (booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
         'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(message.message_id)
     }]
 
 
-def _get_non_demanded_message_button(message: Message):
+def _get_non_demanded_message_button(message: Message, supply_user: User):
     return [{
         'text': _('%s (not booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
         'data': SupplyCommand.SHOW_NON_DEMANDED_MESSAGE.build(message.message_id),
     }]
 
 
-def view_messages(user):
+def view_messages(user: User):
     messages = list_messages(user)
     buttons = [
-        _get_demanded_message_button(x) if x.demand_user_id else _get_non_demanded_message_button(x)
+        _get_demanded_message_button(x, user) if x.demand_user_id else _get_non_demanded_message_button(x, user)
         for x in messages
     ]
     buttons.append([{
