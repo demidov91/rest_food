@@ -408,7 +408,7 @@ msgstr "Poinformujemy Cię, gdy bot zacznie działać w innych krajach. Naciśni
 #: rest_food/supply/supply_state.py:84
 #, python-format
 msgid "We'll notify you when your account is approved. Also, you can contact us with %s"
-msgstr "Wyślemy Ci wiadomość e-mail, gdy Twoje konto zostanie zweryfikowane. Możesz się odnieść %s po więcej informacji"
+msgstr "Wyślemy Ci wiadomość, gdy Twoje konto zostanie zweryfikowane. Możesz się odnieść %s po więcej informacji"
 
 #: rest_food/supply/supply_state.py:464
 msgid "What to tell the foodsaver?"
