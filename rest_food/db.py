@@ -283,6 +283,10 @@ def set_message_publication_time(message_id: str):
     )
 
 
+def deactivate_message_and_unset_booking(message_id):
+    _update_message(message_id, update={'state': MessageState.DEACTIVATED.value, 'demand_user_id': None})
+
+
 def set_message_state(message_id: Union[str, ObjectId], state: MessageState):
     _update_message(message_id, update={'state': state.value})
 

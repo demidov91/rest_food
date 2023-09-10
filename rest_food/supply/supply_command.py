@@ -16,7 +16,7 @@ from rest_food.db import (
     set_info,
     get_user_by_id,
     get_message_demanded_user,
-    set_approved_language, set_message_state, get_supply_message_record,
+    set_approved_language, set_message_state, get_supply_message_record, deactivate_message_and_unset_booking,
 )
 from rest_food.entities import Reply, User, Message
 from rest_food.supply.supply_reply import build_supply_side_booked_message
@@ -44,6 +44,9 @@ def handle_supply_command(user: User, command_name: SupplyCommand, args: List[st
     return {
         SupplyCommand.CANCEL_BOOKING: cancel_booking,
         SupplyCommand.APPROVE_BOOKING: approve_booking,
+        SupplyCommand.DEACTIVATE_MESSAGE: deactivate_message,
+        SupplyCommand.ACTIVATE_MESSAGE: activate_message,
+        SupplyCommand.COMPLETE_MESSAGE: complete_message,
         SupplyCommand.LIST_MESSAGES: view_messages,
         SupplyCommand.SHOW_MESSAGE: show_message,
         SupplyCommand.APPROVE_SUPPLIER: approve_supplier,
@@ -62,6 +65,33 @@ def approve_booking(user: User, booking_id: str):
     notify_demand_for_approved(supply_user=user, message_id=booking_id)
     set_message_state(booking_id, MessageState.APPROVED)
     return Reply(next_state=SupplyState.READY_TO_POST)
+
+
+def deactivate_message(user: User, message_id: str) -> Reply:
+    message = get_supply_message_record(user=user, message_id=message_id)
+    if message is None:
+        return Reply(_('Sorry, something went wrong.'))
+
+    deactivate_message_and_unset_booking(message_id)
+    return _show_deactivated_message(user, message)
+
+
+def activate_message(user: User, message_id: str) -> Reply:
+    message = get_supply_message_record(user=user, message_id=message_id)
+    if message is None:
+        return Reply(_('Sorry, something went wrong.'))
+
+    set_message_state(message_id, MessageState.PUBLISHED)
+    return _show_non_demanded_message(user, message_id)
+
+
+def complete_message(user: User, message_id: str) -> Reply:
+    message = get_supply_message_record(user=user, message_id=message_id)
+    if message is None:
+        return Reply(_('Sorry, something went wrong.'))
+
+    set_message_state(message_id, MessageState.TAKEN)
+    return _show_taken_message(user, message)
 
 
 def back_to_posting(user):
