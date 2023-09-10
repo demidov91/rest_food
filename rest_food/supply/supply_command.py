@@ -7,6 +7,7 @@ from rest_food.communication import (
     notify_supplier_is_declined,
 )
 from rest_food.enums import SupplyState, SupplyCommand, UserInfoField, MessageState
+from rest_food.supply.supply_utils import get_message_caption
 from rest_food.translation import translate_lazy as _
 from rest_food.decorators import admin_only
 from rest_food.db import (
@@ -24,20 +25,9 @@ from rest_food.common.formatters import (
     build_supplier_approved_text,
     build_supplier_declined_text, message_to_text,
 )
-from rest_food.supply.supply_utils import db_time_to_user
-from rest_food.translation import set_language as set_context_language, LANGUAGES_SUPPORTED
-from rest_food.user_utilities import get_user_timezone
+from rest_food.translation import set_language as set_context_language
 
 logger = logging.getLogger(__name__)
-
-
-state_to_message = {
-    MessageState.PUBLISHED: _('published'),
-    MessageState.DEACTIVATED: _('deactivated'),
-    MessageState.BOOKED: _('booked'),
-    MessageState.APPROVED: _('approved'),
-    MessageState.TAKEN: _('taken'),
-}
 
 
 def handle_supply_command(user: User, command_name: SupplyCommand, args: List[str]):
@@ -82,28 +72,16 @@ def set_state(user: User, state: Optional[str]=None):
     return Reply(next_state=SupplyState(state))
 
 
-def _build_message_button(message: Message, supply_user: User):
-    timezone = get_user_timezone(supply_user)
-    published_display_time = db_time_to_user(message.dt_published, timezone)
-
-    if message.take_time:
-        display_time = f'{published_display_time} → {message.take_time}'
-
-    else:
-        display_time = published_display_time
-
-    display_state = state_to_message[message.state] if message.state is not None else '?'
-
-    caption = _('{} ({})').format(display_time, display_state)
+def _build_message_button(supply_user: User, message: Message):
     return [{
-        'text': caption,
+        'text': get_message_caption(supply_user, message),
         'data': SupplyCommand.SHOW_MESSAGE.build(message.message_id)
     }]
 
 
 def view_messages(user: User):
     messages = list_messages(user)
-    buttons = [_build_message_button(x, user) for x in messages]
+    buttons = [_build_message_button(user, x) for x in messages]
     buttons.append([{
         'text': _('Go to product posting'),
         'data': SupplyCommand.SET_STATE.build(SupplyState.READY_TO_POST),

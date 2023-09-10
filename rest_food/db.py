@@ -276,7 +276,10 @@ def set_message_time(message_id: str, time_message: str):
 def set_message_publication_time(message_id: str):
     _update_message(
         message_id,
-        update={'dt_published': datetime.datetime.now(tz=datetime.timezone.utc).strftime(DT_DB_FORMAT)}
+        update={
+            'dt_published': datetime.datetime.now(tz=datetime.timezone.utc).strftime(DT_DB_FORMAT),
+            'state': MessageState.PUBLISHED.value,
+        }
     )
 
 
