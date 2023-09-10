@@ -36,4 +36,4 @@ if __name__ == '__main__':
         run(module_name=arguments.migration_number, method='backward')
 
     else:
-        ValueError('Specify either -b or -f')
+        raise ValueError('Specify either -b or -f')
