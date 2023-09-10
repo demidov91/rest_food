@@ -5,6 +5,10 @@ from rest_food.translation import translate_lazy as _
 import dataclasses
 
 
+DT_DB_FORMAT = '%Y-%m-%d %H:%M:%S'
+""" Message.dt_published stored datetime as string rather than mongo time. 
+"""
+
 MESSAGE_UI_DT_TIME_FORMAT = '%d-%m %H:%M'
 
 

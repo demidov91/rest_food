@@ -5,7 +5,8 @@ from typing import Optional, Union, List
 from bson.objectid import ObjectId
 from pymongo import MongoClient, ReturnDocument
 
-from rest_food.entities import User, Message, Command, DT_DB_FORMAT
+from rest_food.common.constants import DT_DB_FORMAT
+from rest_food.entities import User, Message, Command
 from rest_food.enums import Provider, Workflow, UserInfoField
 from rest_food.settings import DB_CONNECTION_STRING, DB_NAME, ADMIN_USERNAMES
 

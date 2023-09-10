@@ -2,8 +2,7 @@ import datetime
 from typing import Optional
 from zoneinfo import ZoneInfo
 
-from rest_food.common.constants import MESSAGE_UI_DT_TIME_FORMAT
-from rest_food.entities import DT_DB_FORMAT
+from rest_food.common.constants import MESSAGE_UI_DT_TIME_FORMAT, DT_DB_FORMAT
 
 
 def db_time_to_user(db_time: Optional[str], timezone: Optional[ZoneInfo]) -> str:
