@@ -179,7 +179,7 @@ msgstr "Terrain: %s"
 
 #: rest_food/supply/supply_state.py:180
 msgid "Location is not defined."
-msgstr "Не определена местность."
+msgstr "Undefined terrain."
 
 #: rest_food/common/constants.py:40
 msgid "Minsk"
@@ -255,7 +255,7 @@ msgstr "Please, provide information about yourself before getting started"
 
 #: rest_food/common/validators.py:14
 msgid "Please, provide only pone number."
-msgstr "Please, provide only your pone number."
+msgstr "Please, provide only your phone number."
 
 #: rest_food/supply/supply_state.py:309
 msgid "Please, provide restaurant address."
@@ -364,7 +364,7 @@ msgstr "The bot is not active outside of those cities. We will notify you when a
 
 #: rest_food/demand/demand_command.py:296
 msgid "This is a foodsharing bot. _intro_text_goes_here_\n"
-msgstr "Hello! You are welcomed by the foodsharing telegram bot! By going through a simple registration procedure, you will be able to join the global foodsharing movement!\n\nSteps:\n1. Select your location\n2. Wait for the product posting to appear\n3.When the publication of products appears, click \"Pick up\"\n4. Indicate your social status and contact phone number\n5. In order to pick up food, click \"Confirm\"\n\nNext, follow the directions.\n\nThe language is automatically selected according to the language of the Telegram client, but if you want to change the language, press /language.\n\nThat's it! Use the bot for foodsharing with pleasure! Remember that with small steps you can make a big contribution to the sustainability of the planet and the fight against world hunger!\n\nIf you have any questions, message the bot for feedback: @foodsharingsupport_bot.\n"
+msgstr "Hello! You are welcomed by the foodsharing telegram bot! By going through a simple registration procedure, you will be able to join the global foodsharing movement!\n\nSteps:\n1. Select your location\n2. Wait for the product posting to appear\n3.When the publication of the products appears, click \"Pick up\"\n4. Indicate your social status and contact phone number\n5. In order to pick up food, click \"Confirm\"\n\nNext, follow the directions.\n\nThe language is automatically selected according to the language of the Telegram client, but if you want to change the language, press /language.\n\nThat's it! Use the bot for foodsharing with pleasure! Remember that with small steps you can make a big contribution to the sustainability of the planet and the fight against world hunger!\n\nIf you have any questions, message the bot for feedback: @foodsharingsupport_bot.\n"
 
 #: rest_food/common/validators.py:18
 msgid "This is not a valid phone number."
