@@ -26,7 +26,7 @@ from rest_food.common.formatters import (
 )
 from rest_food.supply.supply_utils import db_time_to_user
 from rest_food.translation import set_language as set_context_language, LANGUAGES_SUPPORTED
-
+from rest_food.user_utilities import get_user_timezone
 
 logger = logging.getLogger(__name__)
 
@@ -73,26 +73,32 @@ def set_state(user: User, state: Optional[str]=None):
     return Reply(next_state=SupplyState(state))
 
 
-def _get_demanded_message_button(message: Message, supply_user: User):
-    return [{
-        'text': _('%s (booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
-        'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(message.message_id)
-    }]
+def _build_message_button(message: Message, supply_user: User):
+    timezone = get_user_timezone(supply_user)
+    published_display_time = db_time_to_user(message.dt_published, timezone)
 
+    if message.take_time:
+        display = f'{published_display_time} → {message.take_time}'
 
-def _get_non_demanded_message_button(message: Message, supply_user: User):
-    return [{
-        'text': _('%s (not booked)') % db_time_to_user(message.dt_published, '%d-%m %H:%M'),
-        'data': SupplyCommand.SHOW_NON_DEMANDED_MESSAGE.build(message.message_id),
-    }]
+    else:
+        display = published_display_time
+
+    if message.demand_user_id:
+        return [{
+            'text': _('%s (booked)') % display,
+            'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(message.message_id)
+        }]
+
+    else:
+        return [{
+            'text': _('%s (not booked)') % display,
+            'data': SupplyCommand.SHOW_NON_DEMANDED_MESSAGE.build(message.message_id),
+        }]
 
 
 def view_messages(user: User):
     messages = list_messages(user)
-    buttons = [
-        _get_demanded_message_button(x, user) if x.demand_user_id else _get_non_demanded_message_button(x, user)
-        for x in messages
-    ]
+    buttons = [_build_message_button(x, user) for x in messages]
     buttons.append([{
         'text': _('Go to product posting'),
         'data': SupplyCommand.SET_STATE.build(SupplyState.READY_TO_POST),

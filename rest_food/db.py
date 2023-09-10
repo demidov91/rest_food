@@ -5,7 +5,7 @@ from typing import Optional, Union, List
 from bson.objectid import ObjectId
 from pymongo import MongoClient, ReturnDocument
 
-from rest_food.entities import User, Message, Command, DT_FORMAT
+from rest_food.entities import User, Message, Command, DT_DB_FORMAT
 from rest_food.enums import Provider, Workflow, UserInfoField
 from rest_food.settings import DB_CONNECTION_STRING, DB_NAME, ADMIN_USERNAMES
 
@@ -275,9 +275,7 @@ def set_message_time(message_id: str, time_message: str):
 def set_message_publication_time(message_id: str):
     _update_message(
         message_id,
-        update={
-            'dt_published': datetime.datetime.now().strftime(DT_FORMAT)
-        }
+        update={'dt_published': datetime.datetime.now(tz=datetime.timezone.utc).strftime(DT_DB_FORMAT)}
     )
 
 
@@ -288,7 +286,7 @@ def cancel_supply_message(user: User, *, provider: Provider):
 
 
 def list_messages(supply_user: User, interval: datetime.timedelta=datetime.timedelta(days=2)):
-    dt_from = (datetime.datetime.now() - interval).strftime(DT_FORMAT)
+    dt_from = (datetime.datetime.now() - interval).strftime(DT_DB_FORMAT)
 
     records = db.messages.find({
         'owner_id': supply_user.id,
