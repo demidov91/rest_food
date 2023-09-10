@@ -16,7 +16,8 @@ from rest_food.entities import (
     Command,
     soc_status_translation,
 )
-from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField, DemandTgCommand
+from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField, \
+    DemandTgCommand, MessageState
 from rest_food.translation import translate_lazy as _, set_language
 from rest_food.demand.demand_reply import (
     build_demand_side_short_message,
@@ -64,8 +65,8 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
 
     info = build_demand_side_full_message_text(supply_user, message_record)
 
-    if message_record.demand_user_id:
-        return build_food_taken_message(user, message_record.demand_user_id, info)
+    if message_record.state != MessageState.PUBLISHED:
+        return build_food_taken_message(user, message_record, info)
 
     set_next_command(
         user,
@@ -186,8 +187,8 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
 
     info = build_demand_side_full_message_text(supply_user, message_record)
 
-    if message_record.demand_user_id is not None:
-        return build_food_taken_message(user, message_record.demand_user_id, info)
+    if message_record.state != MessageState.PUBLISHED:
+        return build_food_taken_message(user, message_record, info)
 
     set_next_command(
         user,

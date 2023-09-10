@@ -7,7 +7,7 @@ from pymongo import MongoClient, ReturnDocument
 
 from rest_food.common.constants import DT_DB_FORMAT
 from rest_food.entities import User, Message, Command
-from rest_food.enums import Provider, Workflow, UserInfoField
+from rest_food.enums import Provider, Workflow, UserInfoField, MessageState
 from rest_food.settings import DB_CONNECTION_STRING, DB_NAME, ADMIN_USERNAMES
 
 
@@ -280,6 +280,10 @@ def set_message_publication_time(message_id: str):
     )
 
 
+def set_message_state(message_id: Union[str, ObjectId], state: MessageState):
+    _update_message(message_id, update={'state': state.value})
+
+
 def cancel_supply_message(user: User, *, provider: Provider):
     _update_user(user.user_id, provider, Workflow.SUPPLY, update={'editing_message_id': None})
     db.messages.remove({'_id': ObjectId(user.editing_message_id)})
@@ -335,16 +339,20 @@ def mark_message_as_booked(demand_user: User, message_id: str):
 
     result = db.messages.update_one({
         '_id': ObjectId(message_id),
-        'demand_user_id': None,
+        'state': MessageState.PUBLISHED.value,
     }, {
-        '$set': {'demand_user_id': extended_id},
+        '$set': {'demand_user_id': extended_id, 'state': MessageState.BOOKED.value},
     })
 
     return result.modified_count > 0
 
 
 def cancel_booking(supply_user: User, message_id: str):
-    _update_message(message_id, owner_id=supply_user.id, update={'demand_user_id': None})
+    _update_message(
+        message_id,
+        owner_id=supply_user.id,
+        update={'demand_user_id': None, 'state': MessageState.PUBLISHED.value},
+    )
 
 
 def set_inactive(chat_id: int, provider: Provider, workflow: Workflow):

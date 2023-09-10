@@ -2,8 +2,8 @@ import logging
 
 from rest_food.common.constants import CITY_DICT, COUNTRY_DICT
 from rest_food.db import get_supply_user
-from rest_food.entities import User, Reply
-from rest_food.enums import Provider, DemandCommand, UserInfoField, DemandTgCommand
+from rest_food.entities import User, Reply, Message
+from rest_food.enums import Provider, DemandCommand, UserInfoField, DemandTgCommand, MessageState
 from rest_food.common.formatters import build_short_message_text_by_id, \
     build_demand_side_full_message_text_by_id
 
@@ -47,8 +47,11 @@ def build_demand_side_message_by_id(supply_user: User, message_id: str, *, intro
     }]])
 
 
-def build_food_taken_message(user: User, demand_user_id: str, info: str):
-    if demand_user_id.endswith(user.user_id):
+def build_food_taken_message(user: User, message: Message, info: str):
+    if message.state == MessageState.DEACTIVATED:
+        return Reply(text='{}\n\n{}'.format(_('The message is no longer relevant'), info))
+
+    if message.demand_user_id.endswith(user.user_id):
         logger.warning('Viewing taken food info.')
         return Reply(text=_("You've already taken it.\n\n{}".format(info)))
 

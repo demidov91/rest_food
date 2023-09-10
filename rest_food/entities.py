@@ -6,7 +6,7 @@ from decimal import Decimal
 from bson import ObjectId
 from telegram.user import User as TgUser
 
-from rest_food.enums import DemandState, SupplyState, Provider, Workflow, SocialStatus, UserInfoField
+from rest_food.enums import DemandState, SupplyState, Provider, Workflow, SocialStatus, UserInfoField, MessageState
 from rest_food.translation import translate_lazy as _
 from rest_food import settings
 
@@ -137,10 +137,12 @@ class Message:
     take_time: Optional[str] = None
     demand_user_id: Optional[Union[str, int]] = None
     dt_published: Optional[str] = None
+    state: Optional[MessageState] = None
 
     @classmethod
     def from_db(cls, record: dict):
         record['message_id'] = record.pop('_id')
+        record['state'] = record.get('state') and MessageState(record['state'])
         return Message(**record)
 
 

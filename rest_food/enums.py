@@ -79,6 +79,7 @@ class SupplyCommand(Enum):
     CANCEL_BOOKING = 'cancel_booking'
     APPROVE_BOOKING = 'approve_booking'
     LIST_MESSAGES = 'list_messages'
+    DEACTIVATE_MESSAGE = 'deactive_msg'
     SHOW_DEMANDED_MESSAGE = 'sdm'
     SHOW_NON_DEMANDED_MESSAGE = 'show_ndm'
     APPROVE_SUPPLIER = 'approve_supplier'
@@ -134,3 +135,11 @@ class UserInfoField(Enum):
     SOCIAL_STATUS = 'social_status'
     # True for supply users who are allowed to post messages. Actually it makes sense to move it into the User level...
     IS_APPROVED_SUPPLY = 'is_approved_supply'
+
+
+class MessageState(Enum):
+    PUBLISHED = 'published'
+    BOOKED = 'booked'
+    APPROVED = 'approved'
+    DEACTIVATED = 'deactivated'
+    TAKEN = 'taken'
