@@ -14,7 +14,7 @@ NOT_SET = object()
 
 def env_var(var_name: str, default=NOT_SET):
     if var_name not in os.environ:
-        if default is NOT_SET:
+        if default is NOT_SET and os.environ.get('PYTEST_RUN_CONFIG') != 'True':
             raise Exception('%s is not set.' % var_name)
 
         logger.warning('%s env variable was not found. Using %s as default', var_name, default)

@@ -11,10 +11,6 @@ from rest_food.translation import translate_lazy as _
 from rest_food import settings
 
 
-DT_FORMAT = '%Y%m%d%H%M%S'
-""" Message.dt_published stored datetime as string rather than mongo time. 
-"""
-
 soc_status_translation = {
     SocialStatus.BIG_FAMILY: _('big family'),
     SocialStatus.DISABILITY: _('disability'),

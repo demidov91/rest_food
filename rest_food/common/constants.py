@@ -1,7 +1,15 @@
 from typing import Optional
+from zoneinfo import ZoneInfo
 
 from rest_food.translation import translate_lazy as _
 import dataclasses
+
+
+DT_DB_FORMAT = '%Y-%m-%d %H:%M:%S'
+""" Message.dt_published stored datetime as string rather than mongo time. 
+"""
+
+MESSAGE_UI_DT_TIME_FORMAT = '%d-%m %H:%M'
 
 
 @dataclasses.dataclass
@@ -17,6 +25,10 @@ class CityData:
     code: str
     name: str
     for_name: str
+
+    @property
+    def country(self):
+        return COUNTRY_DICT[self.country_code]
 
 
 LANG_TO_NAME = [
@@ -44,3 +56,8 @@ CITIES = [
 
 COUNTRY_DICT = {x.code: x for x in COUNTRIES}
 CITY_DICT = {x.code: x for x in CITIES}
+TIMEZONE_DICT = {
+    'by': ZoneInfo('Europe/Minsk'),
+    'pl': ZoneInfo('Europe/Warsaw'),
+    'lt': ZoneInfo('Europe/Vilnius'),
+}
