@@ -92,7 +92,7 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
             'data': DemandCommand.SHORT_INFO.build(provider_str, supply_user_id, message_id),
         },
         {
-            'text': _('Confirm 🆗✅'),
+            'text': _('Confirm ✅'),
             'data': DemandCommand.FINISH_TAKE.build(provider_str, supply_user_id, message_id),
         }
     ])
@@ -233,7 +233,7 @@ def _handle_short_info(user: User, supply_provider: str, supply_user_id: str, me
 
 def _handle_booked(user: User, supply_provider: str, supply_user_id: str, message_id: str):
     supply_user = get_supply_user(user_id=supply_user_id, provider=Provider(supply_provider))
-    return build_demand_side_message_by_id(supply_user, message_id, intro=_("You've booked this"))
+    return build_demand_side_message_by_id(supply_user, message_id, intro=None)
 
 
 def _handle_map_info(user: User, supply_provider: str, supply_user_id: str, message_id: str):
