@@ -46,4 +46,4 @@ def get_message_caption(user: User, message: Message):
 
     display_state = STATE_TO_MESSAGE[message.state] if message.state is not None else '?'
 
-    return _('{} ({})').format(display_time, display_state)
+    return '{} ({})'.format(display_time, display_state)
