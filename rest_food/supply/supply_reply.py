@@ -21,7 +21,7 @@ def build_supply_side_booked_message(*, demand_user: User, supply_user: User, me
             'data': SupplyCommand.APPROVE_BOOKING.build(message_id),
         }],
         [{
-            'text': _('📋 View all messages'),
+            'text': _('📋 View all'),
             'data': SupplyCommand.LIST_MESSAGES.build(),
         }],
     ]

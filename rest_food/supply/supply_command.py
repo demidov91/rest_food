@@ -136,10 +136,10 @@ def _show_non_demanded_message(user, message_id: str):
         text=message,
         buttons=[[
             {
-                'text': _('🛑 Deactivate the message'),
+                'text': _('🛑 Deactivate'),
                 'data': SupplyCommand.DEACTIVATE_MESSAGE.build(message_id),
             }, {
-                'text': _('📋 View all messages'),
+                'text': _('View all 📋'),
                 'data': SupplyCommand.LIST_MESSAGES.build(),
             }
         ]]
@@ -151,10 +151,10 @@ def _show_deactivated_message(user: User, message: Message):
 
     return Reply(text=text, buttons=[[
         {
-            'text': _('🔄 Activate the message'),
+            'text': _('🔄 Activate'),
             'data': SupplyCommand.ACTIVATE_MESSAGE.build(message.message_id),
         }, {
-            'text': _('📋 View all messages'),
+            'text': _('View all 📋'),
             'data': SupplyCommand.LIST_MESSAGES.build(),
         }
     ]])
@@ -166,17 +166,17 @@ def _show_approved_message(user: User, message: Message):
     return Reply(text=text, buttons=[
         [
             {
-                'text': _('🛑 Deactivate the message'),
+                'text': _('🛑 Deactivate'),
                 'data': SupplyCommand.DEACTIVATE_MESSAGE.build(message.message_id),
             },
             {
-                'text': _('The food is already shared ✅'),
+                'text': _('Already shared ✅'),
                 'data': SupplyCommand.COMPLETE_MESSAGE.build(message.message_id),
             },
         ],
         [
             {
-                'text': _('📋 View all messages'),
+                'text': _('📋 View all'),
                 'data': SupplyCommand.LIST_MESSAGES.build(),
             }
         ],
@@ -184,7 +184,15 @@ def _show_approved_message(user: User, message: Message):
 
 
 def _show_taken_message(user: User, message: Message):
-    return Reply(text='{}\n\n{}'.format(_('Shared food'), message_to_text(message)))
+    return Reply(
+        text='{}\n\n{}'.format(_('Shared food'), message_to_text(message)),
+        buttons=[[
+            {
+                'text': _('📋 View all'),
+                'data': SupplyCommand.LIST_MESSAGES.build(),
+            }
+        ]]
+    )
 
 
 def show_message(user, message_id: str):

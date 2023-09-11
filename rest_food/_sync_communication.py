@@ -101,6 +101,7 @@ def send_messages(
                 'chat_id': tg_chat_id,
                 'text': reply.text,
                 'reply_markup': markup,
+                'parse_mode': 'HTML',
             }
 
             if original_message_can_be_replaced and original_message.text is not None and not reply.is_text_buttons:

@@ -49,7 +49,7 @@ def build_demand_side_message_by_id(supply_user: User, message_id: str, *, intro
 
 def build_food_taken_message(user: User, message: Message, info: str):
     if message.state == MessageState.DEACTIVATED:
-        return Reply(text='{}\n\n{}'.format(_('The message is no longer relevant'), info))
+        return Reply(text='{}\n\n{}'.format(_('<b>The message is no longer relevant</b>'), info))
 
     if message.demand_user_id.endswith(user.user_id):
         logger.warning('Viewing taken food info.')
