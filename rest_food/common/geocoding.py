@@ -183,7 +183,7 @@ def get_coordinates(address: str, location: Optional[Location]=None) -> Optional
     if location is not None:
         if location.city is not None:
             with switch_language('en'):
-                location = f'{location.city.name}, {location}'
+                address = f'{location.city.name}, {address}'
 
     if location and location.country.code == 'by':
         geocoder = YandexGeocoder()
