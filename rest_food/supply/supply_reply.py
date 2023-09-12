@@ -14,14 +14,14 @@ def build_supply_side_booked_message(*, demand_user: User, supply_user: User, me
 
     buttons = [
         [{
-            'text': _('Reject'),
+            'text': _('❌ Reject'),
             'data': SupplyCommand.CANCEL_BOOKING.build(message_id),
         }, {
-            'text': _('Approve'),
+            'text': _('Approve ✅'),
             'data': SupplyCommand.APPROVE_BOOKING.build(message_id),
         }],
         [{
-            'text': _('View all messages'),
+            'text': _('📋 View all'),
             'data': SupplyCommand.LIST_MESSAGES.build(),
         }],
     ]

@@ -16,7 +16,8 @@ from rest_food.entities import (
     Command,
     soc_status_translation,
 )
-from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField, DemandTgCommand
+from rest_food.enums import DemandState, Provider, Workflow, SocialStatus, DemandCommand, UserInfoField, \
+    DemandTgCommand, MessageState
 from rest_food.translation import translate_lazy as _, set_language
 from rest_food.demand.demand_reply import (
     build_demand_side_short_message,
@@ -64,8 +65,8 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
 
     info = build_demand_side_full_message_text(supply_user, message_record)
 
-    if message_record.demand_user_id:
-        return build_food_taken_message(user, message_record.demand_user_id, info)
+    if message_record.state != MessageState.PUBLISHED:
+        return build_food_taken_message(user, message_record, info)
 
     set_next_command(
         user,
@@ -91,7 +92,7 @@ def _handle_take(user: User, provider_str: str, supply_user_id: str, message_id:
             'data': DemandCommand.SHORT_INFO.build(provider_str, supply_user_id, message_id),
         },
         {
-            'text': _('Confirm 🆗✅'),
+            'text': _('Confirm ✅'),
             'data': DemandCommand.FINISH_TAKE.build(provider_str, supply_user_id, message_id),
         }
     ])
@@ -186,8 +187,8 @@ def _handle_info(user: User, provider_str: str, supply_user_id: str, message_id:
 
     info = build_demand_side_full_message_text(supply_user, message_record)
 
-    if message_record.demand_user_id is not None:
-        return build_food_taken_message(user, message_record.demand_user_id, info)
+    if message_record.state != MessageState.PUBLISHED:
+        return build_food_taken_message(user, message_record, info)
 
     set_next_command(
         user,
@@ -232,7 +233,7 @@ def _handle_short_info(user: User, supply_provider: str, supply_user_id: str, me
 
 def _handle_booked(user: User, supply_provider: str, supply_user_id: str, message_id: str):
     supply_user = get_supply_user(user_id=supply_user_id, provider=Provider(supply_provider))
-    return build_demand_side_message_by_id(supply_user, message_id, intro=_("You've booked this"))
+    return build_demand_side_message_by_id(supply_user, message_id, intro=None)
 
 
 def _handle_map_info(user: User, supply_provider: str, supply_user_id: str, message_id: str):

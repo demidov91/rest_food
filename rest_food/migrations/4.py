@@ -6,7 +6,6 @@ import datetime
 
 def forward():
     for message in db.messages.find({'dt_published': {'$exists': True}}):
-        print('apply')
         _update_message(
             message['_id'],
             update={

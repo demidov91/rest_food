@@ -143,3 +143,7 @@ def location_to_string(location_code: str) -> str:
         return CITY_DICT[country_city[1]].name
 
     return COUNTRY_DICT[country_city[0]].name
+
+
+def bold(text: str) -> str:
+    return f'<b>{text}</b>'

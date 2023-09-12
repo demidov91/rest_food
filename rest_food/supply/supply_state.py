@@ -464,7 +464,7 @@ class BookingCancelReason(State):
             text=_('What to tell the foodsaver?'),
             buttons=[[{
                 'text': _('Back to the message'),
-                'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(self.db_user.context["booking_to_cancel"]),
+                'data': SupplyCommand.SHOW_MESSAGE.build(self.db_user.context["booking_to_cancel"]),
             }]]
         )
 
@@ -477,7 +477,14 @@ class BookingCancelReason(State):
         cancel_booking(
             supply_user=self.db_user, message_id=self.db_user.context['booking_to_cancel']
         )
-        return Reply(text=_('Cancelled'), next_state=SupplyState.READY_TO_POST)
+        return Reply(
+            text=_('Cancelled'),
+            buttons=[[{
+                'text': _('Back to the message'),
+                'data': SupplyCommand.SHOW_MESSAGE.build(self.db_user.context["booking_to_cancel"]),
+            }]],
+            next_state=SupplyState.NO_STATE,
+        )
 
 
 class NoState(State):

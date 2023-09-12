@@ -7,7 +7,7 @@ from pymongo import MongoClient, ReturnDocument
 
 from rest_food.common.constants import DT_DB_FORMAT
 from rest_food.entities import User, Message, Command
-from rest_food.enums import Provider, Workflow, UserInfoField
+from rest_food.enums import Provider, Workflow, UserInfoField, MessageState
 from rest_food.settings import DB_CONNECTION_STRING, DB_NAME, ADMIN_USERNAMES
 
 
@@ -276,8 +276,19 @@ def set_message_time(message_id: str, time_message: str):
 def set_message_publication_time(message_id: str):
     _update_message(
         message_id,
-        update={'dt_published': datetime.datetime.now(tz=datetime.timezone.utc).strftime(DT_DB_FORMAT)}
+        update={
+            'dt_published': datetime.datetime.now(tz=datetime.timezone.utc).strftime(DT_DB_FORMAT),
+            'state': MessageState.PUBLISHED.value,
+        }
     )
+
+
+def deactivate_message_and_unset_booking(message_id):
+    _update_message(message_id, update={'state': MessageState.DEACTIVATED.value, 'demand_user_id': None})
+
+
+def set_message_state(message_id: Union[str, ObjectId], state: MessageState):
+    _update_message(message_id, update={'state': state.value})
 
 
 def cancel_supply_message(user: User, *, provider: Provider):
@@ -335,16 +346,20 @@ def mark_message_as_booked(demand_user: User, message_id: str):
 
     result = db.messages.update_one({
         '_id': ObjectId(message_id),
-        'demand_user_id': None,
+        'state': MessageState.PUBLISHED.value,
     }, {
-        '$set': {'demand_user_id': extended_id},
+        '$set': {'demand_user_id': extended_id, 'state': MessageState.BOOKED.value},
     })
 
     return result.modified_count > 0
 
 
 def cancel_booking(supply_user: User, message_id: str):
-    _update_message(message_id, owner_id=supply_user.id, update={'demand_user_id': None})
+    _update_message(
+        message_id,
+        owner_id=supply_user.id,
+        update={'demand_user_id': None, 'state': MessageState.PUBLISHED.value},
+    )
 
 
 def set_inactive(chat_id: int, provider: Provider, workflow: Workflow):

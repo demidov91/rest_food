@@ -6,7 +6,8 @@ from rest_food.communication import (
     notify_supplier_is_approved,
     notify_supplier_is_declined,
 )
-from rest_food.enums import SupplyState, SupplyCommand, UserInfoField
+from rest_food.enums import SupplyState, SupplyCommand, UserInfoField, MessageState
+from rest_food.supply.supply_utils import get_message_caption
 from rest_food.translation import translate_lazy as _
 from rest_food.decorators import admin_only
 from rest_food.db import (
@@ -15,18 +16,16 @@ from rest_food.db import (
     set_info,
     get_user_by_id,
     get_message_demanded_user,
-    set_approved_language,
+    set_approved_language, set_message_state, get_supply_message_record, deactivate_message_and_unset_booking,
 )
 from rest_food.entities import Reply, User, Message
 from rest_food.supply.supply_reply import build_supply_side_booked_message
 from rest_food.common.formatters import (
     build_short_message_text_by_id,
     build_supplier_approved_text,
-    build_supplier_declined_text,
+    build_supplier_declined_text, message_to_text,
 )
-from rest_food.supply.supply_utils import db_time_to_user
-from rest_food.translation import set_language as set_context_language, LANGUAGES_SUPPORTED
-from rest_food.user_utilities import get_user_timezone
+from rest_food.translation import set_language as set_context_language
 
 logger = logging.getLogger(__name__)
 
@@ -45,9 +44,11 @@ def handle_supply_command(user: User, command_name: SupplyCommand, args: List[st
     return {
         SupplyCommand.CANCEL_BOOKING: cancel_booking,
         SupplyCommand.APPROVE_BOOKING: approve_booking,
+        SupplyCommand.DEACTIVATE_MESSAGE: deactivate_message,
+        SupplyCommand.ACTIVATE_MESSAGE: activate_message,
+        SupplyCommand.COMPLETE_MESSAGE: complete_message,
         SupplyCommand.LIST_MESSAGES: view_messages,
-        SupplyCommand.SHOW_DEMANDED_MESSAGE: show_demanded_message,
-        SupplyCommand.SHOW_NON_DEMANDED_MESSAGE: show_non_demanded_message,
+        SupplyCommand.SHOW_MESSAGE: show_message,
         SupplyCommand.APPROVE_SUPPLIER: approve_supplier,
         SupplyCommand.DECLINE_SUPPLIER: decline_supplier,
         SupplyCommand.SET_LANGUAGE: set_language,
@@ -62,7 +63,35 @@ def cancel_booking(user, booking_id: str):
 
 def approve_booking(user: User, booking_id: str):
     notify_demand_for_approved(supply_user=user, message_id=booking_id)
+    set_message_state(booking_id, MessageState.APPROVED)
     return Reply(next_state=SupplyState.READY_TO_POST)
+
+
+def deactivate_message(user: User, message_id: str) -> Reply:
+    message = get_supply_message_record(user=user, message_id=message_id)
+    if message is None:
+        return Reply(_('Sorry, something went wrong.'))
+
+    deactivate_message_and_unset_booking(message_id)
+    return _show_deactivated_message(user, message)
+
+
+def activate_message(user: User, message_id: str) -> Reply:
+    message = get_supply_message_record(user=user, message_id=message_id)
+    if message is None:
+        return Reply(_('Sorry, something went wrong.'))
+
+    set_message_state(message_id, MessageState.PUBLISHED)
+    return _show_non_demanded_message(user, message_id)
+
+
+def complete_message(user: User, message_id: str) -> Reply:
+    message = get_supply_message_record(user=user, message_id=message_id)
+    if message is None:
+        return Reply(_('Sorry, something went wrong.'))
+
+    set_message_state(message_id, MessageState.TAKEN)
+    return _show_taken_message(user, message)
 
 
 def back_to_posting(user):
@@ -73,32 +102,16 @@ def set_state(user: User, state: Optional[str]=None):
     return Reply(next_state=SupplyState(state))
 
 
-def _build_message_button(message: Message, supply_user: User):
-    timezone = get_user_timezone(supply_user)
-    published_display_time = db_time_to_user(message.dt_published, timezone)
-
-    if message.take_time:
-        display = f'{published_display_time} → {message.take_time}'
-
-    else:
-        display = published_display_time
-
-    if message.demand_user_id:
-        return [{
-            'text': _('%s (booked)') % display,
-            'data': SupplyCommand.SHOW_DEMANDED_MESSAGE.build(message.message_id)
-        }]
-
-    else:
-        return [{
-            'text': _('%s (not booked)') % display,
-            'data': SupplyCommand.SHOW_NON_DEMANDED_MESSAGE.build(message.message_id),
-        }]
+def _build_message_button(supply_user: User, message: Message):
+    return [{
+        'text': get_message_caption(supply_user, message),
+        'data': SupplyCommand.SHOW_MESSAGE.build(message.message_id)
+    }]
 
 
 def view_messages(user: User):
     messages = list_messages(user)
-    buttons = [_build_message_button(x, user) for x in messages]
+    buttons = [_build_message_button(user, x) for x in messages]
     buttons.append([{
         'text': _('Go to product posting'),
         'data': SupplyCommand.SET_STATE.build(SupplyState.READY_TO_POST),
@@ -106,17 +119,7 @@ def view_messages(user: User):
     return Reply(text=_('Last messages'), buttons=buttons)
 
 
-def show_demanded_message(user, message_id: str, demand_provider: str=None, demand_user_id: str=None):
-    """
-
-    Parameters
-    ----------
-    user
-    message_id
-    demand_provider: deprecated
-    demand_user_id: deprecated
-    """
-
+def _show_demanded_message(user, message_id: str):
     demand_user = get_message_demanded_user(supply_user=user, message_id=message_id)
 
     return build_supply_side_booked_message(
@@ -124,18 +127,90 @@ def show_demanded_message(user, message_id: str, demand_provider: str=None, dema
     )
 
 
-def show_non_demanded_message(user, message_id: str):
+def _show_non_demanded_message(user, message_id: str):
     message = _('Not yet booked.\n\n%s') % build_short_message_text_by_id(
         message_id=message_id
     )
 
     return Reply(
         text=message,
-        buttons=[[{
-            'text': _('View all messages'),
-            'data': SupplyCommand.LIST_MESSAGES.build(),
-        }]]
+        buttons=[[
+            {
+                'text': _('🛑 Deactivate'),
+                'data': SupplyCommand.DEACTIVATE_MESSAGE.build(message_id),
+            }, {
+                'text': _('View all 📋'),
+                'data': SupplyCommand.LIST_MESSAGES.build(),
+            }
+        ]]
     )
+
+
+def _show_deactivated_message(user: User, message: Message):
+    text = '{}\n\n{}'.format(_('Deactivated'), message_to_text(message))
+
+    return Reply(text=text, buttons=[[
+        {
+            'text': _('🔄 Activate'),
+            'data': SupplyCommand.ACTIVATE_MESSAGE.build(message.message_id),
+        }, {
+            'text': _('View all 📋'),
+            'data': SupplyCommand.LIST_MESSAGES.build(),
+        }
+    ]])
+
+
+def _show_approved_message(user: User, message: Message):
+    text = '{}\n\n{}'.format(_('Booked and approved'), message_to_text(message))
+
+    return Reply(text=text, buttons=[
+        [
+            {
+                'text': _('🛑 Deactivate'),
+                'data': SupplyCommand.DEACTIVATE_MESSAGE.build(message.message_id),
+            },
+            {
+                'text': _('Already shared ✅'),
+                'data': SupplyCommand.COMPLETE_MESSAGE.build(message.message_id),
+            },
+        ],
+        [
+            {
+                'text': _('📋 View all'),
+                'data': SupplyCommand.LIST_MESSAGES.build(),
+            }
+        ],
+    ])
+
+
+def _show_taken_message(user: User, message: Message):
+    return Reply(
+        text='{}\n\n{}'.format(_('Shared food'), message_to_text(message)),
+        buttons=[[
+            {
+                'text': _('📋 View all'),
+                'data': SupplyCommand.LIST_MESSAGES.build(),
+            }
+        ]]
+    )
+
+
+def show_message(user, message_id: str):
+    message = get_supply_message_record(user=user, message_id=message_id)
+    if message.state is None or message.state == MessageState.PUBLISHED:
+        return _show_non_demanded_message(user, message_id)
+
+    if message.state == MessageState.BOOKED:
+        return _show_demanded_message(user, message_id)
+
+    if message.state == MessageState.DEACTIVATED:
+        return _show_deactivated_message(user, message)
+
+    if message.state == MessageState.APPROVED:
+        return _show_approved_message(user, message)
+
+    if message.state == MessageState.TAKEN:
+        return _show_taken_message(user, message)
 
 
 def set_language(user: User, language: str):
