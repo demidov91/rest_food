@@ -8,10 +8,24 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=((n%10==1) && (n%100!=11)) ? 0 : ((n%10>=2 && n%10<=4) && ((n%100<12 || n%100>14))) ? 1 : 2;\n"
 
-#: rest_food/demand/demand_command.py:84 rest_food/demand/demand_command.py:206
-#: rest_food/demand/demand_reply.py:43
+#: rest_food/supply/supply_command.py:154
+msgid "🔄 Activate"
+msgstr "🔄 Відновити"
+
+#: rest_food/supply/supply_command.py:139
+#: rest_food/supply/supply_command.py:169
+msgid "🛑 Deactivate"
+msgstr "🛑 Відмінити"
+
+#: rest_food/demand/demand_command.py:85 rest_food/demand/demand_command.py:207
+#: rest_food/demand/demand_reply.py:53
 msgid "🌍 Map"
 msgstr "🌍 Карта"
+
+#: rest_food/supply/supply_command.py:179
+#: rest_food/supply/supply_command.py:191 rest_food/supply/supply_reply.py:24
+msgid "📋 View all"
+msgstr "📋 Переглянути всі"
 
 #: rest_food/common/formatters.py:79
 #, python-format
@@ -22,22 +36,12 @@ msgstr "\n \nТелефон: %s"
 msgid "\nTime: {}"
 msgstr "\nЧас: {}"
 
-#: rest_food/demand/demand_command.py:100
+#: rest_food/demand/demand_command.py:101
 #, python-format
 msgid "%(info)s\n-----------\n%(ask_for_approve)s"
 msgstr "%(info)s\n-----------\n%(ask_for_approve)s"
 
-#: rest_food/supply/supply_command.py:78
-#, python-format
-msgid "%s (booked)"
-msgstr "%s (заброньовано)"
-
-#: rest_food/supply/supply_command.py:85
-#, python-format
-msgid "%s (not booked)"
-msgstr "%s (не заброньовано)"
-
-#: rest_food/demand/demand_command.py:171
+#: rest_food/demand/demand_command.py:172
 #, python-format
 msgid "%s is notified that you'll take the food. Please, wait for approval."
 msgstr "%s повідомлено про ваше бажання забрати продукти. Будь ласка, дочекайтеся підтвердження."
@@ -47,26 +51,38 @@ msgstr "%s повідомлено про ваше бажання забрати 
 msgid "Address: %s"
 msgstr "Адреса: %s"
 
-#: rest_food/supply/supply_reply.py:20 rest_food/supply/supply_reply.py:36
+#: rest_food/supply/supply_command.py:173
+msgid "Already shared ✅"
+msgstr "Передано ✅"
+
+#: rest_food/supply/supply_reply.py:36
 msgid "Approve"
 msgstr "Підтвердити"
 
+#: rest_food/supply/supply_reply.py:20
+msgid "Approve ✅"
+msgstr "Так ✅"
+
 #: rest_food/common/shared_commands.py:25
-#: rest_food/demand/demand_command.py:215
-#: rest_food/demand/demand_command.py:333
-#: rest_food/demand/demand_command.py:354 rest_food/demand/demand_reply.py:111
-#: rest_food/demand/demand_reply.py:126 rest_food/demand/demand_reply.py:136
+#: rest_food/demand/demand_command.py:216
+#: rest_food/demand/demand_command.py:334
+#: rest_food/demand/demand_command.py:355 rest_food/demand/demand_reply.py:124
+#: rest_food/demand/demand_reply.py:139 rest_food/demand/demand_reply.py:149
 #: rest_food/demand/demand_utils.py:17
 msgid "Back"
 msgstr "Назад"
 
-#: rest_food/supply/supply_state.py:466
+#: rest_food/supply/supply_state.py:466 rest_food/supply/supply_state.py:483
 msgid "Back to the message"
 msgstr "Назад до повідомлення"
 
-#: rest_food/common/constants.py:32
+#: rest_food/common/constants.py:44
 msgid "Belarus"
 msgstr "Білорусь"
+
+#: rest_food/supply/supply_command.py:164
+msgid "Booked and approved"
+msgstr "Заброньовано та підтверджено"
 
 #: rest_food/supply/supply_state.py:123 rest_food/supply/supply_state.py:154
 #: rest_food/supply/supply_state.py:268 rest_food/supply/supply_state.py:401
@@ -74,7 +90,7 @@ msgstr "Білорусь"
 msgid "Cancel"
 msgstr "Відміна"
 
-#: rest_food/supply/supply_state.py:480
+#: rest_food/supply/supply_state.py:481
 msgid "Cancelled"
 msgstr "Скасовано"
 
@@ -82,23 +98,23 @@ msgstr "Скасовано"
 msgid "Choose the bot language:"
 msgstr "Виберіть мову для бота:"
 
-#: rest_food/demand/demand_command.py:342
+#: rest_food/demand/demand_command.py:343
 msgid "Choose your active area"
 msgstr "Яке місто вас цікавить?"
 
-#: rest_food/demand/demand_command.py:286
+#: rest_food/demand/demand_command.py:287
 msgid "Choose your social status:"
 msgstr "Виберіть свій соціальний статус:"
 
-#: rest_food/demand/demand_command.py:94
-msgid "Confirm 🆗✅"
-msgstr "Підтвердити 🆗 ✅"
+#: rest_food/demand/demand_command.py:95
+msgid "Confirm ✅"
+msgstr "Підтвердити ✅"
 
-#: rest_food/demand/demand_command.py:117
+#: rest_food/demand/demand_command.py:118
 msgid "Connect via {}: ✅"
 msgstr "Зв'язуватися через {}: ✅"
 
-#: rest_food/demand/demand_command.py:122
+#: rest_food/demand/demand_command.py:123
 msgid "Connect via {}: ❌"
 msgstr "Зв'язуватися через {}: ❌"
 
@@ -107,9 +123,13 @@ msgstr "Зв'язуватися через {}: ❌"
 msgid "Coordinates: %s"
 msgstr "Координати: %s"
 
-#: rest_food/demand/demand_reply.py:101
+#: rest_food/demand/demand_reply.py:114
 msgid "Coordinates where not provided."
 msgstr "Немає координат :("
+
+#: rest_food/supply/supply_command.py:150
+msgid "Deactivated"
+msgstr "Відмінено"
 
 #: rest_food/supply/supply_reply.py:39
 msgid "Decline"
@@ -132,7 +152,7 @@ msgid "Food you can share:\n{}"
 msgstr "Продукти передачі:\n{}"
 
 #: rest_food/supply/supply_tg_command.py:30
-#: rest_food/supply/supply_command.py:97 rest_food/supply/supply_state.py:231
+#: rest_food/supply/supply_command.py:116 rest_food/supply/supply_state.py:231
 msgid "Go to product posting"
 msgstr "До публікації продуктів"
 
@@ -144,7 +164,7 @@ msgstr "Зрозуміло, почнемо"
 msgid "Hello. <Supply-side intro>"
 msgstr "Здрастуйте! Вас вітає фудшерінг телеграм бот! Пройшовши просту процедуру реєстрації, ви зможете приєднатися до світового руху фудшерінга!\n\nКроки:\n1. Введіть назву вашого закладу\n2. Вкажіть місто, в якому ви перебуваєте\n3. Введіть адресу вашого закладу\n4. Введіть контактний номер телефону\n5. Дочекайтеся підтвердження вашого закладу\n\nДалі дотримуйтесь вказівок.\n\nМова автоматично вибирається відповідно до мови клієнта Telegram, але якщо ви хочете змінити мову, натисніть /language.\n\nЦе все! Користуйтеся ботом для фудшерінгу із задоволенням! Пам'ятайте, що маленькими кроками ви можете зробити великий внесок у збереження стійкості планети та боротьбу зі світовим голодом!\n\nЯкщо у вас виникнуть запитання, пишіть боту для зворотного зв'язку: @foodsharingsupport_bot."
 
-#: rest_food/demand/demand_command.py:319
+#: rest_food/demand/demand_command.py:320
 msgid "Hello. Here you will see notifications about available food."
 msgstr "Вітаю. Тут будуть публікуватись оголошення про доступні продукти."
 
@@ -160,15 +180,15 @@ msgstr "Інформація"
 msgid "Information is sent. I'll notify you when there is someone to take this food."
 msgstr "Інформація надіслана. Ви отримаєте сповіщення, коли хтось захоче забрати ці продукти."
 
-#: rest_food/demand/demand_command.py:63 rest_food/demand/demand_command.py:185
+#: rest_food/demand/demand_command.py:64 rest_food/demand/demand_command.py:186
 msgid "Information was not found."
 msgstr "Інформація не була знайдена."
 
-#: rest_food/supply/supply_command.py:100
+#: rest_food/supply/supply_command.py:119
 msgid "Last messages"
 msgstr "Останні оголошення"
 
-#: rest_food/common/constants.py:34
+#: rest_food/common/constants.py:46
 msgid "Lithuania"
 msgstr "Литва"
 
@@ -181,7 +201,7 @@ msgstr "Місцевість: %s"
 msgid "Location is not defined."
 msgstr "Не визначено місцевість."
 
-#: rest_food/common/constants.py:40
+#: rest_food/common/constants.py:52
 msgid "Minsk"
 msgstr "Мінськ"
 
@@ -190,7 +210,7 @@ msgstr "Мінськ"
 msgid "Name: %s"
 msgstr "Ім'я: %s"
 
-#: rest_food/demand/demand_command.py:110
+#: rest_food/demand/demand_command.py:111
 msgid "Name: {}"
 msgstr "Ім'я: {}"
 
@@ -206,16 +226,16 @@ msgstr "Не те. Змінити 🌍"
 msgid "No contact info was provided.\n"
 msgstr "Контактна інформація не була надана :(\n"
 
-#: rest_food/supply/supply_command.py:150
+#: rest_food/supply/supply_command.py:231
 msgid "Nope, decline it"
 msgstr "Ні, відхилити"
 
-#: rest_food/supply/supply_command.py:122
+#: rest_food/supply/supply_command.py:131
 #, python-format
 msgid "Not yet booked.\n\n%s"
 msgstr "Ще не заброньовано.\n\n%s"
 
-#: rest_food/demand/demand_reply.py:79
+#: rest_food/demand/demand_reply.py:92
 #, python-brace-format
 msgid "Now you'll see notifications for {city}. Use /{command} to change your choice."
 msgstr "Вам надходитимуть повідомлення, актуальні для {city}. Натисніть /{command}, щоб змінити вибір"
@@ -226,13 +246,13 @@ msgstr "Вам надходитимуть повідомлення, актуал
 msgid "OK ✅"
 msgstr "OK ✅"
 
-#: rest_food/common/constants.py:35 rest_food/demand/demand_command.py:306
-#: rest_food/demand/demand_command.py:337
-#: rest_food/demand/demand_command.py:357
+#: rest_food/common/constants.py:47 rest_food/demand/demand_command.py:307
+#: rest_food/demand/demand_command.py:338
+#: rest_food/demand/demand_command.py:358
 msgid "Other"
 msgstr "Інше"
 
-#: rest_food/supply/supply_state.py:227 rest_food/demand/demand_command.py:142
+#: rest_food/supply/supply_state.py:227 rest_food/demand/demand_command.py:143
 #, python-format
 msgid "Phone: %s"
 msgstr "Телефон: %s"
@@ -241,7 +261,7 @@ msgstr "Телефон: %s"
 msgid "Phone: {}\n"
 msgstr "Телефон: {}\n"
 
-#: rest_food/demand/demand_command.py:102
+#: rest_food/demand/demand_command.py:103
 msgid "Please, confirm/edit your contact information to proceed."
 msgstr "Будь ласка, підтвердьте контактну інформацію, щоб продовжити."
 
@@ -269,7 +289,7 @@ msgstr "Будь ласка, надішліть координати: Прикр
 msgid "Please, send your contact number."
 msgstr "Будь ласка, надішліть контактний телефон."
 
-#: rest_food/common/constants.py:33
+#: rest_food/common/constants.py:45
 msgid "Poland"
 msgstr "Польща"
 
@@ -281,16 +301,12 @@ msgstr "Скасовано"
 msgid "Provide later"
 msgstr "Пізніше"
 
-#: rest_food/supply/supply_reply.py:17
-msgid "Reject"
-msgstr "Відхилити"
-
 #: rest_food/common/formatters.py:72
 #, python-brace-format
 msgid "Restaurant name: {name}\nAddress: {address}"
 msgstr "Заклад: {name}\nАдреса: {address}"
 
-#: rest_food/demand/demand_reply.py:55
+#: rest_food/demand/demand_reply.py:68
 msgid "SOMEONE HAS ALREADY TAKEN IT!\n\n{}"
 msgstr "Хтось уже забрав!\n\n{}"
 
@@ -307,21 +323,25 @@ msgstr "Будь ласка, надішліть свій контактний н
 msgid "Set time and send"
 msgstr "Ввести час та надіслати"
 
+#: rest_food/supply/supply_command.py:188
+msgid "Shared food"
+msgstr "Їжа, яку віддали"
+
 #: rest_food/common/formatters.py:53
 #, python-format
 msgid "Social status: %s"
 msgstr "Соціальний статус: %s"
 
-#: rest_food/demand/demand_command.py:131
+#: rest_food/demand/demand_command.py:132
 #, python-format
 msgid "Social status: %s ✅"
 msgstr "Соціальний статус: %s ✅"
 
-#: rest_food/demand/demand_command.py:129
+#: rest_food/demand/demand_command.py:130
 msgid "Social status: not set ❌"
 msgstr "Соціальний статус: не встановлено ❌"
 
-#: rest_food/demand/demand_command.py:162
+#: rest_food/demand/demand_command.py:163
 msgid "Someone has already taken it."
 msgstr "Хтось уже забрав."
 
@@ -329,15 +349,16 @@ msgstr "Хтось уже забрав."
 msgid "Something went wrong. Try something different, please."
 msgstr "Щось пішло не так. Спробуйте щось інше."
 
-#: rest_food/supply/supply_command.py:165
+#: rest_food/supply/supply_command.py:246
 msgid "Sorry, approve it"
 msgstr "Ой, підтвердити"
 
-#: rest_food/supply/supply_state.py:493
+#: rest_food/supply/supply_command.py:73 rest_food/supply/supply_command.py:82
+#: rest_food/supply/supply_command.py:91 rest_food/supply/supply_state.py:500
 msgid "Sorry, something went wrong."
 msgstr "Перепрошую, щось пішло не так :("
 
-#: rest_food/demand/demand_command.py:381
+#: rest_food/demand/demand_command.py:382
 msgid "Sorry. Unexpected error happened. Please, try later."
 msgstr "Сталася непередбачена помилка. Спробуйте пізніше."
 
@@ -349,8 +370,8 @@ msgstr "Вказати час"
 msgid "Start from the beginning"
 msgstr "Почати заново"
 
-#: rest_food/demand/demand_command.py:211 rest_food/demand/demand_reply.py:23
-#: rest_food/demand/demand_reply.py:116
+#: rest_food/demand/demand_command.py:212 rest_food/demand/demand_reply.py:23
+#: rest_food/demand/demand_reply.py:129
 msgid "Take it"
 msgstr "Забрати"
 
@@ -358,11 +379,15 @@ msgstr "Забрати"
 msgid "Telegram: @{}\n"
 msgstr "Телеграм: @ {}\n"
 
-#: rest_food/demand/demand_command.py:364
+#: rest_food/demand/demand_command.py:365
 msgid "The bot is not active outside of those cities. We will notify you when anything new appears in your area."
 msgstr "Поза цими містами бот не активний. Ми вам повідомимо, коли у вашій місцевості щось з'явиться."
 
-#: rest_food/demand/demand_command.py:296
+#: rest_food/demand/demand_reply.py:42 rest_food/demand/demand_reply.py:62
+msgid "The message is no longer relevant"
+msgstr "Повідомлення вже не актуальне"
+
+#: rest_food/demand/demand_command.py:297
 msgid "This is a foodsharing bot. _intro_text_goes_here_\n"
 msgstr "Доброго дня! Вас вітає фудшерінг телеграм бот! Пройшовши просту процедуру реєстрації, ви зможете приєднатися до світового руху фудшерінгу!\n\nКроки:\n1. Виберіть вашу локацію\n2. Дочекайтеся, коли з'явиться публікація продуктів\n3. Коли з'явиться публікація продуктів, натисніть \"Забрати\"\n4. Вкажіть ваш соціальний статус і контактний номер телефону\n5. Для того, щоб забрати їжу, натисніть \"Підтвердити\"\n\nДалі дотримуйтесь вказівок.\n\nМова автоматично вибирається відповідно до мови клієнта Telegram, але якщо ви хочете змінити мову, натисніть /language.\n\nЦе все! Користуйтеся ботом для фудшерінгу із задоволенням! Пам'ятайте, що маленькими кроками ви можете зробити великий внесок у збереження стійкості планети та боротьбу зі світовим голодом!\n\nЯкщо у вас виникнуть запитання, пишіть боту для зворотного зв'язку: @foodsharingsupport_bot.\n"
 
@@ -379,28 +404,29 @@ msgstr "Користувач @%s"
 msgid "Very different"
 msgstr "Зовсім інше"
 
-#: rest_food/supply/supply_command.py:129 rest_food/supply/supply_reply.py:24
-msgid "View all messages"
-msgstr "Переглянути всі оголошення"
+#: rest_food/supply/supply_command.py:142
+#: rest_food/supply/supply_command.py:157
+msgid "View all 📋"
+msgstr "Переглянути всі 📋"
 
 #: rest_food/supply/supply_state.py:95
 msgid "View posted products"
 msgstr "Переглянути оголошення"
 
-#: rest_food/common/constants.py:42
+#: rest_food/common/constants.py:54
 msgid "Vilnius"
 msgstr "Вільнюс"
 
-#: rest_food/common/constants.py:41
+#: rest_food/common/constants.py:53
 msgid "Warszawa"
 msgstr "Варшава"
 
-#: rest_food/demand/demand_reply.py:71
+#: rest_food/demand/demand_reply.py:84
 #, python-brace-format
 msgid "We'll let you know if new food sharers appear in {country}. Use /{command} to change your choice."
 msgstr "Ми вам повідомимо, якщо в {country} з'являться нові рятувальники їжі. Натисніть /{command} щоб змінити вибір"
 
-#: rest_food/demand/demand_reply.py:62
+#: rest_food/demand/demand_reply.py:75
 #, python-brace-format
 msgid "We'll let you know if the bot starts working in other countries. Use /{command} to update location"
 msgstr "Ми вам повідомимо, коли бот почне працювати в інших країнах. Натисніть /{command}, щоб змінити вибір"
@@ -426,11 +452,11 @@ msgstr "Так ✅"
 msgid "You're not allowed to use the bot for foodsharing yet."
 msgstr "Вам акаунт поки що підтверджено."
 
-#: rest_food/demand/demand_reply.py:53
+#: rest_food/demand/demand_reply.py:66
 msgid "You've already taken it.\n\n{}"
 msgstr "Ви вже забрали.\n\n{}"
 
-#: rest_food/demand/demand_command.py:235
+#: rest_food/demand/demand_reply.py:48
 msgid "You've booked this"
 msgstr "Ви пообіцяли забрати продукти"
 
@@ -460,57 +486,77 @@ msgstr "Отримано підтвердження. Будь ласка, зат
 msgid "Your request was rejected with the following words:\n%(message)s\n\nRequest was:\n%(food)s"
 msgstr "❌ Їжу не можна буде забрати. Заклад пише:\n%(message)s\n\nОпис їжі було таким:\n%(food)s"
 
-#: rest_food/entities.py:19
+#: rest_food/supply/supply_utils.py:16
+msgid "approved"
+msgstr "підтверджено"
+
+#: rest_food/entities.py:15
 msgid "big family"
 msgstr "Багатодітна родина"
 
-#: rest_food/entities.py:20
+#: rest_food/supply/supply_utils.py:15
+msgid "booked"
+msgstr "заброньовано"
+
+#: rest_food/supply/supply_utils.py:14
+msgid "deactivated"
+msgstr "відхилено"
+
+#: rest_food/entities.py:16
 msgid "disability"
 msgstr "Група інвалідності"
 
-#: rest_food/entities.py:23
+#: rest_food/entities.py:19
 msgid "emigrant"
 msgstr "Емігрант"
 
-#: rest_food/common/constants.py:40
+#: rest_food/common/constants.py:52
 msgid "for-Minsk"
 msgstr "Мінська"
 
-#: rest_food/common/constants.py:42
+#: rest_food/common/constants.py:54
 msgid "for-Vilnius"
 msgstr "Вільнюса"
 
-#: rest_food/common/constants.py:41
+#: rest_food/common/constants.py:53
 msgid "for-Warszawa"
 msgstr "Варшави"
 
-#: rest_food/entities.py:22
+#: rest_food/entities.py:18
 msgid "hard times"
 msgstr "Скрутне соціальне становище"
 
-#: rest_food/entities.py:21
+#: rest_food/entities.py:17
 msgid "homeless"
 msgstr "Бездомний/а"
 
-#: rest_food/common/constants.py:32
+#: rest_food/common/constants.py:44
 msgid "in-Belarus"
 msgstr "Білорусі"
 
-#: rest_food/common/constants.py:34
+#: rest_food/common/constants.py:46
 msgid "in-Lithuania"
 msgstr "Литві"
 
-#: rest_food/common/constants.py:33
+#: rest_food/common/constants.py:45
 msgid "in-Poland"
 msgstr "Польщі"
 
-#: rest_food/demand/demand_command.py:139
+#: rest_food/demand/demand_command.py:140
 msgid "not set ❓"
 msgstr "не надано ❓"
 
-#: rest_food/entities.py:24
+#: rest_food/entities.py:20
 msgid "other"
 msgstr "Інше"
+
+#: rest_food/supply/supply_utils.py:13
+msgid "published"
+msgstr "опубліковано"
+
+#: rest_food/supply/supply_utils.py:17
+msgid "taken"
+msgstr "передано"
 
 #: rest_food/common/formatters.py:106
 #, python-brace-format
@@ -539,6 +585,10 @@ msgstr "{}, інше"
 msgid "{} can share the following:\n{}"
 msgstr "{} може передати таке:\n{}"
 
+#: rest_food/demand/demand_reply.py:45
+msgid "{} is waiting for you"
+msgstr "{} чекає на вас"
+
 #: rest_food/common/formatters.py:33
 msgid "{} will take the food.\n"
 msgstr "{} забере продукти.\n"
@@ -547,7 +597,7 @@ msgstr "{} забере продукти.\n"
 msgid "← Back"
 msgstr "← Назад"
 
-#: rest_food/demand/demand_command.py:90
+#: rest_food/demand/demand_command.py:91
 msgid "❌ Cancel"
 msgstr "❌ Скасувати"
 
@@ -558,3 +608,7 @@ msgstr "❌ Видалити"
 #: rest_food/supply/supply_state.py:364
 msgid "❌ Dismiss"
 msgstr "❌ Пропустити"
+
+#: rest_food/supply/supply_reply.py:17
+msgid "❌ Reject"
+msgstr "❌ Відхилити"
