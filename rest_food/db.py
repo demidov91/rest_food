@@ -15,7 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 def create_mongo_connector():
-    return MongoClient(DB_CONNECTION_STRING)[DB_NAME]
+    if isinstance(DB_CONNECTION_STRING, str):
+        return MongoClient(DB_CONNECTION_STRING)[DB_NAME]
 
 
 db = create_mongo_connector()
