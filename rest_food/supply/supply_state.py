@@ -28,7 +28,7 @@ from rest_food.common.formatters import build_active_food_message, location_to_s
 from rest_food.common.validators import validate_phone_number
 from rest_food.common.geocoding import get_coordinates
 from rest_food.translation import translate_lazy as _
-
+from rest_food.user_utilities import get_user_location
 
 logger = logging.getLogger(__name__)
 
@@ -317,7 +317,7 @@ class SetAddressState(BaseEditInfoState):
     def handle_text(self, text):
         initial_address = self.db_user.info.get(UserInfoField.ADDRESS.value)
         if text != initial_address:
-            coordinates = get_coordinates(text)
+            coordinates = get_coordinates(text, location=get_user_location(self.db_user))
             set_info(self.db_user, UserInfoField.IS_APPROVED_COORDINATES, False)
             if coordinates:
                 set_info(self.db_user, UserInfoField.COORDINATES, [str(x) for x in coordinates])

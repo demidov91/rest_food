@@ -26,9 +26,11 @@ class CityData:
     name: str
     for_name: str
 
-    @property
-    def country(self):
-        return COUNTRY_DICT[self.country_code]
+
+@dataclasses.dataclass
+class Location:
+    country: CountryData
+    city: Optional[CityData]
 
 
 LANG_TO_NAME = [
