@@ -34,8 +34,17 @@ class GeoCoderResult:
 
 
 class Geocoder:
+    _api_key: str
+
     def __init__(self):
         self._http_session = Session()
+
+    @property
+    def api_key(self):
+        if self._api_key is None:
+            raise ValueError(f'{type(self).__name__} api-key is not defined.')
+
+        return self._api_key
 
     def get_bounds(self, country: CountryData):
         raise NotImplemented
@@ -48,6 +57,8 @@ class Geocoder:
 
 
 class YandexGeocoder(Geocoder):
+    _api_key = YANDEX_API_KEY
+
     def get_bounds(self, country: CountryData):
         if country.code == 'by':
             return YandexBBox.BELARUS
@@ -57,7 +68,7 @@ class YandexGeocoder(Geocoder):
     def call_geocoder(self, address: str, bbox: Optional[YandexBBox]) -> Optional[GeoCoderResult]:
         logger.info('Geocode %s for %s', address, bbox.name)
         params = {
-            'apikey': YANDEX_API_KEY,
+            'apikey': self.api_key,
             'geocode': address,
             'rspn': 1,
             'format': 'json',
@@ -130,6 +141,8 @@ class YandexGeocoder(Geocoder):
 
 
 class GoogleGeocoder(Geocoder):
+    _api_key = GOOGLE_API_KEY
+
     def get_bounds(self, country) -> Optional[GoogleBounds]:
         if country is None:
             return None
@@ -147,7 +160,7 @@ class GoogleGeocoder(Geocoder):
         url = 'https://maps.googleapis.com/maps/api/geocode/json'
         params = {
             'address': address,
-            'key': GOOGLE_API_KEY,
+            'key': self.api_key,
         }
         if bounds is not None:
             params['bounds'] = bounds.value
