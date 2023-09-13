@@ -1,6 +1,8 @@
 import pytest
-from rest_food.common.constants import COUNTRY_DICT, CITY_DICT, Location
-from rest_food.common.geocoding import get_coordinates, GeoCoderResult
+from rest_food.common.constants import COUNTRY_DICT, CITY_DICT, Location, CountryData
+from rest_food.common.geocoding import (
+    get_coordinates, GeoCoderResult, YandexGeocoder, YandexBBox, GoogleBounds, GoogleGeocoder,
+)
 from unittest.mock import patch
 
 
@@ -24,3 +26,34 @@ def test_get_coordinates(in_address, country_code, city_code, expected_address):
 
     assert coordinates == [10, 22]
     p.assert_called_once_with(expected_address, country=country)
+
+
+class TestYandexGeocoder:
+    @pytest.mark.parametrize('country, expected_bounds', [
+        (CountryData.by_code('by'), YandexBBox.BELARUS),
+        (None, None),
+    ])
+    def test_geocode(self, country, expected_bounds):
+        geocoder = YandexGeocoder()
+        address = 'the address'
+
+        with patch.object(geocoder, 'call_geocoder') as p:
+            geocoder.geocode(address, country)
+
+        p.assert_called_once_with(address, expected_bounds)
+
+
+class TestGoogleGeocoder:
+    @pytest.mark.parametrize('country, expected_bounds', [
+        (CountryData.by_code('pl'), GoogleBounds.POLAND),
+        (CountryData.by_code('lt'), GoogleBounds.LITHUANIA),
+        (None, None),
+    ])
+    def test_geocode(self, country, expected_bounds):
+        geocoder = GoogleGeocoder()
+        address = 'the address'
+
+        with patch.object(geocoder, 'call_geocoder') as p:
+            geocoder.geocode(address, country)
+
+        p.assert_called_once_with(address, expected_bounds)

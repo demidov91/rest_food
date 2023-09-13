@@ -18,6 +18,10 @@ class CountryData:
     name: str
     in_name: Optional[str]
 
+    @classmethod
+    def by_code(cls, code: str):
+        return COUNTRY_DICT[code]
+
 
 @dataclasses.dataclass
 class CityData:
