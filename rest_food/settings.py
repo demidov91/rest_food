@@ -14,7 +14,7 @@ NOT_SET = object()
 
 def env_var(var_name: str, default=NOT_SET):
     if var_name not in os.environ:
-        if default is NOT_SET and os.environ.get('PYTEST_RUN_CONFIG') != 'True':
+        if default is NOT_SET and not (os.environ.get('PYTEST_RUN_CONFIG') == 'True' or 'pytest' in os.environ.get('_', '')):
             raise Exception('%s is not set.' % var_name)
 
         logger.warning('%s env variable was not found. Using %s as default', var_name, default)
@@ -30,7 +30,7 @@ GOOGLE_API_KEY = env_var('GOOGLE_API_KEY')
 BOT_PATH_KEY = env_var('BOT_PATH_KEY', None)
 DB_CONNECTION_STRING = env_var('DB_CONNECTION_STRING')
 DB_NAME = env_var('DB_NAME')
-DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE')
+DEFAULT_LANGUAGE = env_var('DEFAULT_LANGUAGE', 'be')
 ADMIN_USERNAMES = env_var('ADMIN_USERNAMES', []) and env_var('ADMIN_USERNAMES').split(',')
 STAGE = env_var('STAGE')
 
