@@ -33,11 +33,11 @@ class GeoCoderResult:
     is_sure: bool
 
 
+_http_session = Session()
+
+
 class Geocoder:
     _api_key: str
-
-    def __init__(self):
-        self._http_session = Session()
 
     @property
     def api_key(self):
@@ -77,7 +77,7 @@ class YandexGeocoder(Geocoder):
             params['bbox'] = bbox.value
 
         try:
-            response = self._http_session.get('https://geocode-maps.yandex.ru/1.x/', params=params, timeout=5)
+            response = _http_session.get('https://geocode-maps.yandex.ru/1.x/', params=params, timeout=5)
         except ConnectionError:
             logger.exception('Connection error while geocode.')
             return None
@@ -168,7 +168,7 @@ class GoogleGeocoder(Geocoder):
         logger.debug('Making geocoding call with bounds %s', params.get('bounds'))
 
         try:
-            response = self._http_session.get(url, params=params, timeout=5)
+            response = _http_session.get(url, params=params, timeout=5)
         except ConnectionError:
             logger.exception('Connection error while geocode.')
             return None
