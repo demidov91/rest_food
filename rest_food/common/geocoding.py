@@ -23,6 +23,7 @@ class YandexBBox(Enum):
 class GoogleBounds(Enum):
     WARSZAWA = '52,20.5|52.5,21.3'
     POLAND = '49.13,14.3|55,24.5'
+    LITHUANIA = '53.81,20.85|56.37,27.17'
 
 
 @dataclasses.dataclass
@@ -135,6 +136,11 @@ class GoogleGeocoder(Geocoder):
 
         if country.code == 'pl':
             return GoogleBounds.POLAND
+
+        if country.code == 'lt':
+            return GoogleBounds.LITHUANIA
+
+        return None
 
     def call_geocoder(self, address: str, bounds: Optional[GoogleBounds]) -> Optional[GeoCoderResult]:
         logger.info('Geocode %s for %s by Google API.', address, bounds.name)
